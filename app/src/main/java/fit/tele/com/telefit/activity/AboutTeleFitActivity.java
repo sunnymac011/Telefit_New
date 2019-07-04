@@ -58,5 +58,6 @@ public class AboutTeleFitActivity extends BaseActivity implements View.OnClickLi
         }
 
         //Changes sunny
+        //New thing
     }
 }
