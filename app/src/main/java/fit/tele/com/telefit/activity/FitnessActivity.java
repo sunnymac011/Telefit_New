@@ -14,6 +14,7 @@ import fit.tele.com.telefit.base.BaseActivity;
 import fit.tele.com.telefit.databinding.ActivityFitnessBinding;
 import fit.tele.com.telefit.modelBean.ModelBean;
 import fit.tele.com.telefit.modelBean.RoutinePlanBean;
+import fit.tele.com.telefit.modelBean.RoutinePlanListBean;
 import fit.tele.com.telefit.modelBean.YogaExerciseDetailsBean;
 import fit.tele.com.telefit.themes.MainActivityTheme;
 import fit.tele.com.telefit.utils.CommonUtils;
@@ -26,6 +27,7 @@ public class FitnessActivity extends BaseActivity implements View.OnClickListene
 
     ActivityFitnessBinding binding;
     private RoutinePlanAdapter routinePlanAdapter;
+    private RoutinePlanAdapter pastRoutinePlanAdapter;
 
     @Override
     public int getLayoutResId() {
@@ -47,10 +49,12 @@ public class FitnessActivity extends BaseActivity implements View.OnClickListene
         binding.txtExplore.setOnClickListener(this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-        binding.rvPlans.setLayoutManager(linearLayoutManager);
+        LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        binding.rvFuturePlans.setLayoutManager(linearLayoutManager);
+        binding.rvPastPlans.setLayoutManager(linearLayoutManager1);
 
         if (routinePlanAdapter == null) {
-            routinePlanAdapter = new RoutinePlanAdapter(context, binding.rvPlans, new RoutinePlanAdapter.ClickListener() {
+            routinePlanAdapter = new RoutinePlanAdapter(context, binding.rvFuturePlans, new RoutinePlanAdapter.ClickListener() {
                 @Override
                 public void onClick(String plan_id) {
                     Intent intent = new Intent(FitnessActivity.this,PlayVideoActivity.class);
@@ -59,8 +63,21 @@ public class FitnessActivity extends BaseActivity implements View.OnClickListene
                 }
             });
         }
-        binding.rvPlans.setAdapter(routinePlanAdapter);
+        binding.rvFuturePlans.setAdapter(routinePlanAdapter);
         routinePlanAdapter.clearAll();
+
+        if (pastRoutinePlanAdapter == null) {
+            pastRoutinePlanAdapter = new RoutinePlanAdapter(context, binding.rvPastPlans, new RoutinePlanAdapter.ClickListener() {
+                @Override
+                public void onClick(String plan_id) {
+                    Intent intent = new Intent(FitnessActivity.this,PlayVideoActivity.class);
+                    intent.putExtra("plan_id",plan_id);
+                    startActivity(intent);
+                }
+            });
+        }
+        binding.rvPastPlans.setAdapter(pastRoutinePlanAdapter);
+        pastRoutinePlanAdapter.clearAll();
 
         callRoutinePlanApi();
     }
@@ -103,10 +120,10 @@ public class FitnessActivity extends BaseActivity implements View.OnClickListene
         if (CommonUtils.isInternetOn(context)) {
             binding.progress.setVisibility(View.VISIBLE);
 
-            Observable<ModelBean<ArrayList<RoutinePlanBean>>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).getRoutinePlansApi();
+            Observable<ModelBean<RoutinePlanListBean>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).getRoutinePlansApi();
             subscription = signupusers.subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Subscriber<ModelBean<ArrayList<RoutinePlanBean>>>() {
+                    .subscribe(new Subscriber<ModelBean<RoutinePlanListBean>>() {
                         @Override
                         public void onCompleted() {
                         }
@@ -120,15 +137,29 @@ public class FitnessActivity extends BaseActivity implements View.OnClickListene
                         }
 
                         @Override
-                        public void onNext(ModelBean<ArrayList<RoutinePlanBean>> apiExercisesBean) {
+                        public void onNext(ModelBean<RoutinePlanListBean> apiExercisesBean) {
                             binding.progress.setVisibility(View.GONE);
-                            if (apiExercisesBean.getStatus().toString().equalsIgnoreCase("1"))
+                            if (apiExercisesBean.getStatus().toString().equalsIgnoreCase("1") )
                             {
-                                if (routinePlanAdapter.getItemCount() <= 0)
-                                    routinePlanAdapter.addAllList(apiExercisesBean.getResult());
-                                else {
-                                    routinePlanAdapter.removeProgress();
-                                    routinePlanAdapter.addAllList(apiExercisesBean.getResult());
+                                if (apiExercisesBean.getResult() != null) {
+                                    if (apiExercisesBean.getResult().getFuture().size() > 0)
+                                    {
+                                        routinePlanAdapter.addAllList(apiExercisesBean.getResult().getFuture());
+                                        binding.llFuture.setVisibility(View.VISIBLE);
+                                    }
+                                    else {
+                                        binding.rvFuturePlans.setVisibility(View.GONE);
+                                        binding.llFuture.setVisibility(View.GONE);
+                                    }
+                                    if (apiExercisesBean.getResult().getPast().size() > 0)
+                                    {
+                                        pastRoutinePlanAdapter.addAllList(apiExercisesBean.getResult().getFuture());
+                                        binding.llPast.setVisibility(View.VISIBLE);
+                                    }
+                                    else {
+                                        binding.rvPastPlans.setVisibility(View.GONE);
+                                        binding.llPast.setVisibility(View.GONE);
+                                    }
                                 }
                             }
                             else

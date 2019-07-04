@@ -1,10 +1,13 @@
 
 package fit.tele.com.telefit.modelBean.chompBeans;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Vegetarian {
+public class Vegetarian implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -24,6 +27,27 @@ public class Vegetarian {
     @SerializedName("grade_confidence_desc")
     @Expose
     private String gradeConfidenceDesc;
+
+    protected Vegetarian(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        isCompatible = in.readString();
+        compatibility = in.readString();
+        gradeConfidence = in.readString();
+        gradeConfidenceDesc = in.readString();
+    }
+
+    public static final Creator<Vegetarian> CREATOR = new Creator<Vegetarian>() {
+        @Override
+        public Vegetarian createFromParcel(Parcel in) {
+            return new Vegetarian(in);
+        }
+
+        @Override
+        public Vegetarian[] newArray(int size) {
+            return new Vegetarian[size];
+        }
+    };
 
     public String getId() {
         return id;
@@ -73,4 +97,30 @@ public class Vegetarian {
         this.gradeConfidenceDesc = gradeConfidenceDesc;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(isCompatible);
+        dest.writeString(compatibility);
+        dest.writeString(gradeConfidence);
+        dest.writeString(gradeConfidenceDesc);
+    }
+
+    @Override
+    public String toString() {
+        return "Vegetarian{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", isCompatible='" + isCompatible + '\'' +
+                ", compatibility='" + compatibility + '\'' +
+                ", gradeConfidence='" + gradeConfidence + '\'' +
+                ", gradeConfidenceDesc='" + gradeConfidenceDesc + '\'' +
+                '}';
+    }
 }

@@ -165,7 +165,7 @@
                 android:id="@+id/txt_header_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Create Routine"
+                android:text="New Recipe"
                 android:textSize="@dimen/_14sdp"
                 android:textColor="@color/white"
                 android:textStyle="bold"
@@ -176,12 +176,12 @@
                 android:id="@+id/txt_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add"
+                android:text="Save"
                 android:textStyle="bold"
                 android:textColor="@color/light_blue"
                 android:fontFamily="@font/rubik"
                 android:layout_alignParentRight="true"
-                android:drawableLeft="@drawable/add_icon"
+                android:drawableLeft="@drawable/save_icon"
                 android:drawablePadding="@dimen/_5sdp"
                 android:layout_centerVertical="true"/>
 
@@ -202,13 +202,14 @@
                     android:id="@+id/txt_header_txt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Create your routine and take control of your health."
+                    android:text="Create your own recipe
+Add foods as you prefer."
                     android:layout_margin="@dimen/_10sdp"
                     android:textColor="@color/light_gray"
                     android:fontFamily="@font/rubik"/>
 
                 <android.support.design.widget.TextInputLayout
-                    android:id="@+id/input_layout_routine"
+                    android:id="@+id/input_layout_recipe"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -217,10 +218,10 @@
                     android:layout_marginRight="@dimen/_10sdp">
 
                     <EditText
-                        android:id="@+id/input_routine_name"
+                        android:id="@+id/input_recipe_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Routine Name"
+                        android:hint="Recipe Name"
                         android:textColor="@color/main_color"
                         android:textColorHint="@color/main_color"
                         android:fontFamily="@font/rubik"
@@ -228,161 +229,35 @@
 
                 </android.support.design.widget.TextInputLayout>
 
-                <LinearLayout
-                    android:id="@+id/ll_main_day"
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/txt_calories"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    tools:text="273 Calories per serving"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/_16sdp"
+                    android:textColor="@color/light_blue_text"
+                    android:fontFamily="@font/rubik"
                     android:layout_marginTop="@dimen/_10sdp"
-                    android:layout_marginLeft="@dimen/_10sdp"
-                    android:layout_marginRight="@dimen/_10sdp">
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:layout_marginLeft="@dimen/_80sdp"
+                    android:layout_below="@+id/txt_plan"/>
 
-                    <LinearLayout
-                        android:id="@+id/ll_level"
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/_5sdp"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Difficulty Level"
-                            android:textColor="@color/light_gray"
-                            android:fontFamily="@font/rubik"/>
-
-                        <Spinner
-                            android:id="@+id/spi_level"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="@dimen/_15sdp"
-                            android:textStyle="bold"
-                            android:textColor="@color/main_color"
-                            android:layout_marginTop="@dimen/_5sdp"
-                            android:fontFamily="@font/rubik"/>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_1sdp"
-                            android:background="@color/main_color"
-                            android:layout_marginTop="@dimen/_5sdp"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/ll_type"
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Routine Type"
-                            android:textColor="@color/light_gray"
-                            android:fontFamily="@font/rubik"/>
-
-                        <Spinner
-                            android:id="@+id/spi_type"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="@dimen/_15sdp"
-                            android:textStyle="bold"
-                            android:textColor="@color/main_color"
-                            android:layout_marginTop="@dimen/_5sdp"
-                            android:fontFamily="@font/rubik"/>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_1sdp"
-                            android:background="@color/main_color"
-                            android:layout_marginTop="@dimen/_5sdp"/>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ll_date"
-                    android:orientation="vertical"
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:layout_marginLeft="@dimen/_10sdp"
-                    android:layout_marginRight="@dimen/_10sdp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Routine Date"
-                        android:textColor="@color/light_gray"
-                        android:fontFamily="@font/rubik"/>
-
-                    <TextView
-                        android:id="@+id/txt_routine_date"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        tools:text="02/07/2019"
-                        android:textSize="@dimen/_14sdp"
-                        android:textStyle="bold"
-                        android:textColor="@color/main_color"
-                        android:layout_marginTop="@dimen/_5sdp"
-                        android:fontFamily="@font/rubik" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_1sdp"
-                        android:background="@color/main_color"
-                        android:layout_marginTop="@dimen/_5sdp"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ll_day"
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:layout_marginLeft="@dimen/_10sdp"
-                    android:layout_marginRight="@dimen/_10sdp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Day of the Week"
-                        android:textColor="@color/light_gray"
-                        android:fontFamily="@font/rubik"/>
-
-                    <TextView
-                        android:id="@+id/txt_week_day"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        tools:text="Day 1 Monday"
-                        android:textSize="@dimen/_14sdp"
-                        android:textStyle="bold"
-                        android:textColor="@color/main_color"
-                        android:layout_marginTop="@dimen/_5sdp"
-                        android:fontFamily="@font/rubik" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_1sdp"
-                        android:background="@color/main_color"
-                        android:layout_marginTop="@dimen/_5sdp"/>
-
-                </LinearLayout>
+                    android:layout_height="1dp"
+                    android:background="@color/light_gray"
+                    android:layout_marginLeft="@dimen/_80sdp"/>
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_exercises"
+                    android:id="@+id/rv_recipe"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:listitem="@layout/item_exercises"
                     android:layout_marginTop="@dimen/_10sdp"/>
 
                 <LinearLayout
-                    android:id="@+id/ll_add_plan"
+                    android:id="@+id/ll_add_food"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -398,7 +273,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Add Exercise >"
+                        android:text="Add Food >"
                         android:textStyle="bold"
                         android:textColor="@color/light_blue_text"
                         android:textSize="@dimen/_16sdp"

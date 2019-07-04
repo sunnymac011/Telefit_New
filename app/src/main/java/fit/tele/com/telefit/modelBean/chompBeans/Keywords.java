@@ -1,10 +1,13 @@
 
 package fit.tele.com.telefit.modelBean.chompBeans;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Keywords {
+public class Keywords implements Parcelable {
 
     @SerializedName("bean")
     @Expose
@@ -33,6 +36,30 @@ public class Keywords {
     @SerializedName("protein")
     @Expose
     private String protein;
+
+    protected Keywords(Parcel in) {
+        bean = in.readString();
+        black = in.readString();
+        burger = in.readString();
+        chipotle = in.readString();
+        gardein = in.readString();
+        garden = in.readString();
+        inc = in.readString();
+        international = in.readString();
+        protein = in.readString();
+    }
+
+    public static final Creator<Keywords> CREATOR = new Creator<Keywords>() {
+        @Override
+        public Keywords createFromParcel(Parcel in) {
+            return new Keywords(in);
+        }
+
+        @Override
+        public Keywords[] newArray(int size) {
+            return new Keywords[size];
+        }
+    };
 
     public String getBean() {
         return bean;
@@ -106,4 +133,36 @@ public class Keywords {
         this.protein = protein;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(bean);
+        dest.writeString(black);
+        dest.writeString(burger);
+        dest.writeString(chipotle);
+        dest.writeString(gardein);
+        dest.writeString(garden);
+        dest.writeString(inc);
+        dest.writeString(international);
+        dest.writeString(protein);
+    }
+
+    @Override
+    public String toString() {
+        return "Keywords{" +
+                "bean='" + bean + '\'' +
+                ", black='" + black + '\'' +
+                ", burger='" + burger + '\'' +
+                ", chipotle='" + chipotle + '\'' +
+                ", gardein='" + gardein + '\'' +
+                ", garden='" + garden + '\'' +
+                ", inc='" + inc + '\'' +
+                ", international='" + international + '\'' +
+                ", protein='" + protein + '\'' +
+                '}';
+    }
 }

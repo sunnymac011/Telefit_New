@@ -17,6 +17,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FetchServiceBase {
     private static String BASE_URL = "https://telefitapp.com/api/v1/";
+//    private static String BASE_URL = "http://appbuckets.com/telefit/api/v1/";
     private static String BASE_CHOMP_URL = "https://chompthis.com/api/";
 
     private static Retrofit GetRestAdapter(final Context context) {

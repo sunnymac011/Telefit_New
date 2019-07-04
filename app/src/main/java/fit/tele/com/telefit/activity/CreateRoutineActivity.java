@@ -1,6 +1,7 @@
 package fit.tele.com.telefit.activity;
 
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -11,8 +12,13 @@ import android.widget.ArrayAdapter;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import fit.tele.com.telefit.R;
 import fit.tele.com.telefit.adapter.ExercisesDragNDropAdapter;
@@ -31,13 +37,15 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class CreateRoutineActivity extends BaseActivity implements View.OnClickListener, OnStartDragListener {
+public class CreateRoutineActivity extends BaseActivity implements View.OnClickListener, OnStartDragListener, DatePickerDialog.OnDateSetListener {
 
     ActivityCreateRoutineBinding binding;
     private ExercisesDragNDropAdapter exercisesDragNDropAdapter;
     private ItemTouchHelper mItemTouchHelper;
     private ArrayList<ExercisesListBean> exercisesListBeans = new ArrayList<>();
     private CreatePlanApiBean createPlanApiBean;
+    private DatePickerDialog dpd;
+    private String dayFlag = "1";
 
     @Override
     public int getLayoutResId() {
@@ -64,10 +72,7 @@ public class CreateRoutineActivity extends BaseActivity implements View.OnClickL
         binding.llFitness.setOnClickListener(this);
         binding.llAddPlan.setOnClickListener(this);
         binding.txtAdd.setOnClickListener(this);
-
-        ArrayAdapter<String> spinnerDaysArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.days));
-        spinnerDaysArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.spiDay.setAdapter(spinnerDaysArrayAdapter);
+        binding.txtRoutineDate.setOnClickListener(this);
 
         ArrayAdapter<String> spinnerRoutineTypeArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.routine_type));
         spinnerRoutineTypeArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -131,15 +136,22 @@ public class CreateRoutineActivity extends BaseActivity implements View.OnClickL
                 this.overridePendingTransition(0, 0);
                 break;
 
+            case R.id.txt_routine_date:
+                datePicker();
+                break;
+
             case R.id.txt_add:
                     if (TextUtils.isEmpty(binding.inputRoutineName.getText().toString()))
                         CommonUtils.toast(context, "Please enter Routine Name");
+                    else if (TextUtils.isEmpty(binding.txtRoutineDate.getText().toString()))
+                        CommonUtils.toast(context, "Please enter Routine Date");
                     else {
                         createPlanApiBean.setRoutineName(binding.inputRoutineName.getText().toString().trim());
-                        createPlanApiBean.setDayOfTheWeek(binding.spiDay.getSelectedItem().toString());
+                        createPlanApiBean.setDayOfTheWeek(binding.txtWeekDay.getText().toString());
                         createPlanApiBean.setRoutineType(binding.spiType.getSelectedItem().toString());
                         createPlanApiBean.setDifficultyLevel(binding.spiLevel.getSelectedItem().toString());
-                        createPlanApiBean.setDayFlag(""+(binding.spiDay.getSelectedItemPosition()+1));
+                        createPlanApiBean.setDayFlag(dayFlag);
+                        createPlanApiBean.setRoutineDate(binding.txtRoutineDate.getText().toString().trim());
                         ExeDetl exeDetl;
                         ArrayList<ExeDetl> exeDetls;
                         if (exercisesDragNDropAdapter != null) {
@@ -214,5 +226,95 @@ public class CreateRoutineActivity extends BaseActivity implements View.OnClickL
         } else {
             CommonUtils.toast(context, context.getString(R.string.snack_bar_no_internet));
         }
+    }
+
+    private void datePicker() {
+        if (dpd == null || !dpd.isVisible()) {
+            Calendar now = Calendar.getInstance();
+            int year = now.get(Calendar.YEAR);
+            int mm = now.get(Calendar.MONTH);
+            int dd = now.get(Calendar.DAY_OF_MONTH);
+
+
+            if(binding.txtRoutineDate != null && !binding.txtRoutineDate.getText().toString().equalsIgnoreCase("")) {
+                String[] date = binding.txtRoutineDate.getText().toString().split("/");
+                if(date.length == 3) {
+                    dd = Integer.parseInt(date[1]);
+                    mm = Integer.parseInt(date[0]) - 1;
+                    year = Integer.parseInt(date[2]);
+                }
+            }
+
+            dpd = DatePickerDialog.newInstance(CreateRoutineActivity.this, year, mm, dd);
+            dpd.setThemeDark(false);
+            dpd.vibrate(false);
+            dpd.dismissOnPause(true);
+            dpd.setMinDate(now);
+            dpd.showYearPickerFirst(false);
+            dpd.setVersion(DatePickerDialog.Version.VERSION_1);
+            dpd.setAccentColor(ContextCompat.getColor(context, R.color.colorAccent));
+            dpd.setTitle("Select date");
+
+            dpd.show(getFragmentManager(), "Datepickerdialog");
+        }
+    }
+
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        String date =  dayOfMonth + "/" + ((monthOfYear+1) > 9 ? (monthOfYear+1) : ("0"+(monthOfYear+1))) + "/" + year;
+        binding.txtRoutineDate.setText(date);
+
+        try {
+            SimpleDateFormat inFormat = new SimpleDateFormat("dd/MM/yyyy");
+            Date date1 = inFormat.parse(date);
+            SimpleDateFormat outFormat = new SimpleDateFormat("EEEE");
+            String goal = outFormat.format(date1);
+            if (goal.equalsIgnoreCase("Monday"))
+            {
+                binding.txtWeekDay.setText("Day 1, Monday");
+                dayFlag = "1";
+            }
+            if (goal.equalsIgnoreCase("Tuesday"))
+            {
+                binding.txtWeekDay.setText("Day 2, Tuesday");
+                dayFlag = "2";
+            }
+            if (goal.equalsIgnoreCase("Wednesday"))
+            {
+                binding.txtWeekDay.setText("Day 3, Wednesday");
+                dayFlag = "3";
+            }
+            if (goal.equalsIgnoreCase("Thursday"))
+            {
+                binding.txtWeekDay.setText("Day 4, Thursday");
+                dayFlag = "4";
+            }
+            if (goal.equalsIgnoreCase("Friday"))
+            {
+                binding.txtWeekDay.setText("Day 5, Friday");
+                dayFlag = "5";
+            }
+            if (goal.equalsIgnoreCase("Saturday"))
+            {
+                binding.txtWeekDay.setText("Day 6, Saturday");
+                dayFlag = "6";
+            }
+            if (goal.equalsIgnoreCase("Sunday"))
+            {
+                binding.txtWeekDay.setText("Day 7, Sunday");
+                dayFlag = "7";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DatePickerDialog dpd = (DatePickerDialog) getFragmentManager().findFragmentByTag("Datepickerdialog");
+        if (dpd != null)
+            dpd.setOnDateSetListener(this);
     }
 }

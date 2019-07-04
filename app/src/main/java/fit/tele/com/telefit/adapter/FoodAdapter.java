@@ -1,10 +1,12 @@
 package fit.tele.com.telefit.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import fit.tele.com.telefit.R;
+import fit.tele.com.telefit.activity.AddFoodActivity;
 import fit.tele.com.telefit.modelBean.chompBeans.ChompProductBean;
 import fit.tele.com.telefit.utils.OnLoadMoreListener;
 
@@ -142,7 +145,9 @@ public class FoodAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 @Override
                 public void onClick(View view) {
                     if(list != null && pos >= 0 && pos < list.size() && list.get(pos) != null) {
-
+                        Intent intent = new Intent(context, AddFoodActivity.class);
+                        intent.putExtra("SelectedItems",list.get(pos));
+                        context.startActivity(intent);
                     }
                 }
             });

@@ -1,10 +1,13 @@
 
 package fit.tele.com.telefit.modelBean.chompBeans;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Sodium {
+public class Sodium implements Parcelable {
 
     @SerializedName("name")
     @Expose
@@ -18,6 +21,25 @@ public class Sodium {
     @SerializedName("per_serving")
     @Expose
     private String perServing;
+
+    protected Sodium(Parcel in) {
+        name = in.readString();
+        measurement = in.readString();
+        per100g = in.readString();
+        perServing = in.readString();
+    }
+
+    public static final Creator<Sodium> CREATOR = new Creator<Sodium>() {
+        @Override
+        public Sodium createFromParcel(Parcel in) {
+            return new Sodium(in);
+        }
+
+        @Override
+        public Sodium[] newArray(int size) {
+            return new Sodium[size];
+        }
+    };
 
     public String getName() {
         return name;
@@ -51,4 +73,26 @@ public class Sodium {
         this.perServing = perServing;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(measurement);
+        dest.writeString(per100g);
+        dest.writeString(perServing);
+    }
+
+    @Override
+    public String toString() {
+        return "Sodium{" +
+                "name='" + name + '\'' +
+                ", measurement='" + measurement + '\'' +
+                ", per100g='" + per100g + '\'' +
+                ", perServing='" + perServing + '\'' +
+                '}';
+    }
 }

@@ -1,10 +1,13 @@
 
 package fit.tele.com.telefit.modelBean.chompBeans;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Proteins {
+public class Proteins implements Parcelable {
 
     @SerializedName("name")
     @Expose
@@ -18,6 +21,25 @@ public class Proteins {
     @SerializedName("per_serving")
     @Expose
     private String perServing;
+
+    protected Proteins(Parcel in) {
+        name = in.readString();
+        measurement = in.readString();
+        per100g = in.readString();
+        perServing = in.readString();
+    }
+
+    public static final Creator<Proteins> CREATOR = new Creator<Proteins>() {
+        @Override
+        public Proteins createFromParcel(Parcel in) {
+            return new Proteins(in);
+        }
+
+        @Override
+        public Proteins[] newArray(int size) {
+            return new Proteins[size];
+        }
+    };
 
     public String getName() {
         return name;
@@ -51,4 +73,26 @@ public class Proteins {
         this.perServing = perServing;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(measurement);
+        dest.writeString(per100g);
+        dest.writeString(perServing);
+    }
+
+    @Override
+    public String toString() {
+        return "Proteins{" +
+                "name='" + name + '\'' +
+                ", measurement='" + measurement + '\'' +
+                ", per100g='" + per100g + '\'' +
+                ", perServing='" + perServing + '\'' +
+                '}';
+    }
 }

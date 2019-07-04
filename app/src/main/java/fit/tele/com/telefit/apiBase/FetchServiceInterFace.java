@@ -17,6 +17,7 @@ import fit.tele.com.telefit.modelBean.LoginBean;
 import fit.tele.com.telefit.modelBean.ModelBean;
 import fit.tele.com.telefit.modelBean.RoutinePlanBean;
 import fit.tele.com.telefit.modelBean.RoutinePlanDetailsBean;
+import fit.tele.com.telefit.modelBean.RoutinePlanListBean;
 import fit.tele.com.telefit.modelBean.SelectedItemsBean;
 import fit.tele.com.telefit.modelBean.SubExerciseBean;
 import fit.tele.com.telefit.modelBean.SubOptionsBean;
@@ -97,7 +98,7 @@ public interface FetchServiceInterFace {
     Observable<ModelBean<ExercisesListBean>> createRoutineApi(@Body CreatePlanApiBean request); //done
 
     @POST("customer/customer_routine_plane_get")
-    Observable<ModelBean<ArrayList<RoutinePlanBean>>> getRoutinePlansApi(); //done
+    Observable<ModelBean<RoutinePlanListBean>> getRoutinePlansApi(); //done
 
     @POST("customer/customer_routine_plane_getexe")
     Observable<ModelBean<ArrayList<RoutinePlanDetailsBean>>> getRoutinePlanDetailsAPI(@Body Map<String, String> params); //done
