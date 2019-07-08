@@ -1,21 +1,16 @@
 package fit.tele.com.telefit.apiBase;
 
-import com.google.gson.Gson;
-
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import fit.tele.com.telefit.modelBean.CreatePlanApiBean;
 import fit.tele.com.telefit.modelBean.CrossFitBean;
+import fit.tele.com.telefit.modelBean.CustomerDetailBean;
 import fit.tele.com.telefit.modelBean.ExerciseDetailsBean;
 import fit.tele.com.telefit.modelBean.ExercisesBean;
 import fit.tele.com.telefit.modelBean.ExercisesListBean;
 import fit.tele.com.telefit.modelBean.LoginBean;
 import fit.tele.com.telefit.modelBean.ModelBean;
-import fit.tele.com.telefit.modelBean.RoutinePlanBean;
 import fit.tele.com.telefit.modelBean.RoutinePlanDetailsBean;
 import fit.tele.com.telefit.modelBean.RoutinePlanListBean;
 import fit.tele.com.telefit.modelBean.SelectedItemsBean;
@@ -27,13 +22,11 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.http.Body;
-import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 import rx.Observable;
 
@@ -102,4 +95,17 @@ public interface FetchServiceInterFace {
 
     @POST("customer/customer_routine_plane_getexe")
     Observable<ModelBean<ArrayList<RoutinePlanDetailsBean>>> getRoutinePlanDetailsAPI(@Body Map<String, String> params); //done
+
+    @POST("customer/get_all_customer_list")
+    Observable<ModelBean<ArrayList<CustomerDetailBean>>> getAllCustomers(@Body Map<String, String> params); //done
+
+    @POST("customer/send_request_friend")
+    Observable<ModelBean<ArrayList<CustomerDetailBean>>> addFriend(@Body Map<String, String> params); //done
+
+    @POST("customer/get_all_friend_request_list")
+    Observable<ModelBean<ArrayList<CustomerDetailBean>>> getAllRequests(@Body Map<String, String> params); //done
+
+    @POST("customer/accept_request_friend")
+    Observable<ModelBean<ArrayList<CustomerDetailBean>>> acceptRequest(@Body Map<String, String> params); //done
+
 }

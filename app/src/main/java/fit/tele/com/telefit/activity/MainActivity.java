@@ -89,6 +89,7 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
         binding.llProfile.setOnClickListener(this);
         binding.llFitness.setOnClickListener(this);
         binding.llGoals.setOnClickListener(this);
+        binding.llSocial.setOnClickListener(this);
     }
 
     @Override
@@ -118,6 +119,13 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
 
             case R.id.ll_goals:
                 intent = new Intent(context, GoalsActivity.class);
+                startActivity(intent);
+                this.overridePendingTransition(0, 0);
+                break;
+
+
+            case R.id.ll_social:
+                intent = new Intent(context, SocialActivity.class);
                 startActivity(intent);
                 this.overridePendingTransition(0, 0);
                 break;

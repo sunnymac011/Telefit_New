@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="fit.tele.com.telefit">
 
@@ -15,148 +16,118 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
 
     <application
+        android:name=".utils.MyApplication"
         android:allowBackup="false"
         android:icon="@drawable/logo_white"
         android:label="@string/app_name"
         android:roundIcon="@drawable/logo_white"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:name=".utils.MyApplication">
-
+        android:theme="@style/AppTheme">
         <activity
             android:name=".activity.SplashActivityClass"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activity.LoginActivity"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
         <activity
             android:name=".activity.WelcomeActivity"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
         <activity
             android:name=".activity.NumberCallActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.VideoMainActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.CallActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.SignUpActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.SignUpTwoActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.MainActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.ForgotActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.ProfileActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.EditProfileActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activity.AboutTeleFitActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.ThemesActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.UnitsActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.QRCodeActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.MainExercisesActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.ExercisesActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
-
         <activity
             android:name=".activity.ExerciseDetailsActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.SearchFoodActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
-
         <activity
             android:name=".activity.GymActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.FitnessActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.GoalsActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.YogaActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.CrossFitActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.GirlsActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.PlayVideoActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.CreateRoutineActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
-
         <activity
             android:name=".activity.ChangePasswordActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
-
         <activity
             android:name=".activity.NewRecipeActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden" />
-
         <activity
             android:name=".activity.AddFoodActivity"
             android:screenOrientation="portrait"
@@ -165,7 +136,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyC1yZXv7lpPr8ACbKsIp8hWsHvFqU_5NR8" />
-
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -175,9 +145,9 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-        <service android:name=".utils.LocationService"
-            android:enabled="true"/>
+        <service
+            android:name=".utils.LocationService"
+            android:enabled="true" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -204,18 +174,30 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
 
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="30fdeb66b1e0bb2912e59750098b3ca12358427f" />
 
-        <service android:name=".firebasepush.MyFirebaseInstanceIDService" android:exported="true">
+        <service
+            android:name=".firebasepush.MyFirebaseInstanceIDService"
+            android:exported="true">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
+        <activity
+            android:name=".activity.SocialActivity"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity android:name=".activity.FindFriendActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+        </activity>
 
     </application>
 
