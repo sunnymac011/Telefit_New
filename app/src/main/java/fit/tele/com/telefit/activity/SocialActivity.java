@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fit.tele.com.telefit.R;
+import fit.tele.com.telefit.adapter.AllFriendsAdapter;
 import fit.tele.com.telefit.adapter.FriendRequestAdapter;
 import fit.tele.com.telefit.apiBase.FetchServiceBase;
 import fit.tele.com.telefit.base.BaseActivity;
@@ -30,9 +31,11 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
     ActivitySocialBinding binding;
     private int strSelectedTab = 1;
     LinearLayoutManager linearLayoutManager;
+    RecyclerView rv_req_customers;
     RecyclerView rv_customers;
 
     FriendRequestAdapter friendRequestAdapter;
+    AllFriendsAdapter allFriendsAdapter;
 
     @Override
     public int getLayoutResId() {
@@ -136,6 +139,24 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
                 binding.txtRequestsTab.setTextColor(getResources().getColor(R.color.light_gray));
                 binding.viewRequests.setVisibility(View.GONE);
 
+
+                rv_customers = (RecyclerView)findViewById(R.id.rv_customers);
+                linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+                rv_customers.setLayoutManager(linearLayoutManager);
+
+                allFriendsAdapter = new AllFriendsAdapter(context, rv_customers, new AllFriendsAdapter.FriendRequestListner() {
+                    @Override
+                    public void onClick(int id, CustomerDetailBean bean) {
+                        if(id==50001){
+                            if(bean.getFriend_id()!=null)
+                                showComfirmDialog(String.valueOf(bean.getFriend_id()),"Are you sure want to unfriend?","3");
+                        }
+                    }
+                });
+
+                rv_customers.setAdapter(allFriendsAdapter);
+                getAllFriends();
+
                 break;
 
             case R.id.ll_requests_tab:
@@ -152,26 +173,25 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
                 binding.txtRequestsTab.setTextColor(getResources().getColor(R.color.white));
                 binding.viewRequests.setVisibility(View.VISIBLE);
 
-                rv_customers = (RecyclerView)findViewById(R.id.rv_customers);
+                rv_req_customers = (RecyclerView)findViewById(R.id.rv_req_customers);
                 linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-                rv_customers.setLayoutManager(linearLayoutManager);
+                rv_req_customers.setLayoutManager(linearLayoutManager);
 
-               friendRequestAdapter = new FriendRequestAdapter(context, rv_customers, new FriendRequestAdapter.FriendRequestListner() {
+               friendRequestAdapter = new FriendRequestAdapter(context, rv_req_customers, new FriendRequestAdapter.FriendRequestListner() {
                    @Override
                    public void onClick(int id, CustomerDetailBean bean) {
                         if(id==50001){
                             if(bean.getFriend_id()!=null)
-                                showComfirmDialog(String.valueOf(bean.getFriend_id()),"Are you sure want to accept friend request?");
+                                showComfirmDialog(String.valueOf(bean.getFriend_id()),"Are you sure want to accept friend request?","1");
 
                         }else if(id==50002){
                             if(bean.getFriend_id()!=null)
-                                showComfirmDialog(String.valueOf(bean.getFriend_id()),"Are you sure want to decline friend request?");
+                                showComfirmDialog(String.valueOf(bean.getFriend_id()),"Are you sure want to decline friend request?","2");
                         }
                    }
                });
 
-                rv_customers.setAdapter(friendRequestAdapter);
-
+                rv_req_customers.setAdapter(friendRequestAdapter);
                 getAllRequests();
 
                 break;
@@ -206,9 +226,11 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
                         }
                         @Override
                         public void onNext(ModelBean<ArrayList<CustomerDetailBean>> loginBean) {
+                            binding.progress.setVisibility(View.GONE);
                             if(loginBean.getStatus()==1){
-                                binding.progress.setVisibility(View.GONE);
-                                friendRequestAdapter.addAllList(loginBean.getResult());
+                             //   binding.progress.setVisibility(View.GONE);
+                                if(loginBean.getResult()!=null)
+                                    friendRequestAdapter.addAllList(loginBean.getResult());
                             }
                         }
                     });
@@ -218,11 +240,46 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
-    private void acceptRequest(String friendId) {
+    private void getAllFriends() {
+        if (CommonUtils.isInternetOn(context)) {
+            binding.progress.setVisibility(View.VISIBLE);
+            Map<String, String> map = new HashMap<>();
+            Observable<ModelBean<ArrayList<CustomerDetailBean>>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).getAllFriends(map);
+            subscription = signupusers.subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<ModelBean<ArrayList<CustomerDetailBean>>>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            CommonUtils.toast(context, e.getMessage());
+                            Log.e("callRoutinePlanDetails"," "+e);
+                            binding.progress.setVisibility(View.GONE);
+                        }
+                        @Override
+                        public void onNext(ModelBean<ArrayList<CustomerDetailBean>> loginBean) {
+                            binding.progress.setVisibility(View.GONE);
+                            if(loginBean.getStatus()==1){
+                             //   binding.progress.setVisibility(View.GONE);
+                                if(loginBean.getResult()!=null)
+                                    allFriendsAdapter.addAllList(loginBean.getResult());
+                            }
+                        }
+                    });
+
+        } else {
+            CommonUtils.toast(context, context.getString(R.string.snack_bar_no_internet));
+        }
+    }
+
+    private void acceptRequest(String friendId,String is_accept) {
         if (CommonUtils.isInternetOn(context)) {
             binding.progress.setVisibility(View.VISIBLE);
             Map<String, String> map = new HashMap<>();
             map.put("friend_id",friendId);
+            map.put("is_accept",is_accept);
 
             Observable<ModelBean<ArrayList<CustomerDetailBean>>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).acceptRequest(map);
             subscription = signupusers.subscribeOn(Schedulers.newThread())
@@ -240,9 +297,19 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
                         }
                         @Override
                         public void onNext(ModelBean<ArrayList<CustomerDetailBean>> loginBean) {
+                            binding.progress.setVisibility(View.GONE);
+                            CommonUtils.toast(context, loginBean.getMessage());
                             if(loginBean.getStatus()==1){
-                                binding.progress.setVisibility(View.GONE);
-                                friendRequestAdapter.addAllList(loginBean.getResult());
+                               // binding.progress.setVisibility(View.GONE);
+                                if(is_accept.equalsIgnoreCase("3")) {
+                                   allFriendsAdapter.clearAll();
+                                   if(loginBean.getResult()!=null)
+                                    allFriendsAdapter.addAllList(loginBean.getResult());
+                                }else {
+                                    friendRequestAdapter.clearAll();
+                                    if(loginBean.getResult()!=null)
+                                        friendRequestAdapter.addAllList(loginBean.getResult());
+                                }
                             }
                         }
                     });
@@ -252,7 +319,7 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
-    public void showComfirmDialog(String friendId,String message){
+    public void showComfirmDialog(String friendId,String message,String is_accept){
 
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setCancelable(false);
@@ -261,7 +328,7 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     dialog.cancel();
-                    acceptRequest(friendId);
+                    acceptRequest(friendId,is_accept);
                 }
             });
             builder.setNegativeButton("No", new DialogInterface.OnClickListener() {

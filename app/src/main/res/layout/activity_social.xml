@@ -106,7 +106,7 @@
                 <ImageView
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
-                    android:src="@drawable/tab_sosial_icon"
+                    android:src="@drawable/tab_sosial_selected_icon"
                     android:layout_gravity="center_horizontal"/>
 
                 <TextView
@@ -322,9 +322,9 @@
                 android:layout_below="@+id/ll_tab">
 
                 <include android:id="@+id/include1" layout="@layout/item_activities" />
-                <include android:id="@+id/include2" layout="@layout/item_activities" />
-                <include android:id="@+id/include3" layout="@layout/item_activities" />
-                <include android:id="@+id/include4" layout="@layout/item_social_friends" />
+                <include android:id="@+id/include2" layout="@layout/item_messages" />
+                <include android:id="@+id/include3" layout="@layout/item_social_friends" />
+                <include android:id="@+id/include4" layout="@layout/item_requests" />
 
 
             </ViewFlipper>

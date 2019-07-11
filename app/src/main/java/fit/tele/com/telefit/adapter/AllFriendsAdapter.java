@@ -21,7 +21,7 @@ import fit.tele.com.telefit.modelBean.CustomerDetailBean;
 import fit.tele.com.telefit.utils.CircleTransform;
 import fit.tele.com.telefit.utils.OnLoadMoreListener;
 
-public class FriendRequestAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class AllFriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
     private Context context;
@@ -33,7 +33,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<RecyclerView.View
     FriendRequestListner listener;
     private ArrayList<CustomerDetailBean> listFill = new ArrayList<>();
 
-    public FriendRequestAdapter(Context context, RecyclerView recyclerView, FriendRequestListner listener) {
+    public AllFriendsAdapter(Context context, RecyclerView recyclerView, FriendRequestListner listener) {
         this.context = context;
         list = new ArrayList<>();
         this.listener = listener;
@@ -62,7 +62,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_ITEM) {
-            View view = LayoutInflater.from(context).inflate(R.layout.item_request_friends, parent, false);
+            View view = LayoutInflater.from(context).inflate(R.layout.item_all_friends, parent, false);
             return new Header(view);
         } else if (viewType == VIEW_TYPE_LOADING) {
             View view = LayoutInflater.from(context).inflate(R.layout.item_progress, parent, false);
@@ -130,14 +130,14 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private class Header extends RecyclerView.ViewHolder {
         int position;
-        private TextView txt_customer_name, txt_accept,txt_decline;
+        private TextView txt_customer_name, txt_add;
         private ImageView img_customer;
 
         Header(View v) {
             super(v);
             txt_customer_name = (TextView) v.findViewById(R.id.txt_customer_name);
-            txt_accept = (TextView) v.findViewById(R.id.txt_accept);
-            txt_decline = (TextView) v.findViewById(R.id.txt_decline);
+            txt_add = (TextView) v.findViewById(R.id.txt_add);
+          //  txt_add.setVisibility(View.GONE);
             img_customer = (ImageView) v.findViewById(R.id.img_customer);
         }
 
@@ -160,22 +160,18 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<RecyclerView.View
                                 .transform(new CircleTransform())
                                 .into(img_customer);
                     }
+
+                    itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            if (listener != null)
+                                listener.onClick(50001, list.get(position));
+                            return false;
+                        }
+                    });
                 }
 
-                txt_accept.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (listener != null)
-                            listener.onClick(50001, list.get(position));
-                    }
-                });
-                txt_decline.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (listener != null)
-                            listener.onClick(50002, list.get(position));
-                    }
-                });
+
 
 
             }

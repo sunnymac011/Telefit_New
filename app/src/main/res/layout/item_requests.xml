@@ -6,10 +6,10 @@
 
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_customers"
+        android:id="@+id/rv_req_customers"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/_3sdp"
-        tools:listitem="@layout/item_all_friends"/>
+        tools:listitem="@layout/item_request_friends"/>
 
 </RelativeLayout>

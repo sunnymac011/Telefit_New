@@ -5,61 +5,55 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <ImageView
-        android:id="@+id/img_customer"
+        android:id="@+id/img_list"
         android:layout_width="@dimen/_40sdp"
         android:layout_height="@dimen/_40sdp"
         android:layout_marginLeft="@dimen/_20sdp"
         android:layout_centerVertical="true"
         android:src="@drawable/trans_blue"/>
 
-    <TextView
-        android:id="@+id/txt_decline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text=""
-        android:background="@drawable/close_icon"
-        android:textColor="@color/light_blue"
-        android:fontFamily="@font/rubik"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/_10sdp"/>
-
-    <TextView
-        android:id="@+id/txt_accept"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text=""
-        android:background="@drawable/save_icon"
-        android:textColor="@color/light_blue"
-        android:fontFamily="@font/rubik"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@id/txt_decline"
-        android:layout_marginRight="@dimen/_10sdp"/>
-
     <LinearLayout
         android:id="@+id/ll_details"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/img_customer"
+        android:layout_toRightOf="@+id/img_list"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/txt_accept"
+        android:layout_toLeftOf="@+id/txt_date"
         android:layout_marginRight="@dimen/_10sdp">
 
         <TextView
-            android:id="@+id/txt_customer_name"
+            android:id="@+id/txt_list_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Firstname Lastname"
+            tools:text="Coffee, Brewed"
             android:textStyle="bold"
             android:textColor="@color/main_color"
             android:fontFamily="@font/rubik"
             android:layout_marginLeft="@dimen/_10sdp"/>
 
+        <TextView
+            android:id="@+id/txt_list_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="2 cals per cup"
+            android:textStyle="bold"
+            android:textColor="@color/light_blue"
+            android:fontFamily="@font/rubik"
+            android:layout_marginLeft="@dimen/_10sdp"/>
 
     </LinearLayout>
 
-
+    <TextView
+        android:id="@+id/txt_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Sep 15"
+        android:textColor="@color/light_blue"
+        android:fontFamily="@font/rubik"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/_10sdp"/>
 
     <View
         android:layout_width="match_parent"

@@ -99,6 +99,11 @@ public interface FetchServiceInterFace {
     @POST("customer/get_all_customer_list")
     Observable<ModelBean<ArrayList<CustomerDetailBean>>> getAllCustomers(@Body Map<String, String> params); //done
 
+
+    @POST("customer/get_friend_list")
+    Observable<ModelBean<ArrayList<CustomerDetailBean>>> getAllFriends(@Body Map<String, String> params); //done
+
+
     @POST("customer/send_request_friend")
     Observable<ModelBean<ArrayList<CustomerDetailBean>>> addFriend(@Body Map<String, String> params); //done
 

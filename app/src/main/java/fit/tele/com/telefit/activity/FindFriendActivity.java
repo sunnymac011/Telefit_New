@@ -91,6 +91,7 @@ public class FindFriendActivity extends BaseActivity implements View.OnClickList
         binding.llFitness.setOnClickListener(this);
         binding.llGoals.setOnClickListener(this);
         binding.llSocial.setOnClickListener(this);
+        binding.txtInvite.setOnClickListener(this);
 
     }
 
@@ -117,10 +118,10 @@ public class FindFriendActivity extends BaseActivity implements View.OnClickList
 
                         @Override
                         public void onNext(ModelBean<ArrayList<CustomerDetailBean>> loginBean) {
+                            binding.progress.setVisibility(View.GONE);
                             if(loginBean.getStatus()==1){
-                                binding.progress.setVisibility(View.GONE);
-                                customerDetailAdapterr.addAllList(loginBean.getResult());
-
+                               if(loginBean.getResult()!=null)
+                                    customerDetailAdapterr.addAllList(loginBean.getResult());
                             }
                         }
                     });
@@ -198,6 +199,12 @@ public class FindFriendActivity extends BaseActivity implements View.OnClickList
 
             case R.id.ll_social:
                 finish();
+                break;
+
+            case R.id.txt_invite:
+                intent = new Intent(context, InviteFriendsActivity.class);
+                startActivity(intent);
+                this.overridePendingTransition(0, 0);
                 break;
         }
     }
