@@ -191,12 +191,20 @@
 
         <activity
             android:name=".activity.SocialActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.FindFriendActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"></activity>
-        <activity android:name=".activity.InviteFriendsActivity"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".activity.InviteFriendsActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".activity.CreatePost"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity android:name=".activity.SocialSetting"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"></activity>
     </application>

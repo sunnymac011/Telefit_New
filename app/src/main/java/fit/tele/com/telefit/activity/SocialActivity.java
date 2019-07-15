@@ -1,5 +1,6 @@
 package fit.tele.com.telefit.activity;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
@@ -7,12 +8,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import fit.tele.com.telefit.R;
+import fit.tele.com.telefit.adapter.ActivityAdapter;
 import fit.tele.com.telefit.adapter.AllFriendsAdapter;
 import fit.tele.com.telefit.adapter.FriendRequestAdapter;
 import fit.tele.com.telefit.apiBase.FetchServiceBase;
@@ -32,10 +35,12 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
     private int strSelectedTab = 1;
     LinearLayoutManager linearLayoutManager;
     RecyclerView rv_req_customers;
-    RecyclerView rv_customers;
+    RecyclerView rv_customers,rv_activities;
+    LinearLayout ll_create_post;
 
     FriendRequestAdapter friendRequestAdapter;
     AllFriendsAdapter allFriendsAdapter;
+    ActivityAdapter activityAdapter;
 
     @Override
     public int getLayoutResId() {
@@ -45,6 +50,9 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
     @Override
     public void init() {
         binding = (ActivitySocialBinding)getBindingObj();
+
+        ll_create_post = findViewById(R.id.ll_create_post);
+
         setListner();
     }
 
@@ -66,6 +74,24 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
         binding.llFriendsTab.setOnClickListener(this);
         binding.llRequestsTab.setOnClickListener(this);
         binding.txtNew.setOnClickListener(this);
+        ll_create_post.setOnClickListener(this);
+        binding.txtSetting.setOnClickListener(this);
+
+        if(strSelectedTab==1){
+            rv_activities = (RecyclerView)findViewById(R.id.rv_activities);
+            linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+            rv_activities.setLayoutManager(linearLayoutManager);
+
+            activityAdapter = new ActivityAdapter(context, rv_activities, new ActivityAdapter.FriendRequestListner() {
+                @Override
+                public void onClick(int id, CustomerDetailBean bean) {
+
+                }
+            });
+            rv_activities.setAdapter(activityAdapter);
+            getAllActivities();
+
+        }
 
     }
 
@@ -101,6 +127,20 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
             case R.id.ll_activity_tab:
                 strSelectedTab = 1;
                 binding.vf.setDisplayedChild(0);
+
+                if(activityAdapter==null){
+                    activityAdapter = new ActivityAdapter(context, rv_activities, new ActivityAdapter.FriendRequestListner() {
+                        @Override
+                        public void onClick(int id, CustomerDetailBean bean) {
+
+                        }
+                    });
+                    rv_activities.setAdapter(activityAdapter);
+                }
+
+
+                binding.txtSetting.setVisibility(View.VISIBLE);
+                binding.txtNew.setVisibility(View.GONE);
                 binding.txtActivityTab.setTextColor(getResources().getColor(R.color.white));
                 binding.viewActivity.setVisibility(View.VISIBLE);
                 binding.txtMessagesTab.setTextColor(getResources().getColor(R.color.light_gray));
@@ -109,13 +149,15 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
                 binding.viewFriends.setVisibility(View.GONE);
                 binding.txtRequestsTab.setTextColor(getResources().getColor(R.color.light_gray));
                 binding.viewRequests.setVisibility(View.GONE);
-               // setSearchFoodData();
+                getAllActivities();
 
                 break;
 
             case R.id.ll_messages_tab:
                 strSelectedTab = 2;
                 binding.vf.setDisplayedChild(1);
+                binding.txtSetting.setVisibility(View.GONE);
+                binding.txtNew.setVisibility(View.VISIBLE);
                 binding.txtActivityTab.setTextColor(getResources().getColor(R.color.light_gray));
                 binding.viewActivity.setVisibility(View.GONE);
                 binding.txtMessagesTab.setTextColor(getResources().getColor(R.color.white));
@@ -129,7 +171,8 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
             case R.id.ll_friends_tab:
                 strSelectedTab = 3;
                 binding.vf.setDisplayedChild(2);
-
+                binding.txtSetting.setVisibility(View.GONE);
+                binding.txtNew.setVisibility(View.VISIBLE);
                 binding.txtActivityTab.setTextColor(getResources().getColor(R.color.light_gray));
                 binding.viewActivity.setVisibility(View.GONE);
                 binding.txtMessagesTab.setTextColor(getResources().getColor(R.color.light_gray));
@@ -163,7 +206,8 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
 
                 strSelectedTab = 4;
                 binding.vf.setDisplayedChild(3);
-
+                binding.txtSetting.setVisibility(View.GONE);
+                binding.txtNew.setVisibility(View.VISIBLE);
                 binding.txtActivityTab.setTextColor(getResources().getColor(R.color.light_gray));
                 binding.viewActivity.setVisibility(View.GONE);
                 binding.txtMessagesTab.setTextColor(getResources().getColor(R.color.light_gray));
@@ -197,10 +241,19 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
                 break;
 
             case R.id.txt_new:
-
                 Intent in = new Intent(SocialActivity.this,FindFriendActivity.class);
                 startActivity(in);
+                break;
 
+            case R.id.ll_create_post:
+                Intent in1 = new Intent(SocialActivity.this,CreatePost.class);
+                startActivityForResult(in1, 1001);
+            //    startActivity(in1);
+                break;
+
+            case R.id.txt_setting:
+                Intent in2 = new Intent(SocialActivity.this,SocialSetting.class);
+                startActivity(in2);
                 break;
         }
     }
@@ -265,6 +318,42 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
                              //   binding.progress.setVisibility(View.GONE);
                                 if(loginBean.getResult()!=null)
                                     allFriendsAdapter.addAllList(loginBean.getResult());
+                            }
+                        }
+                    });
+
+        } else {
+            CommonUtils.toast(context, context.getString(R.string.snack_bar_no_internet));
+        }
+    }
+
+    private void getAllActivities() {
+        if (CommonUtils.isInternetOn(context)) {
+            binding.progress.setVisibility(View.VISIBLE);
+            Map<String, String> map = new HashMap<>();
+            Observable<ModelBean<ArrayList<CustomerDetailBean>>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).getAllActivities(map);
+            subscription = signupusers.subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<ModelBean<ArrayList<CustomerDetailBean>>>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            CommonUtils.toast(context, e.getMessage());
+                            Log.e("callRoutinePlanDetails"," "+e);
+                            binding.progress.setVisibility(View.GONE);
+                        }
+                        @Override
+                        public void onNext(ModelBean<ArrayList<CustomerDetailBean>> loginBean) {
+                            binding.progress.setVisibility(View.GONE);
+                            if(loginBean.getStatus()==1){
+                             //   binding.progress.setVisibility(View.GONE);
+                                if(loginBean.getResult()!=null) {
+                                    activityAdapter.clearAll();
+                                    activityAdapter.addAllList(loginBean.getResult());
+                                }
                             }
                         }
                     });
@@ -339,5 +428,17 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
 
             builder.create().show();
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1001 && resultCode == Activity.RESULT_OK){
+            if(strSelectedTab==1) {
+                getAllActivities();
+            }
+
+        }
     }
 }

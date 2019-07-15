@@ -113,4 +113,12 @@ public interface FetchServiceInterFace {
     @POST("customer/accept_request_friend")
     Observable<ModelBean<ArrayList<CustomerDetailBean>>> acceptRequest(@Body Map<String, String> params); //done
 
+    @Multipart
+    @POST("customer/create-post")
+    Observable<ModelBean<LoginBean>> createPost(@PartMap Map<String, RequestBody> params, @Part MultipartBody.Part file); //done
+
+    @POST("customer/post-list")
+    Observable<ModelBean<ArrayList<CustomerDetailBean>>> getAllActivities(@Body Map<String, String> params); //done
+
+
 }
