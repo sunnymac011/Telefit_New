@@ -48,9 +48,17 @@ public class CrossFitActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void setListner() {
+        binding.imgSideBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
         binding.llProfile.setOnClickListener(this);
         binding.llNutrition.setOnClickListener(this);
         binding.llGoals.setOnClickListener(this);
+        binding.llFitness.setOnClickListener(this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         binding.rvCrossfit.setLayoutManager(linearLayoutManager);
@@ -111,6 +119,12 @@ public class CrossFitActivity extends BaseActivity implements View.OnClickListen
 
             case R.id.ll_goals:
                 intent = new Intent(context, GoalsActivity.class);
+                startActivity(intent);
+                this.overridePendingTransition(0, 0);
+                break;
+
+            case R.id.ll_fitness:
+                intent = new Intent(context, FitnessActivity.class);
                 startActivity(intent);
                 this.overridePendingTransition(0, 0);
                 break;

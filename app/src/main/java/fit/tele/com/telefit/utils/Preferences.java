@@ -13,6 +13,7 @@ import fit.tele.com.telefit.R;
 import fit.tele.com.telefit.modelBean.ExercisesListBean;
 import fit.tele.com.telefit.modelBean.LoginBean;
 import fit.tele.com.telefit.modelBean.SubOptionsBean;
+import fit.tele.com.telefit.modelBean.chompBeans.ChompProductBean;
 
 
 public class Preferences {
@@ -168,6 +169,60 @@ public class Preferences {
         SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("RoutineData", null);
+        editor.apply();
+    }
+
+    public String getRecipeDataPref() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = preferences.getString("RecipeData", null);
+        Type type = new TypeToken<ArrayList<ChompProductBean>>() {
+        }.getType();
+        return json;
+    }
+
+    public void saveRecipeData(ArrayList<ChompProductBean> subOptionsBeans) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        Gson gson = new Gson();
+        String json = gson.toJson(subOptionsBeans);
+        editor.putString("RecipeData", json);
+        editor.apply();
+        editor.commit();
+    }
+
+    public void cleanRecipedata() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("RecipeData", null);
+        editor.apply();
+    }
+
+    public String getMealDataPref() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = preferences.getString("MealData", null);
+        Type type = new TypeToken<ArrayList<ChompProductBean>>() {
+        }.getType();
+        return json;
+    }
+
+    public void saveMealData(ArrayList<ChompProductBean> subOptionsBeans) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        Gson gson = new Gson();
+        String json = gson.toJson(subOptionsBeans);
+        editor.putString("MealData", json);
+        editor.apply();
+        editor.commit();
+    }
+
+    public void cleanMealdata() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("MealData", null);
         editor.apply();
     }
 }

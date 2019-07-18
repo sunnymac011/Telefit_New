@@ -39,6 +39,9 @@ public class SubExerciseBean implements Parcelable {
     @SerializedName("updated_at")
     @Expose
     private String updatedAt;
+    @SerializedName("sub_cat_image_url")
+    @Expose
+    private String subCatImageUrl;
     @SerializedName("isCheck")
     @Expose
     private boolean isCheck = false;
@@ -56,6 +59,7 @@ public class SubExerciseBean implements Parcelable {
         isDelete = in.readString();
         createdAt = in.readString();
         updatedAt = in.readString();
+        subCatImageUrl = in.readString();
         isCheck = in.readByte() != 0;
         apiSubcatoptExe = in.createTypedArrayList(SubOptionsBean.CREATOR);
     }
@@ -144,6 +148,14 @@ public class SubExerciseBean implements Parcelable {
         this.updatedAt = updatedAt;
     }
 
+    public String getSubCatImageUrl() {
+        return subCatImageUrl;
+    }
+
+    public void setSubCatImageUrl(String subCatImageUrl) {
+        this.subCatImageUrl = subCatImageUrl;
+    }
+
     public boolean isCheck() {
         return isCheck;
     }
@@ -176,6 +188,7 @@ public class SubExerciseBean implements Parcelable {
         dest.writeString(isDelete);
         dest.writeString(createdAt);
         dest.writeString(updatedAt);
+        dest.writeString(subCatImageUrl);
         dest.writeByte((byte) (isCheck ? 1 : 0));
         dest.writeTypedList(apiSubcatoptExe);
     }
@@ -192,6 +205,7 @@ public class SubExerciseBean implements Parcelable {
                 ", isDelete='" + isDelete + '\'' +
                 ", createdAt='" + createdAt + '\'' +
                 ", updatedAt='" + updatedAt + '\'' +
+                ", subCatImageUrl='" + subCatImageUrl + '\'' +
                 ", isCheck=" + isCheck +
                 ", apiSubcatoptExe=" + apiSubcatoptExe +
                 '}';

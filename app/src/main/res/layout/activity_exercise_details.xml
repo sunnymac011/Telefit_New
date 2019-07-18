@@ -352,6 +352,48 @@
                         android:layout_marginRight="@dimen/_15sdp"
                         android:layout_marginLeft="@dimen/_15sdp" />
 
+                    <LinearLayout
+                        android:id="@+id/ll_instruction"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_15sdp"
+                        android:layout_marginRight="@dimen/_15sdp"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/txt_intruction"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Instructions"
+                            android:textStyle="bold"
+                            android:textColor="@color/main_color"
+                            android:fontFamily="@font/rubik"/>
+
+                        <TextView
+                            android:id="@+id/txt_exercise_intruction"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLines="3"
+                            android:layout_marginTop="@dimen/_5sdp"
+                            android:fontFamily="@font/rubik"
+                            android:textColor="@color/light_gray"
+                            android:scrollbars="vertical"/>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/txt_desc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Description"
+                        android:textStyle="bold"
+                        android:textColor="@color/main_color"
+                        android:fontFamily="@font/rubik"
+                        android:layout_marginLeft="@dimen/_15sdp"
+                        android:layout_marginTop="@dimen/_5sdp"/>
+
                     <TextView
                         android:id="@+id/txt_exercise_details"
                         android:layout_width="match_parent"

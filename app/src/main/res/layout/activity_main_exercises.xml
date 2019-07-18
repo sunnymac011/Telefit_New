@@ -201,29 +201,6 @@
                 android:layout_marginBottom="@dimen/_20sdp">
 
                 <RelativeLayout
-                    android:id="@+id/rl_standard"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/rectangle_main_blue_bg"
-                    android:backgroundTint="@color/white"
-                    android:layout_marginRight="@dimen/_20sdp"
-                    android:layout_marginLeft="@dimen/_20sdp"
-                    android:layout_marginBottom="@dimen/_10sdp"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="Gym"
-                        android:textStyle="bold"
-                        android:textColor="@color/light_blue_text"
-                        android:textSize="@dimen/_20sdp"
-                        android:paddingLeft="@dimen/_20sdp"/>
-
-                </RelativeLayout>
-
-                <RelativeLayout
                     android:id="@+id/rl_crossfit"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -234,15 +211,48 @@
                     android:layout_marginBottom="@dimen/_10sdp"
                     android:layout_weight="1">
 
+                    <ImageView
+                        android:id="@+id/img_crossfit"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"/>
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
+                        android:layout_centerInParent="true"
                         android:text="CrossFit"
                         android:textStyle="bold"
                         android:textColor="@color/light_blue_text"
-                        android:textSize="@dimen/_20sdp"
-                        android:paddingLeft="@dimen/_20sdp"/>
+                        android:textSize="@dimen/_20sdp" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_gym"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/rectangle_main_blue_bg"
+                    android:backgroundTint="@color/white"
+                    android:layout_marginRight="@dimen/_20sdp"
+                    android:layout_marginLeft="@dimen/_20sdp"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/img_gym"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="Gym"
+                        android:textStyle="bold"
+                        android:textColor="@color/light_blue_text"
+                        android:textSize="@dimen/_20sdp"/>
 
                 </RelativeLayout>
 
@@ -257,15 +267,20 @@
                     android:layout_marginBottom="@dimen/_10sdp"
                     android:layout_weight="1">
 
+                    <ImageView
+                        android:id="@+id/img_hiit"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
+                        android:layout_centerInParent="true"
                         android:text="HIIT"
                         android:textStyle="bold"
                         android:textColor="@color/light_blue_text"
-                        android:textSize="@dimen/_20sdp"
-                        android:paddingLeft="@dimen/_20sdp"/>
+                        android:textSize="@dimen/_20sdp"/>
 
                 </RelativeLayout>
 
@@ -280,20 +295,38 @@
                     android:layout_marginBottom="@dimen/_10sdp"
                     android:layout_weight="1">
 
+                    <ImageView
+                        android:id="@+id/img_yoga"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
+                        android:layout_centerInParent="true"
                         android:text="Yoga"
                         android:textStyle="bold"
                         android:textColor="@color/light_blue_text"
-                        android:textSize="@dimen/_20sdp"
-                        android:paddingLeft="@dimen/_20sdp"/>
+                        android:textSize="@dimen/_20sdp"/>
 
                 </RelativeLayout>
 
             </LinearLayout>
 
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_centerInParent="true">
+
+            <ProgressBar
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </RelativeLayout>
 
     </RelativeLayout>

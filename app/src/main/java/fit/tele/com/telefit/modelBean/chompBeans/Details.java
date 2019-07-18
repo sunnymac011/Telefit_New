@@ -1,11 +1,14 @@
 
 package fit.tele.com.telefit.modelBean.chompBeans;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Details {
+public class Details implements Parcelable {
 
     @SerializedName("name")
     @Expose
@@ -55,6 +58,37 @@ public class Details {
     @SerializedName("nutrition_label")
     @Expose
     private NutritionLabel nutritionLabel;
+
+    protected Details(Parcel in) {
+        name = in.readString();
+        barcode = in.readString();
+        upc = in.readString();
+        brand = in.readString();
+        ingredients = in.readString();
+        packageSize = in.readString();
+        servingSize = in.readString();
+        brands = in.readParcelable(Brands.class.getClassLoader());
+        countries = in.readParcelable(Countries.class.getClassLoader());
+        hasEnglishIngredients = in.readString();
+        countryDetails = in.readParcelable(CountryDetails.class.getClassLoader());
+        images = in.readParcelable(Images.class.getClassLoader());
+        ingredientTags = in.readParcelable(IngredientTags.class.getClassLoader());
+        keywords = in.readParcelable(Keywords.class.getClassLoader());
+        lifestyle = in.readParcelable(Lifestyle.class.getClassLoader());
+        nutritionLabel = in.readParcelable(NutritionLabel.class.getClassLoader());
+    }
+
+    public static final Creator<Details> CREATOR = new Creator<Details>() {
+        @Override
+        public Details createFromParcel(Parcel in) {
+            return new Details(in);
+        }
+
+        @Override
+        public Details[] newArray(int size) {
+            return new Details[size];
+        }
+    };
 
     public String getName() {
         return name;
@@ -182,6 +216,31 @@ public class Details {
 
     public void setNutritionLabel(NutritionLabel nutritionLabel) {
         this.nutritionLabel = nutritionLabel;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(barcode);
+        dest.writeString(upc);
+        dest.writeString(brand);
+        dest.writeString(ingredients);
+        dest.writeString(packageSize);
+        dest.writeString(servingSize);
+        dest.writeParcelable(brands, flags);
+        dest.writeParcelable(countries, flags);
+        dest.writeString(hasEnglishIngredients);
+        dest.writeParcelable(countryDetails, flags);
+        dest.writeParcelable(images, flags);
+        dest.writeParcelable(ingredientTags, flags);
+        dest.writeParcelable(keywords, flags);
+        dest.writeParcelable(lifestyle, flags);
+        dest.writeParcelable(nutritionLabel, flags);
     }
 
     @Override

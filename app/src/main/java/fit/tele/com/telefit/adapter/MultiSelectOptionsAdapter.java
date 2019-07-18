@@ -11,11 +11,14 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 import fit.tele.com.telefit.R;
 import fit.tele.com.telefit.modelBean.SubExerciseBean;
 import fit.tele.com.telefit.modelBean.SubOptionsBean;
+import fit.tele.com.telefit.utils.CircleTransform;
 import fit.tele.com.telefit.utils.OnLoadMoreListener;
 
 public class MultiSelectOptionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -125,12 +128,13 @@ public class MultiSelectOptionsAdapter extends RecyclerView.Adapter<RecyclerView
     private class Header extends RecyclerView.ViewHolder {
         private int pos;
         private TextView txt_name;
-        private ImageView img_selected;
+        private ImageView img_selected,img_exercise;
 
         Header(View v) {
             super(v);
             txt_name = (TextView) v.findViewById(R.id.txt_name);
             img_selected = (ImageView) v.findViewById(R.id.img_selected);
+            img_exercise = (ImageView) v.findViewById(R.id.img_exercise);
 
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -154,6 +158,15 @@ public class MultiSelectOptionsAdapter extends RecyclerView.Adapter<RecyclerView
         public void bindData(int position) {
             this.pos = position;
             if (list != null && pos >= 0 && pos < list.size() && list.get(pos) != null) {
+
+                if(list.get(pos).getSubCatImageUrl() != null && !TextUtils.isEmpty(list.get(pos).getSubCatImageUrl())) {
+                    Picasso.with(context)
+                            .load(list.get(pos).getSubCatImageUrl())
+                            .transform(new CircleTransform())
+                            .resize(100, 100)
+                            .onlyScaleDown()
+                            .into(img_exercise);
+                }
 
                 if(list.get(pos).getSubCatOption() != null && !TextUtils.isEmpty(list.get(pos).getSubCatOption()))
                     txt_name.setText(list.get(pos).getSubCatOption());

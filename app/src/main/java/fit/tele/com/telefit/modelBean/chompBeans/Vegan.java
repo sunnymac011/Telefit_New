@@ -1,10 +1,13 @@
 
 package fit.tele.com.telefit.modelBean.chompBeans;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Vegan {
+public class Vegan implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -24,6 +27,27 @@ public class Vegan {
     @SerializedName("grade_confidence_desc")
     @Expose
     private String gradeConfidenceDesc;
+
+    protected Vegan(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        isCompatible = in.readString();
+        compatibility = in.readString();
+        gradeConfidence = in.readString();
+        gradeConfidenceDesc = in.readString();
+    }
+
+    public static final Creator<Vegan> CREATOR = new Creator<Vegan>() {
+        @Override
+        public Vegan createFromParcel(Parcel in) {
+            return new Vegan(in);
+        }
+
+        @Override
+        public Vegan[] newArray(int size) {
+            return new Vegan[size];
+        }
+    };
 
     public String getId() {
         return id;
@@ -73,4 +97,30 @@ public class Vegan {
         this.gradeConfidenceDesc = gradeConfidenceDesc;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(isCompatible);
+        dest.writeString(compatibility);
+        dest.writeString(gradeConfidence);
+        dest.writeString(gradeConfidenceDesc);
+    }
+
+    @Override
+    public String toString() {
+        return "Vegan{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", isCompatible='" + isCompatible + '\'' +
+                ", compatibility='" + compatibility + '\'' +
+                ", gradeConfidence='" + gradeConfidence + '\'' +
+                ", gradeConfidenceDesc='" + gradeConfidenceDesc + '\'' +
+                '}';
+    }
 }

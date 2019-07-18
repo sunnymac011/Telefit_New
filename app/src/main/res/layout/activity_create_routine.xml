@@ -238,22 +238,22 @@
                     android:layout_marginRight="@dimen/_10sdp">
 
                     <LinearLayout
-                        android:id="@+id/ll_day"
+                        android:id="@+id/ll_level"
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/txt_inst"
+                        android:layout_marginRight="@dimen/_5sdp"
                         android:layout_weight="1">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Day of the Week"
+                            android:text="Difficulty Level"
                             android:textColor="@color/light_gray"
                             android:fontFamily="@font/rubik"/>
 
                         <Spinner
-                            android:id="@+id/spi_day"
+                            android:id="@+id/spi_level"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/_15sdp"
@@ -305,7 +305,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/ll_level"
+                    android:id="@+id/ll_date"
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -316,19 +316,55 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Difficulty Level"
+                        android:text="Routine Date"
                         android:textColor="@color/light_gray"
                         android:fontFamily="@font/rubik"/>
 
-                    <Spinner
-                        android:id="@+id/spi_level"
+                    <TextView
+                        android:id="@+id/txt_routine_date"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/_15sdp"
+                        tools:text="02/07/2019"
+                        android:textSize="@dimen/_14sdp"
                         android:textStyle="bold"
                         android:textColor="@color/main_color"
                         android:layout_marginTop="@dimen/_5sdp"
+                        android:fontFamily="@font/rubik" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_1sdp"
+                        android:background="@color/main_color"
+                        android:layout_marginTop="@dimen/_5sdp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_day"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:layout_marginRight="@dimen/_10sdp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Day of the Week"
+                        android:textColor="@color/light_gray"
                         android:fontFamily="@font/rubik"/>
+
+                    <TextView
+                        android:id="@+id/txt_week_day"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:text="Day 1 Monday"
+                        android:textSize="@dimen/_14sdp"
+                        android:textStyle="bold"
+                        android:textColor="@color/main_color"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:fontFamily="@font/rubik" />
 
                     <View
                         android:layout_width="match_parent"

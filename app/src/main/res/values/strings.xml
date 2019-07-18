@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">TeleFit</string>
+    <string name="stripe_key">pk_test_qd03xow6EdCwzPQslnAeFheF00SwbNB17s</string>
     <string name="facebook_app_id">1981780252117081</string>
     <string name="fb_login_protocol_scheme">fb1981780252117081</string>
     <!-- Share Pref -->

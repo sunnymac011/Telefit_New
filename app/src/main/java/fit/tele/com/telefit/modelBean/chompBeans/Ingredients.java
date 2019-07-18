@@ -1,10 +1,13 @@
 
 package fit.tele.com.telefit.modelBean.chompBeans;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Ingredients {
+public class Ingredients implements Parcelable {
 
     @SerializedName("small")
     @Expose
@@ -15,6 +18,24 @@ public class Ingredients {
     @SerializedName("display")
     @Expose
     private String display;
+
+    protected Ingredients(Parcel in) {
+        small = in.readString();
+        thumb = in.readString();
+        display = in.readString();
+    }
+
+    public static final Creator<Ingredients> CREATOR = new Creator<Ingredients>() {
+        @Override
+        public Ingredients createFromParcel(Parcel in) {
+            return new Ingredients(in);
+        }
+
+        @Override
+        public Ingredients[] newArray(int size) {
+            return new Ingredients[size];
+        }
+    };
 
     public String getSmall() {
         return small;
@@ -40,4 +61,24 @@ public class Ingredients {
         this.display = display;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(small);
+        dest.writeString(thumb);
+        dest.writeString(display);
+    }
+
+    @Override
+    public String toString() {
+        return "Ingredients{" +
+                "small='" + small + '\'' +
+                ", thumb='" + thumb + '\'' +
+                ", display='" + display + '\'' +
+                '}';
+    }
 }

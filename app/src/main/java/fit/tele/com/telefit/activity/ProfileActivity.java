@@ -25,7 +25,7 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
 
     ActivityProfileBinding binding;
     LoginBean saveLogiBean;
-    RelativeLayout rl_notifications, rl_themes, rl_logout, rl_units, rl_about;
+    RelativeLayout rl_notifications, rl_themes, rl_logout, rl_units, rl_about,rl_privacy;
     TextView txt_themes_count;
 
     @Override
@@ -50,6 +50,7 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
         rl_themes = (RelativeLayout) findViewById(R.id.rl_themes);
         rl_units = (RelativeLayout) findViewById(R.id.rl_units);
         rl_about = (RelativeLayout) findViewById(R.id.rl_about);
+        rl_privacy = (RelativeLayout) findViewById(R.id.rl_privacy);
         txt_themes_count = (TextView) findViewById(R.id.txt_themes_count);
         txt_themes_count.setText(preferences.getTheme());
 
@@ -67,6 +68,7 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
         rl_notifications.setOnClickListener(this);
         rl_themes.setOnClickListener(this);
         rl_units.setOnClickListener(this);
+        rl_privacy.setOnClickListener(this);
 
         rl_logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,9 +105,13 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
         if (saveLogiBean != null && saveLogiBean.getHeight() != null
                 && !TextUtils.isEmpty(saveLogiBean.getHeight()))
         {
+            double doubleHeight = Double.parseDouble(saveLogiBean.getHeight());
             if (saveLogiBean != null && saveLogiBean.getWeight() != null
                     && !TextUtils.isEmpty(saveLogiBean.getWeight()))
-                binding.txtHeightWeight.setText(saveLogiBean.getHeight()+"ft / "+saveLogiBean.getWeight()+" kg");
+            {
+                double doubleWeight = Double.parseDouble(saveLogiBean.getWeight());
+                binding.txtHeightWeight.setText(String.format("%.2f", doubleHeight)+"ft / "+String.format("%.2f", doubleWeight)+" kg");
+            }
         }
 
         if (saveLogiBean != null && saveLogiBean.getDob() != null
@@ -184,6 +190,16 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
 
             case R.id.rl_units :
                 intent = new Intent(context, UnitsActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.rl_notifications :
+                intent = new Intent(context, NotificationSettingsActiviry.class);
+                startActivity(intent);
+                break;
+
+            case R.id.rl_privacy :
+                intent = new Intent(context, PrivacyActiviry.class);
                 startActivity(intent);
                 break;
         }

@@ -79,7 +79,7 @@ public class CallActivity extends BaseActivity implements MyApplication.OnAgoraE
             mIsCallInRefuse = true;
             binding.callLayoutCallin.setVisibility(View.VISIBLE);
             binding.callButtonHangup.setVisibility(View.GONE);
-            binding.meetTitle.setText(String.format(Locale.US, "%s is calling...", mSubscriber));
+            binding.txtTitle.setText(String.format(Locale.US, "%s is calling...", mSubscriber));
 
             try {
                 mPlayer = MediaPlayer.create(this, R.raw.basic_ring);
@@ -92,7 +92,7 @@ public class CallActivity extends BaseActivity implements MyApplication.OnAgoraE
         } else if (callType == Constant.CALL_OUT) {
             binding.callLayoutCallin.setVisibility(View.GONE);
             binding.callButtonHangup.setVisibility(View.VISIBLE);
-            binding.meetTitle.setText(String.format(Locale.US, "%s is be called...", mSubscriber));
+            binding.txtTitle.setText(String.format(Locale.US, "%s is be called...", mSubscriber));
 
             try {
                 mPlayer = MediaPlayer.create(this, R.raw.basic_tones);
@@ -169,7 +169,7 @@ public class CallActivity extends BaseActivity implements MyApplication.OnAgoraE
                 mAgoraAPI.channelInviteAccept(channelName, mSubscriber, 0, null);
                 binding.callLayoutCallin.setVisibility(View.GONE);
                 binding.callButtonHangup.setVisibility(View.VISIBLE);
-                binding.meetTitle.setVisibility(View.GONE);
+                binding.txtTitle.setVisibility(View.GONE);
                 startCountDown();
                 if (mPlayer != null && mPlayer.isPlaying()) {
                     mPlayer.stop();
@@ -263,7 +263,7 @@ public class CallActivity extends BaseActivity implements MyApplication.OnAgoraE
                     public void run() {
                         binding.callButtonHangup.setVisibility(View.VISIBLE);
 
-                        binding.meetTitle.setText(String.format(Locale.US, "%s is being called ...", mSubscriber));
+                        binding.txtTitle.setText(String.format(Locale.US, "%s is being called ...", mSubscriber));
                     }
                 });
             }
@@ -284,7 +284,7 @@ public class CallActivity extends BaseActivity implements MyApplication.OnAgoraE
                         if (mPlayer != null && mPlayer.isPlaying()) {
                             mPlayer.stop();
                         }
-                        binding.meetTitle.setVisibility(View.GONE);
+                        binding.txtTitle.setVisibility(View.GONE);
                     }
                 });
 

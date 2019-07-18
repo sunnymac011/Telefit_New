@@ -109,10 +109,12 @@ public class CrossFitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private class Header extends RecyclerView.ViewHolder {
         private int pos;
         private TextView txt_name;
+        private ImageView img_exercise;
 
         Header(View v) {
             super(v);
             txt_name = (TextView) v.findViewById(R.id.txt_name);
+            img_exercise = (ImageView) v.findViewById(R.id.img_exercise);
 
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -127,6 +129,15 @@ public class CrossFitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public void bindData(int position) {
             this.pos = position;
             if (list != null && pos >= 0 && pos < list.size() && list.get(pos) != null) {
+
+                if(list.get(pos).getSubCatImageUrl() != null && !TextUtils.isEmpty(list.get(pos).getSubCatImageUrl())) {
+                    Picasso.with(context)
+                            .load(list.get(pos).getSubCatImageUrl())
+                            .resize(700, 700)
+                            .onlyScaleDown()
+                            .into(img_exercise);
+                }
+
                 if(list.get(pos).getSubCatName() != null && !TextUtils.isEmpty(list.get(pos).getSubCatName()))
                     txt_name.setText(list.get(pos).getSubCatName());
             }

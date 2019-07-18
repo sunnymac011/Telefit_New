@@ -74,6 +74,9 @@ public class ChangePasswordActivity extends BaseActivity {
                 } else if (binding.inputConfPassword.getText().toString().isEmpty()) {
                     binding.inputEmail.setError("Please enter Confirm Password!");
                     return false;
+                } else if (!binding.inputPassword.getText().toString().equalsIgnoreCase(binding.inputConfPassword.getText().toString())) {
+                    CommonUtils.toast(context,"Password not matched!");
+                    return false;
                 }  else
                     return true;
             }
@@ -108,10 +111,15 @@ public class ChangePasswordActivity extends BaseActivity {
                         @Override
                         public void onNext(ModelBean<LoginBean> loginBean) {
                             binding.progress.setVisibility(View.GONE);
-                            CommonUtils.toast(context, ""+loginBean.getMessage());
-                            Intent intent = new Intent(ChangePasswordActivity.this, LoginActivity.class);
-                            startActivity(intent);
-                            finish();
+                            if (loginBean.getStatus() == 1) {
+                                CommonUtils.toast(context, ""+loginBean.getMessage());
+                                Intent intent = new Intent(ChangePasswordActivity.this, LoginActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                            else
+                                CommonUtils.toast(context, ""+loginBean.getMessage());
+
                         }
                     });
 

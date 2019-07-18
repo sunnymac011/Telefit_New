@@ -16,6 +16,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONObject;
 
@@ -23,10 +24,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import fit.tele.com.telefit.R;
+import fit.tele.com.telefit.adapter.ExercisesDragNDropAdapter;
 import fit.tele.com.telefit.adapter.FoodAdapter;
+import fit.tele.com.telefit.adapter.RecipeListAdapter;
 import fit.tele.com.telefit.apiBase.FetchServiceBase;
 import fit.tele.com.telefit.base.BaseActivity;
 import fit.tele.com.telefit.databinding.ActivitySearchFoodBinding;
+import fit.tele.com.telefit.modelBean.ExercisesListBean;
 import fit.tele.com.telefit.modelBean.chompBeans.ChompProductBean;
 import fit.tele.com.telefit.utils.CommonUtils;
 import fit.tele.com.telefit.utils.OnLoadMoreListener;
@@ -44,6 +48,7 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
     private LinearLayoutManager linearLayoutManager;
     private EditText foodSv;
     private ArrayList<ChompProductBean> chompProductBeans;
+    private int strSelectedTab = 1;
 
     @Override
     public int getLayoutResId() {
@@ -74,6 +79,7 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
         binding.llFoodTab.setOnClickListener(this);
         binding.llMealsTab.setOnClickListener(this);
         binding.llRecipesTab.setOnClickListener(this);
+        binding.txtNew.setOnClickListener(this);
 
         FoodRv = (RecyclerView) findViewById(R.id.rv_food);
         foodSv = (EditText) findViewById(R.id.edt_search_food);
@@ -111,6 +117,7 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
                 break;
 
             case R.id.ll_search_tab:
+                strSelectedTab = 1;
                 binding.vf.setDisplayedChild(0);
                 binding.txtSearchTab.setTextColor(getResources().getColor(R.color.white));
                 binding.viewSearch.setVisibility(View.VISIBLE);
@@ -123,6 +130,7 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
                 setSearchFoodData();
                 break;
             case R.id.ll_food_tab:
+                strSelectedTab = 2;
                 binding.vf.setDisplayedChild(1);
                 binding.txtSearchTab.setTextColor(getResources().getColor(R.color.light_gray));
                 binding.viewSearch.setVisibility(View.GONE);
@@ -134,6 +142,7 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
                 binding.viewRecipes.setVisibility(View.GONE);
                 break;
             case R.id.ll_meals_tab:
+                strSelectedTab = 3;
                 binding.vf.setDisplayedChild(2);
                 binding.txtSearchTab.setTextColor(getResources().getColor(R.color.light_gray));
                 binding.viewSearch.setVisibility(View.GONE);
@@ -145,6 +154,7 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
                 binding.viewRecipes.setVisibility(View.GONE);
                 break;
             case R.id.ll_recipes_tab:
+                strSelectedTab = 4;
                 binding.vf.setDisplayedChild(3);
                 binding.txtSearchTab.setTextColor(getResources().getColor(R.color.light_gray));
                 binding.viewSearch.setVisibility(View.GONE);
@@ -154,6 +164,19 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
                 binding.viewMeals.setVisibility(View.GONE);
                 binding.txtRecipesTab.setTextColor(getResources().getColor(R.color.white));
                 binding.viewRecipes.setVisibility(View.VISIBLE);
+                setRecipeData();
+                break;
+
+            case R.id.txt_new:
+                if (strSelectedTab == 3) {
+                    intent = new Intent(context, NewRecipeActivity.class);
+                }
+                else {
+                    intent = new Intent(context, NewRecipeActivity.class);
+                }
+                startActivity(intent);
+                this.overridePendingTransition(0, 0);
+
                 break;
         }
     }
@@ -188,6 +211,10 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
                 return false;
             }
         });
+    }
+
+    private void setRecipeData() {
+
     }
 
     private void callChompApi(String strName) {

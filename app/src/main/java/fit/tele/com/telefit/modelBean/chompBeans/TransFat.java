@@ -1,10 +1,13 @@
 
 package fit.tele.com.telefit.modelBean.chompBeans;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class TransFat {
+public class TransFat implements Parcelable {
 
     @SerializedName("name")
     @Expose
@@ -18,6 +21,25 @@ public class TransFat {
     @SerializedName("per_serving")
     @Expose
     private String perServing;
+
+    protected TransFat(Parcel in) {
+        name = in.readString();
+        measurement = in.readString();
+        per100g = in.readString();
+        perServing = in.readString();
+    }
+
+    public static final Creator<TransFat> CREATOR = new Creator<TransFat>() {
+        @Override
+        public TransFat createFromParcel(Parcel in) {
+            return new TransFat(in);
+        }
+
+        @Override
+        public TransFat[] newArray(int size) {
+            return new TransFat[size];
+        }
+    };
 
     public String getName() {
         return name;
@@ -51,4 +73,26 @@ public class TransFat {
         this.perServing = perServing;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(measurement);
+        dest.writeString(per100g);
+        dest.writeString(perServing);
+    }
+
+    @Override
+    public String toString() {
+        return "TransFat{" +
+                "name='" + name + '\'' +
+                ", measurement='" + measurement + '\'' +
+                ", per100g='" + per100g + '\'' +
+                ", perServing='" + perServing + '\'' +
+                '}';
+    }
 }

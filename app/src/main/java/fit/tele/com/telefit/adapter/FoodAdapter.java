@@ -1,10 +1,12 @@
 package fit.tele.com.telefit.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import fit.tele.com.telefit.R;
+import fit.tele.com.telefit.activity.AddFoodActivity;
 import fit.tele.com.telefit.modelBean.chompBeans.ChompProductBean;
 import fit.tele.com.telefit.utils.OnLoadMoreListener;
 
@@ -142,7 +145,9 @@ public class FoodAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 @Override
                 public void onClick(View view) {
                     if(list != null && pos >= 0 && pos < list.size() && list.get(pos) != null) {
-
+                        Intent intent = new Intent(context, AddFoodActivity.class);
+                        intent.putExtra("SelectedItems",list.get(pos));
+                        context.startActivity(intent);
                     }
                 }
             });
@@ -151,17 +156,6 @@ public class FoodAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public void bindData(int position) {
             this.pos = position;
             if (list != null && pos >= 0 && pos < list.size() && list.get(pos) != null) {
-
-//                if (list.get(pos).getExevideo().getVideoCoverimgUrl() != null && list.get(pos).getExevideo().getVideoCoverimgUrl() != null
-//                        && !TextUtils.isEmpty(list.get(pos).getExevideo().getVideoCoverimgUrl())) {
-//                    Picasso.with(context)
-//                            .load(list.get(pos).getExevideo().getVideoCoverimgUrl())
-//                            .error(R.drawable.user_placeholder)
-//                            .placeholder(R.drawable.user_placeholder)
-//                            .transform(new CircleTransform())
-//                            .into(img_exercise);
-//                }
-
                 if(list.get(pos).getName() != null && !TextUtils.isEmpty(list.get(pos).getName()))
                     txt_list_title.setText(Html.fromHtml(list.get(pos).getName()));
                 if(list.get(pos).getDetails().getNutritionLabel().getCalories().getPerServing() != null && !TextUtils.isEmpty(list.get(pos).getDetails().getNutritionLabel().getCalories().getPerServing()))

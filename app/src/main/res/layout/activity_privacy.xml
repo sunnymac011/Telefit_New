@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/rl_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_15sdp"
+            android:background="@color/main_color">
+
+            <ImageView
+                android:id="@+id/img_side_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/vect_back"/>
+
+            <TextView
+                android:id="@+id/txt_header_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Privacy"
+                android:textSize="@dimen/_14sdp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:fontFamily="@font/rubik"
+                android:layout_centerHorizontal="true"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl_header">
+
+            <TextView
+                android:id="@+id/txt_private"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Private"
+                android:textColor="@color/main_color"
+                android:textSize="@dimen/_14sdp"
+                android:fontFamily="@font/rubik"
+                android:layout_centerVertical="true"
+                android:layout_margin="@dimen/_20sdp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/light_gray"/>
+
+            <TextView
+                android:id="@+id/txt_default"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Default"
+                android:textColor="@color/main_color"
+                android:textSize="@dimen/_14sdp"
+                android:fontFamily="@font/rubik"
+                android:layout_centerVertical="true"
+                android:layout_margin="@dimen/_20sdp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/light_gray"/>
+
+            <TextView
+                android:id="@+id/txt_public"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Public"
+                android:textColor="@color/main_color"
+                android:textSize="@dimen/_14sdp"
+                android:fontFamily="@font/rubik"
+                android:layout_centerVertical="true"
+                android:layout_margin="@dimen/_20sdp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/light_gray"/>
+
+            <TextView
+                android:id="@+id/txt_Custom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Custom"
+                android:textColor="@color/main_color"
+                android:textSize="@dimen/_14sdp"
+                android:fontFamily="@font/rubik"
+                android:layout_centerVertical="true"
+                android:layout_margin="@dimen/_20sdp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/light_gray"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</layout>

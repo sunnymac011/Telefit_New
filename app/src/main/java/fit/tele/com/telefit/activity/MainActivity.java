@@ -3,6 +3,8 @@ package fit.tele.com.telefit.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -36,7 +38,10 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
     private String[] xData = {"Calories", "Burned Calories","Empty"};
     PieChart pieChart;
     BarChart barChart;
-    TextView txt_nutrients_tab,txt_calories_tab;
+    TextView txt_nutrients_tab,txt_calories_tab,txt_log_calories,txt_log_nutrients,txt_show_log_nutrients,txt_show_log_calories,
+            txt_show_chart_calories,txt_show_chart_nutrients;
+    LinearLayout ll_calories_details,ll_nutrients_details;
+    RelativeLayout rl_calories_bar,rl_nutrients_bar;
 
     @Override
     public int getLayoutResId() {
@@ -60,10 +65,26 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
     private void setListner() {
         pieChart = (PieChart) findViewById(R.id.caloriesPieChart);
         barChart = (BarChart) findViewById(R.id.caloriesBarChart);
+        ll_calories_details = (LinearLayout) findViewById(R.id.ll_calories_details);
+        rl_calories_bar = (RelativeLayout) findViewById(R.id.rl_calories_bar);
+        ll_nutrients_details = (LinearLayout) findViewById(R.id.ll_nutrients_details);
+        rl_nutrients_bar = (RelativeLayout) findViewById(R.id.rl_nutrients_bar);
         txt_nutrients_tab = (TextView) findViewById(R.id.txt_nutrients_tab);
         txt_nutrients_tab.setOnClickListener(this);
         txt_calories_tab = (TextView) findViewById(R.id.txt_calories_tab);
         txt_calories_tab.setOnClickListener(this);
+        txt_log_calories = (TextView) findViewById(R.id.txt_log_calories);
+        txt_log_calories.setOnClickListener(this);
+        txt_log_nutrients = (TextView) findViewById(R.id.txt_log_nutrients);
+        txt_log_nutrients.setOnClickListener(this);
+        txt_show_log_calories = (TextView) findViewById(R.id.txt_show_log_calories);
+        txt_show_log_calories.setOnClickListener(this);
+        txt_show_log_nutrients = (TextView) findViewById(R.id.txt_show_log_nutrients);
+        txt_show_log_nutrients.setOnClickListener(this);
+        txt_show_chart_calories = (TextView) findViewById(R.id.txt_show_chart_calories);
+        txt_show_chart_calories.setOnClickListener(this);
+        txt_show_chart_nutrients = (TextView) findViewById(R.id.txt_show_chart_nutrients);
+        txt_show_chart_nutrients.setOnClickListener(this);
 
         binding.llProfile.setOnClickListener(this);
         binding.llFitness.setOnClickListener(this);
@@ -99,6 +120,38 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
                 intent = new Intent(context, GoalsActivity.class);
                 startActivity(intent);
                 this.overridePendingTransition(0, 0);
+                break;
+
+            case R.id.txt_log_calories:
+                intent = new Intent(context, SearchFoodActivity.class);
+                startActivity(intent);
+                this.overridePendingTransition(0, 0);
+                break;
+
+            case R.id.txt_log_nutrients:
+                intent = new Intent(context, SearchFoodActivity.class);
+                startActivity(intent);
+                this.overridePendingTransition(0, 0);
+                break;
+
+            case R.id.txt_show_log_calories:
+                ll_calories_details.setVisibility(View.VISIBLE);
+                rl_calories_bar.setVisibility(View.GONE);
+                break;
+
+            case R.id.txt_show_log_nutrients:
+                ll_nutrients_details.setVisibility(View.VISIBLE);
+                rl_nutrients_bar.setVisibility(View.GONE);
+                break;
+
+            case R.id.txt_show_chart_calories:
+                ll_calories_details.setVisibility(View.GONE);
+                rl_calories_bar.setVisibility(View.VISIBLE);
+                break;
+
+            case R.id.txt_show_chart_nutrients:
+                ll_nutrients_details.setVisibility(View.GONE);
+                rl_nutrients_bar.setVisibility(View.VISIBLE);
                 break;
         }
     }

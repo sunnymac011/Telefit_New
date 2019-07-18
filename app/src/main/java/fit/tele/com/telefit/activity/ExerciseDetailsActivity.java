@@ -208,6 +208,12 @@ public class ExerciseDetailsActivity extends BaseActivity implements View.OnClic
                 if (yogaExerciseDetailsBean.getExeDesc() != null && !TextUtils.isEmpty(yogaExerciseDetailsBean.getExeDesc()))
                     binding.txtExerciseDetails.setText(Html.fromHtml(""+Html.fromHtml(yogaExerciseDetailsBean.getExeDesc(), null, new MyTagHandler()), null, new MyTagHandler()));
 
+                if (yogaExerciseDetailsBean.getExeInstructions() != null && !TextUtils.isEmpty(yogaExerciseDetailsBean.getExeInstructions()))
+                {
+                    binding.llInstruction.setVisibility(View.VISIBLE);
+                    binding.txtExerciseIntruction.setText(Html.fromHtml(""+Html.fromHtml(yogaExerciseDetailsBean.getExeInstructions(), null, new MyTagHandler()), null, new MyTagHandler()));
+                }
+
                 binding.imgPlay.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

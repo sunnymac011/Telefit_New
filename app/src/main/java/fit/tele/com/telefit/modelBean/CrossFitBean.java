@@ -37,6 +37,9 @@ public class CrossFitBean implements Parcelable {
     @SerializedName("updated_at")
     @Expose
     private String updatedAt;
+    @SerializedName("sub_cat_image_url")
+    @Expose
+    private String subCatImageUrl;
     @SerializedName("api_subcatopt_exe")
     @Expose
     private ArrayList<SubOptionsBean> apiSubcatoptExe;
@@ -51,6 +54,7 @@ public class CrossFitBean implements Parcelable {
         isDelete = in.readString();
         createdAt = in.readString();
         updatedAt = in.readString();
+        subCatImageUrl = in.readString();
         apiSubcatoptExe = in.createTypedArrayList(SubOptionsBean.CREATOR);
     }
 
@@ -138,6 +142,14 @@ public class CrossFitBean implements Parcelable {
         this.updatedAt = updatedAt;
     }
 
+    public String getSubCatImageUrl() {
+        return subCatImageUrl;
+    }
+
+    public void setSubCatImageUrl(String subCatImageUrl) {
+        this.subCatImageUrl = subCatImageUrl;
+    }
+
     public ArrayList<SubOptionsBean> getApiSubcatoptExe() {
         return apiSubcatoptExe;
     }
@@ -162,6 +174,7 @@ public class CrossFitBean implements Parcelable {
         dest.writeString(isDelete);
         dest.writeString(createdAt);
         dest.writeString(updatedAt);
+        dest.writeString(subCatImageUrl);
         dest.writeTypedList(apiSubcatoptExe);
     }
 
@@ -177,6 +190,7 @@ public class CrossFitBean implements Parcelable {
                 ", isDelete='" + isDelete + '\'' +
                 ", createdAt='" + createdAt + '\'' +
                 ", updatedAt='" + updatedAt + '\'' +
+                ", subCatImageUrl='" + subCatImageUrl + '\'' +
                 ", apiSubcatoptExe=" + apiSubcatoptExe +
                 '}';
     }

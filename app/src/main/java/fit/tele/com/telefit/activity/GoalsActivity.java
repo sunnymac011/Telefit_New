@@ -38,6 +38,7 @@ public class GoalsActivity extends BaseActivity implements View.OnClickListener 
         binding.llProfile.setOnClickListener(this);
         binding.llNutrition.setOnClickListener(this);
         binding.llFitness.setOnClickListener(this);
+        binding.txtGoal.setOnClickListener(this);
     }
 
     @Override
@@ -58,6 +59,12 @@ public class GoalsActivity extends BaseActivity implements View.OnClickListener 
 
             case R.id.ll_fitness:
                 intent = new Intent(context, FitnessActivity.class);
+                startActivity(intent);
+                this.overridePendingTransition(0, 0);
+                break;
+
+            case R.id.txt_goal:
+                intent = new Intent(context, EditGoalsActivity.class);
                 startActivity(intent);
                 this.overridePendingTransition(0, 0);
                 break;

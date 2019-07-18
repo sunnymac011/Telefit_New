@@ -43,6 +43,13 @@ public class GirlsActivity extends BaseActivity implements View.OnClickListener 
     public void init() {
         binding = (ActivityGirlsBinding) getBindingObj();
 
+        binding.imgSideBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
         if(getIntent() != null && getIntent().hasExtra("subOptionsBeans"))
             subOptionsBeans = getIntent().getParcelableArrayListExtra("subOptionsBeans");
         if(getIntent() != null && getIntent().hasExtra("subCatId"))

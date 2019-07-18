@@ -163,7 +163,7 @@ public class RoutinePlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 if(list.get(pos).getCreatedAt() != null && !TextUtils.isEmpty(list.get(pos).getCreatedAt())) {
                     try {
                         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        Date date = format.parse(list.get(pos).getCreatedAt());
+                        Date date = format.parse(list.get(pos).getPlaneDate());
 
                         String finalDate = (String) DateFormat.format("MMM dd",   date);
                         txt_date.setText(finalDate);

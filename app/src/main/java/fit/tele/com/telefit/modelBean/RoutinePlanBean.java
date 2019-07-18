@@ -45,6 +45,9 @@ public class RoutinePlanBean implements Parcelable {
     @SerializedName("total_exe")
     @Expose
     private String totalExe;
+    @SerializedName("plane_date")
+    @Expose
+    private String planeDate;
 
     protected RoutinePlanBean(Parcel in) {
         id = in.readString();
@@ -59,6 +62,7 @@ public class RoutinePlanBean implements Parcelable {
         createdAt = in.readString();
         updatedAt = in.readString();
         totalExe = in.readString();
+        planeDate = in.readString();
     }
 
     public static final Creator<RoutinePlanBean> CREATOR = new Creator<RoutinePlanBean>() {
@@ -169,6 +173,14 @@ public class RoutinePlanBean implements Parcelable {
         this.totalExe = totalExe;
     }
 
+    public String getPlaneDate() {
+        return planeDate;
+    }
+
+    public void setPlaneDate(String planeDate) {
+        this.planeDate = planeDate;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -188,6 +200,7 @@ public class RoutinePlanBean implements Parcelable {
         dest.writeString(createdAt);
         dest.writeString(updatedAt);
         dest.writeString(totalExe);
+        dest.writeString(planeDate);
     }
 
     @Override
@@ -205,6 +218,7 @@ public class RoutinePlanBean implements Parcelable {
                 ", createdAt='" + createdAt + '\'' +
                 ", updatedAt='" + updatedAt + '\'' +
                 ", totalExe='" + totalExe + '\'' +
+                ", planeDate='" + planeDate + '\'' +
                 '}';
     }
 }

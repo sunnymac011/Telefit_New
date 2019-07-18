@@ -39,7 +39,9 @@ public class SubOptionsBean implements Parcelable {
     @SerializedName("isCheck")
     @Expose
     private boolean isCheck;
-
+    @SerializedName("sub_cat_image_url")
+    @Expose
+    private String subCatImageUrl;
 
     protected SubOptionsBean(Parcel in) {
         id = in.readString();
@@ -52,6 +54,7 @@ public class SubOptionsBean implements Parcelable {
         createdAt = in.readString();
         updatedAt = in.readString();
         isCheck = in.readByte() != 0;
+        subCatImageUrl = in.readString();
     }
 
     public static final Creator<SubOptionsBean> CREATOR = new Creator<SubOptionsBean>() {
@@ -146,6 +149,14 @@ public class SubOptionsBean implements Parcelable {
         isCheck = check;
     }
 
+    public String getSubCatImageUrl() {
+        return subCatImageUrl;
+    }
+
+    public void setSubCatImageUrl(String subCatImageUrl) {
+        this.subCatImageUrl = subCatImageUrl;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -163,5 +174,6 @@ public class SubOptionsBean implements Parcelable {
         dest.writeString(createdAt);
         dest.writeString(updatedAt);
         dest.writeByte((byte) (isCheck ? 1 : 0));
+        dest.writeString(subCatImageUrl);
     }
 }
