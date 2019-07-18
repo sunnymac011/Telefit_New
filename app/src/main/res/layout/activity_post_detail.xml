@@ -27,7 +27,7 @@
                     android:id="@+id/txt_header_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Create Post"
+                    android:text="Post Detail"
                     android:textSize="@dimen/_14sdp"
                     android:textColor="@color/white"
                     android:layout_centerVertical="true"
@@ -50,7 +50,7 @@
                     android:layout_centerVertical="true"
                     android:drawableLeft="@drawable/add_icon"
                     android:drawablePadding="@dimen/_5sdp"
-                    android:visibility="visible"/>
+                    android:visibility="gone"/>
 
 
 
@@ -64,50 +64,51 @@
                 android:layout_below="@id/rl_header"
                 android:fillViewport="true">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-
-                android:paddingLeft="@dimen/_20sdp"
-                android:paddingRight="@dimen/_20sdp"
-                android:paddingTop="@dimen/_20sdp">
-
-                <ImageView
-                    android:id="@+id/img_createpost"
-                    android:layout_width="@dimen/_90sdp"
-                    android:layout_height="@dimen/_90sdp"
-                    android:src="@drawable/camera_new"
-                    android:scaleType="centerCrop"/>
-
-                <TextView
-                    android:id="@+id/lbl_createpost"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_20sdp"
-                    android:layout_below="@id/img_createpost"
-                    android:textSize="16sp"
-                    android:textColor="#0d5676"
-                    android:textStyle="bold"
-                    android:lineSpacingExtra="8sp"
-                    android:fontFamily="@font/rubik"
-                    android:text="Hey guys, just lost 3 more pounds doing my HIIT training this week." />
-
-                <EditText
-                    android:id="@+id/input_post"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_20sdp"
-                    android:layout_below="@id/lbl_createpost"
-                    android:hint=""
-                    android:singleLine="false"
-                    android:textColor="@color/main_color"
-                    android:textColorHint="@color/main_color"
-                    android:fontFamily="@font/rubik"/>
+                    android:layout_height="match_parent"
+
+                    android:paddingLeft="@dimen/_20sdp"
+                    android:paddingRight="@dimen/_20sdp"
+                    android:paddingTop="@dimen/_20sdp">
+
+                    <ImageView
+                        android:id="@+id/img_createpost"
+                        android:layout_width="@dimen/_90sdp"
+                        android:layout_height="@dimen/_90sdp"
+                        android:src="@drawable/camera_new"
+                        android:scaleType="centerCrop"/>
+
+                    <TextView
+                        android:id="@+id/lbl_viewpost"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:layout_below="@id/img_createpost"
+                        android:textSize="16sp"
+                        android:textColor="#0d5676"
+                        android:textStyle="bold"
+                        android:lineSpacingExtra="8sp"
+                        android:fontFamily="@font/rubik"
+                        android:text="" />
+
+                    <EditText
+                        android:id="@+id/input_post"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:layout_below="@id/lbl_createpost"
+                        android:hint=""
+                        android:singleLine="false"
+                        android:visibility="gone"
+                        android:textColor="@color/main_color"
+                        android:textColorHint="@color/main_color"
+                        android:fontFamily="@font/rubik"/>
 
 
 
 
-            </RelativeLayout>
+                </RelativeLayout>
 
             </ScrollView>
 

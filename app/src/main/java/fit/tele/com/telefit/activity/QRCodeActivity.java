@@ -54,6 +54,7 @@ public class QRCodeActivity extends BaseActivity implements View.OnClickListener
         binding.llNutrition.setOnClickListener(this);
         binding.llFitness.setOnClickListener(this);
         binding.llGoals.setOnClickListener(this);
+        binding.llSocial.setOnClickListener(this);
 
         binding.barcodeScanner.decodeContinuous(callback);
         binding.barcodeScanner.setStatusText("");
@@ -122,6 +123,12 @@ public class QRCodeActivity extends BaseActivity implements View.OnClickListener
 
             case R.id.ll_goals:
                 intent = new Intent(context, GoalsActivity.class);
+                startActivity(intent);
+                this.overridePendingTransition(0, 0);
+                break;
+
+            case R.id.ll_social:
+                intent = new Intent(context, SocialActivity.class);
                 startActivity(intent);
                 this.overridePendingTransition(0, 0);
                 break;

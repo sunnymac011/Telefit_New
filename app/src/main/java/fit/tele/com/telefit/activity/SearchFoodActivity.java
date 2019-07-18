@@ -1,7 +1,6 @@
 package fit.tele.com.telefit.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -24,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import fit.tele.com.telefit.R;
-import fit.tele.com.telefit.adapter.ExercisesDragNDropAdapter;
 import fit.tele.com.telefit.adapter.FoodAdapter;
 import fit.tele.com.telefit.adapter.RecipeListAdapter;
 import fit.tele.com.telefit.apiBase.FetchServiceBase;
@@ -75,6 +72,7 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
         binding.llNutrition.setOnClickListener(this);
         binding.llFitness.setOnClickListener(this);
         binding.llGoals.setOnClickListener(this);
+        binding.llSocial.setOnClickListener(this);
 
         binding.llSearchTab.setOnClickListener(this);
         binding.llFoodTab.setOnClickListener(this);
@@ -113,6 +111,12 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
 
             case R.id.ll_goals:
                 intent = new Intent(context, GoalsActivity.class);
+                startActivity(intent);
+                this.overridePendingTransition(0, 0);
+                break;
+
+            case R.id.ll_social:
+                intent = new Intent(context, SocialActivity.class);
                 startActivity(intent);
                 this.overridePendingTransition(0, 0);
                 break;

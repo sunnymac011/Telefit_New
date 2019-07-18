@@ -27,6 +27,7 @@ public class MainExercisesActivity extends BaseActivity implements View.OnClickL
         binding.llProfile.setOnClickListener(this);
         binding.llNutrition.setOnClickListener(this);
         binding.llGoals.setOnClickListener(this);
+        binding.llSocial.setOnClickListener(this);
 
         binding.rlStandard.setOnClickListener(this);
         binding.rlCrossfit.setOnClickListener(this);
@@ -59,6 +60,12 @@ public class MainExercisesActivity extends BaseActivity implements View.OnClickL
 
             case R.id.ll_goals:
                 intent = new Intent(context, GoalsActivity.class);
+                startActivity(intent);
+                this.overridePendingTransition(0, 0);
+                break;
+
+            case R.id.ll_social:
+                intent = new Intent(context, SocialActivity.class);
                 startActivity(intent);
                 this.overridePendingTransition(0, 0);
                 break;

@@ -21,9 +21,11 @@ import fit.tele.com.telefit.adapter.FriendRequestAdapter;
 import fit.tele.com.telefit.apiBase.FetchServiceBase;
 import fit.tele.com.telefit.base.BaseActivity;
 import fit.tele.com.telefit.databinding.ActivitySocialBinding;
+import fit.tele.com.telefit.modelBean.CreatePostBean;
 import fit.tele.com.telefit.modelBean.CustomerDetailBean;
 import fit.tele.com.telefit.modelBean.ModelBean;
 import fit.tele.com.telefit.utils.CommonUtils;
+import fit.tele.com.telefit.utils.Preferences;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -41,6 +43,7 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
     FriendRequestAdapter friendRequestAdapter;
     AllFriendsAdapter allFriendsAdapter;
     ActivityAdapter activityAdapter;
+    Preferences preferences;
 
     @Override
     public int getLayoutResId() {
@@ -50,6 +53,9 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
     @Override
     public void init() {
         binding = (ActivitySocialBinding)getBindingObj();
+        preferences = new Preferences(this);
+
+        Log.w("myid",""+preferences.getUserDataPref().getId());
 
         ll_create_post = findViewById(R.id.ll_create_post);
 
@@ -82,10 +88,14 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
             linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
             rv_activities.setLayoutManager(linearLayoutManager);
 
-            activityAdapter = new ActivityAdapter(context, rv_activities, new ActivityAdapter.FriendRequestListner() {
+            activityAdapter = new ActivityAdapter(context, preferences.getUserDataPref().getId(), rv_activities, new ActivityAdapter.ActivitiesListner() {
                 @Override
-                public void onClick(int id, CustomerDetailBean bean) {
-
+                public void onClick(int id, CreatePostBean bean) {
+                    if(id==50001) {
+                        Intent in = new Intent(context, PostDetailActivity.class);
+                        in.putExtra("postDetail",bean);
+                        startActivity(in);
+                    }
                 }
             });
             rv_activities.setAdapter(activityAdapter);
@@ -123,21 +133,29 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
                 this.overridePendingTransition(0, 0);
                 break;
 
+            case R.id.ll_social:
+                intent = new Intent(context, SocialActivity.class);
+                startActivity(intent);
+                this.overridePendingTransition(0, 0);
+                break;
 
             case R.id.ll_activity_tab:
                 strSelectedTab = 1;
                 binding.vf.setDisplayedChild(0);
 
                 if(activityAdapter==null){
-                    activityAdapter = new ActivityAdapter(context, rv_activities, new ActivityAdapter.FriendRequestListner() {
+                    activityAdapter = new ActivityAdapter(context,preferences.getUserDataPref().getId(),rv_activities, new ActivityAdapter.ActivitiesListner() {
                         @Override
-                        public void onClick(int id, CustomerDetailBean bean) {
-
+                        public void onClick(int id, CreatePostBean bean) {
+                            if(id==50001) {
+                                Intent in = new Intent(context, PostDetailActivity.class);
+                                in.putExtra("postDetail",bean);
+                                startActivity(in);
+                            }
                         }
                     });
                     rv_activities.setAdapter(activityAdapter);
                 }
-
 
                 binding.txtSetting.setVisibility(View.VISIBLE);
                 binding.txtNew.setVisibility(View.GONE);
@@ -192,7 +210,7 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
                     public void onClick(int id, CustomerDetailBean bean) {
                         if(id==50001){
                             if(bean.getFriend_id()!=null)
-                                showComfirmDialog(String.valueOf(bean.getFriend_id()),"Are you sure want to unfriend?","3");
+                                showComfirmDialog(String.valueOf(bean.getUser_id()),"Are you sure want to unfriend?","3");
                         }
                     }
                 });
@@ -226,11 +244,11 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
                    public void onClick(int id, CustomerDetailBean bean) {
                         if(id==50001){
                             if(bean.getFriend_id()!=null)
-                                showComfirmDialog(String.valueOf(bean.getFriend_id()),"Are you sure want to accept friend request?","1");
+                                showComfirmDialog(String.valueOf(bean.getUser_id()),"Are you sure want to accept friend request?","1");
 
                         }else if(id==50002){
                             if(bean.getFriend_id()!=null)
-                                showComfirmDialog(String.valueOf(bean.getFriend_id()),"Are you sure want to decline friend request?","2");
+                                showComfirmDialog(String.valueOf(bean.getUser_id()),"Are you sure want to decline friend request?","2");
                         }
                    }
                });
@@ -331,10 +349,10 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
         if (CommonUtils.isInternetOn(context)) {
             binding.progress.setVisibility(View.VISIBLE);
             Map<String, String> map = new HashMap<>();
-            Observable<ModelBean<ArrayList<CustomerDetailBean>>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).getAllActivities(map);
+            Observable<ModelBean<ArrayList<CreatePostBean>>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).getAllActivities(map);
             subscription = signupusers.subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Subscriber<ModelBean<ArrayList<CustomerDetailBean>>>() {
+                    .subscribe(new Subscriber<ModelBean<ArrayList<CreatePostBean>>>() {
                         @Override
                         public void onCompleted() {
                         }
@@ -346,7 +364,7 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
                             binding.progress.setVisibility(View.GONE);
                         }
                         @Override
-                        public void onNext(ModelBean<ArrayList<CustomerDetailBean>> loginBean) {
+                        public void onNext(ModelBean<ArrayList<CreatePostBean>> loginBean) {
                             binding.progress.setVisibility(View.GONE);
                             if(loginBean.getStatus()==1){
                              //   binding.progress.setVisibility(View.GONE);

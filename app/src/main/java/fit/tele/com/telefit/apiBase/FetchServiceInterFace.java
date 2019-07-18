@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import fit.tele.com.telefit.modelBean.CreatePlanApiBean;
+import fit.tele.com.telefit.modelBean.CreatePostBean;
 import fit.tele.com.telefit.modelBean.CrossFitBean;
 import fit.tele.com.telefit.modelBean.CustomerDetailBean;
 import fit.tele.com.telefit.modelBean.ExerciseDetailsBean;
@@ -118,7 +119,7 @@ public interface FetchServiceInterFace {
     Observable<ModelBean<LoginBean>> createPost(@PartMap Map<String, RequestBody> params, @Part MultipartBody.Part file); //done
 
     @POST("customer/post-list")
-    Observable<ModelBean<ArrayList<CustomerDetailBean>>> getAllActivities(@Body Map<String, String> params); //done
+    Observable<ModelBean<ArrayList<CreatePostBean>>> getAllActivities(@Body Map<String, String> params); //done
 
 
 }

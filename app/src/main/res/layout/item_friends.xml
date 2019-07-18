@@ -10,7 +10,7 @@
         android:layout_height="@dimen/_40sdp"
         android:layout_marginLeft="@dimen/_20sdp"
         android:layout_centerVertical="true"
-        android:src="@drawable/trans_blue"/>
+        android:src="@drawable/user_placeholder"/>
 
     <LinearLayout
         android:id="@+id/ll_details"

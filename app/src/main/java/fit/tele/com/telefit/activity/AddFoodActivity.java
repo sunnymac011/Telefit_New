@@ -3,7 +3,6 @@ package fit.tele.com.telefit.activity;
 import android.content.Intent;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.NumberPicker;
 
@@ -16,9 +15,7 @@ import java.util.List;
 import fit.tele.com.telefit.R;
 import fit.tele.com.telefit.base.BaseActivity;
 import fit.tele.com.telefit.databinding.ActivityAddFoodBinding;
-import fit.tele.com.telefit.modelBean.ExercisesListBean;
 import fit.tele.com.telefit.modelBean.chompBeans.ChompProductBean;
-import fit.tele.com.telefit.modelBean.chompBeans.Details;
 
 public class AddFoodActivity extends BaseActivity implements View.OnClickListener {
 
@@ -57,6 +54,7 @@ public class AddFoodActivity extends BaseActivity implements View.OnClickListene
         binding.llNutrition.setOnClickListener(this);
         binding.llFitness.setOnClickListener(this);
         binding.llGoals.setOnClickListener(this);
+        binding.llSocial.setOnClickListener(this);
         binding.txtAdd.setOnClickListener(this);
 
         final String[] values= {"-","1/4","1/2", "3/4"};
@@ -194,6 +192,12 @@ public class AddFoodActivity extends BaseActivity implements View.OnClickListene
 
             case R.id.ll_goals:
                 intent = new Intent(context, GoalsActivity.class);
+                startActivity(intent);
+                this.overridePendingTransition(0, 0);
+                break;
+
+            case R.id.ll_social:
+                intent = new Intent(context, SocialActivity.class);
                 startActivity(intent);
                 this.overridePendingTransition(0, 0);
                 break;

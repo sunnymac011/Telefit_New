@@ -17,8 +17,6 @@ import fit.tele.com.telefit.databinding.ActivityCrossfitBinding;
 import fit.tele.com.telefit.modelBean.CrossFitBean;
 import fit.tele.com.telefit.modelBean.ModelBean;
 import fit.tele.com.telefit.modelBean.SelectedItemsBean;
-import fit.tele.com.telefit.modelBean.SubCatId;
-import fit.tele.com.telefit.modelBean.SubExerciseBean;
 import fit.tele.com.telefit.modelBean.SubOptionsBean;
 import fit.tele.com.telefit.modelBean.YogaApiBean;
 import fit.tele.com.telefit.modelBean.YogaSubCatId;
@@ -51,6 +49,7 @@ public class CrossFitActivity extends BaseActivity implements View.OnClickListen
         binding.llProfile.setOnClickListener(this);
         binding.llNutrition.setOnClickListener(this);
         binding.llGoals.setOnClickListener(this);
+        binding.llSocial.setOnClickListener(this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         binding.rvCrossfit.setLayoutManager(linearLayoutManager);
@@ -111,6 +110,12 @@ public class CrossFitActivity extends BaseActivity implements View.OnClickListen
 
             case R.id.ll_goals:
                 intent = new Intent(context, GoalsActivity.class);
+                startActivity(intent);
+                this.overridePendingTransition(0, 0);
+                break;
+
+            case R.id.ll_social:
+                intent = new Intent(context, SocialActivity.class);
                 startActivity(intent);
                 this.overridePendingTransition(0, 0);
                 break;

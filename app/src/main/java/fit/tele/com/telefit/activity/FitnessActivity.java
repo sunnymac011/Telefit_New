@@ -5,18 +5,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 
-import java.util.ArrayList;
-
 import fit.tele.com.telefit.R;
 import fit.tele.com.telefit.adapter.RoutinePlanAdapter;
 import fit.tele.com.telefit.apiBase.FetchServiceBase;
 import fit.tele.com.telefit.base.BaseActivity;
 import fit.tele.com.telefit.databinding.ActivityFitnessBinding;
 import fit.tele.com.telefit.modelBean.ModelBean;
-import fit.tele.com.telefit.modelBean.RoutinePlanBean;
 import fit.tele.com.telefit.modelBean.RoutinePlanListBean;
-import fit.tele.com.telefit.modelBean.YogaExerciseDetailsBean;
-import fit.tele.com.telefit.themes.MainActivityTheme;
 import fit.tele.com.telefit.utils.CommonUtils;
 import rx.Observable;
 import rx.Subscriber;
@@ -44,6 +39,7 @@ public class FitnessActivity extends BaseActivity implements View.OnClickListene
         binding.llProfile.setOnClickListener(this);
         binding.llNutrition.setOnClickListener(this);
         binding.llGoals.setOnClickListener(this);
+        binding.llSocial.setOnClickListener(this);
 
         binding.llAddPlan.setOnClickListener(this);
         binding.txtExplore.setOnClickListener(this);
@@ -100,6 +96,12 @@ public class FitnessActivity extends BaseActivity implements View.OnClickListene
 
             case R.id.ll_goals:
                 intent = new Intent(context, GoalsActivity.class);
+                startActivity(intent);
+                this.overridePendingTransition(0, 0);
+                break;
+
+            case R.id.ll_social:
+                intent = new Intent(context, SocialActivity.class);
                 startActivity(intent);
                 this.overridePendingTransition(0, 0);
                 break;

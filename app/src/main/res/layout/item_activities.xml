@@ -10,8 +10,8 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/_20sdp"
         android:layout_marginLeft="@dimen/_20sdp"
-        android:layout_marginTop="@dimen/_20sdp"
-        android:layout_marginBottom="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:layout_marginBottom="@dimen/_15sdp"
         android:paddingRight="@dimen/_5sdp"
         android:orientation="horizontal">
 
@@ -53,8 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/light_gray"
-        android:layout_below="@+id/ll_create_post"
-        android:layout_marginLeft="@dimen/_80sdp"/>
+        android:layout_below="@+id/ll_create_post" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_activities"

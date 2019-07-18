@@ -6,25 +6,15 @@ import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import fit.tele.com.telefit.R;
-import fit.tele.com.telefit.adapter.CrossFitAdapter;
 import fit.tele.com.telefit.adapter.GirlAdapter;
-import fit.tele.com.telefit.apiBase.FetchServiceBase;
 import fit.tele.com.telefit.base.BaseActivity;
 import fit.tele.com.telefit.databinding.ActivityGirlsBinding;
-import fit.tele.com.telefit.modelBean.CrossFitBean;
-import fit.tele.com.telefit.modelBean.ModelBean;
 import fit.tele.com.telefit.modelBean.SelectedItemsBean;
 import fit.tele.com.telefit.modelBean.SubCatId;
 import fit.tele.com.telefit.modelBean.SubOptionsBean;
 import fit.tele.com.telefit.utils.CommonUtils;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class GirlsActivity extends BaseActivity implements View.OnClickListener {
 
@@ -116,6 +106,12 @@ public class GirlsActivity extends BaseActivity implements View.OnClickListener 
 
             case R.id.ll_goals:
                 intent = new Intent(context, GoalsActivity.class);
+                startActivity(intent);
+                this.overridePendingTransition(0, 0);
+                break;
+
+            case R.id.ll_social:
+                intent = new Intent(context, SocialActivity.class);
                 startActivity(intent);
                 this.overridePendingTransition(0, 0);
                 break;
