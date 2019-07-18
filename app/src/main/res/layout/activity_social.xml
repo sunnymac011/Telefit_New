@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/ll_bottom_tab"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:paddingLeft="@dimen/_5sdp"
+            android:paddingRight="@dimen/_5sdp"
+            android:background="@drawable/tab_shadow_bg">
+
+            <LinearLayout
+                android:id="@+id/ll_nutrition"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="@dimen/_7sdp"
+                android:layout_marginBottom="@dimen/_7sdp">
+
+                <ImageView
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:src="@drawable/tab_nutrition_non_icon"
+                    android:layout_gravity="center_horizontal"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nutrition"
+                    android:textColor="@color/light_gray"
+                    android:layout_marginTop="@dimen/_3sdp"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/rubik"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_fitness"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="@dimen/_7sdp"
+                android:layout_marginBottom="@dimen/_7sdp">
+
+                <ImageView
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:src="@drawable/tab_fitness_icon"
+                    android:layout_gravity="center_horizontal"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fitness"
+                    android:textColor="@color/light_gray"
+                    android:layout_marginTop="@dimen/_3sdp"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/rubik"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_goals"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="@dimen/_7sdp"
+                android:layout_marginBottom="@dimen/_7sdp">
+
+                <ImageView
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:src="@drawable/tab_goals_icon"
+                    android:layout_gravity="center_horizontal"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Goals"
+                    android:textColor="@color/light_gray"
+                    android:layout_marginTop="@dimen/_3sdp"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/rubik"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_social"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="@dimen/_7sdp"
+                android:layout_marginBottom="@dimen/_7sdp">
+
+                <ImageView
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:src="@drawable/tab_sosial_selected_icon"
+                    android:layout_gravity="center_horizontal"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Social"
+                    android:textColor="@color/main_color"
+                    android:layout_marginTop="@dimen/_3sdp"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/rubik"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_profile"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="@dimen/_7sdp"
+                android:layout_marginBottom="@dimen/_7sdp">
+
+                <ImageView
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:src="@drawable/tab_profile_icon"
+                    android:layout_gravity="center_horizontal"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Profile"
+                    android:textColor="@color/light_gray"
+                    android:layout_marginTop="@dimen/_3sdp"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/rubik"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/ll_bottom_tab">
+
+            <RelativeLayout
+                android:id="@+id/rl_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_15sdp"
+                android:background="@color/main_color">
+
+                <ImageView
+                    android:id="@+id/img_side_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/vect_back"/>
+
+                <TextView
+                    android:id="@+id/txt_header_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Social"
+                    android:textSize="@dimen/_14sdp"
+                    android:textColor="@color/white"
+                    android:layout_centerVertical="true"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/rubik"
+                    android:layout_centerHorizontal="true"/>
+
+                <TextView
+                    android:id="@+id/txt_new"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add "
+                    android:textColor="@color/light_blue"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/rubik"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:drawableLeft="@drawable/add_icon"
+                    android:drawablePadding="@dimen/_10sdp"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/txt_setting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/light_blue"
+                    android:textStyle="bold"
+                    android:background="@drawable/pencil"
+                    android:fontFamily="@font/rubik"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:drawablePadding="@dimen/_10sdp"
+                    android:visibility="visible"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_tab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rl_header"
+                android:padding="@dimen/_20sdp"
+                android:background="@color/main_color">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:id="@+id/ll_activity_tab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/txt_activity_tab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Activity"
+                        android:textSize="@dimen/_13sdp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/rubik"/>
+
+                    <View
+                        android:id="@+id/view_activity"
+                        android:layout_width="@dimen/_25sdp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:background="@color/white"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:id="@+id/ll_messages_tab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/txt_messages_tab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Messages"
+                        android:textSize="@dimen/_13sdp"
+                        android:textStyle="bold"
+                        android:textColor="@color/light_gray"
+                        android:fontFamily="@font/rubik"/>
+
+                    <View
+                        android:id="@+id/view_message"
+                        android:layout_width="@dimen/_25sdp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:background="@color/white"
+                        android:visibility="gone"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:id="@+id/ll_friends_tab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/txt_friends_tab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Friends"
+                        android:textSize="@dimen/_13sdp"
+                        android:textStyle="bold"
+                        android:textColor="@color/light_gray"
+                        android:fontFamily="@font/rubik"/>
+
+                    <View
+                        android:id="@+id/view_friends"
+                        android:layout_width="@dimen/_25sdp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:background="@color/white"
+                        android:visibility="gone"/>
+
+                </LinearLayout>
+
+                 <LinearLayout
+                    android:orientation="vertical"
+                    android:id="@+id/ll_requests_tab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/txt_requests_tab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Requests"
+                        android:textSize="@dimen/_13sdp"
+                        android:textStyle="bold"
+                        android:textColor="@color/light_gray"
+                        android:fontFamily="@font/rubik"/>
+
+                    <View
+                        android:id="@+id/view_requests"
+                        android:layout_width="@dimen/_25sdp"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:background="@color/white"
+                        android:visibility="gone"/>
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+            <ViewFlipper
+                android:id="@+id/vf"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/ll_tab">
+
+                <include android:id="@+id/include1" layout="@layout/item_activities" />
+                <include android:id="@+id/include2" layout="@layout/item_messages" />
+                <include android:id="@+id/include3" layout="@layout/item_social_friends" />
+                <include android:id="@+id/include4" layout="@layout/item_requests" />
+
+            </ViewFlipper>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_centerInParent="true">
+
+            <ProgressBar
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</layout>

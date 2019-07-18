@@ -24,7 +24,6 @@ import fit.tele.com.telefit.databinding.ActivityExerciseDetailsBinding;
 import fit.tele.com.telefit.dialog.SetsRepsDialog;
 import fit.tele.com.telefit.dialog.VideoDialog;
 import fit.tele.com.telefit.modelBean.ExerciseDetailsBean;
-import fit.tele.com.telefit.modelBean.ExercisesBean;
 import fit.tele.com.telefit.modelBean.ExercisesListBean;
 import fit.tele.com.telefit.modelBean.ModelBean;
 import fit.tele.com.telefit.modelBean.VideoArrayBean;
@@ -69,6 +68,7 @@ public class ExerciseDetailsActivity extends BaseActivity implements View.OnClic
         binding.llProfile.setOnClickListener(this);
         binding.llNutrition.setOnClickListener(this);
         binding.llGoals.setOnClickListener(this);
+        binding.llSocial.setOnClickListener(this);
         binding.llFitness.setOnClickListener(this);
         binding.txtAdd.setOnClickListener(this);
 
@@ -109,6 +109,12 @@ public class ExerciseDetailsActivity extends BaseActivity implements View.OnClic
 
             case R.id.ll_goals:
                 intent = new Intent(context, GoalsActivity.class);
+                startActivity(intent);
+                this.overridePendingTransition(0, 0);
+                break;
+
+            case R.id.ll_social:
+                intent = new Intent(context, SocialActivity.class);
                 startActivity(intent);
                 this.overridePendingTransition(0, 0);
                 break;

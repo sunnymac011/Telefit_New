@@ -13,7 +13,6 @@ import java.util.Map;
 
 import fit.tele.com.telefit.R;
 import fit.tele.com.telefit.adapter.ExercisesTypeAdapter;
-import fit.tele.com.telefit.adapter.MultiSelectAdapter;
 import fit.tele.com.telefit.adapter.MultiSelectOptionsAdapter;
 import fit.tele.com.telefit.apiBase.FetchServiceBase;
 import fit.tele.com.telefit.base.BaseActivity;
@@ -22,9 +21,7 @@ import fit.tele.com.telefit.modelBean.ModelBean;
 import fit.tele.com.telefit.modelBean.SelectedItemsBean;
 import fit.tele.com.telefit.modelBean.SubCatId;
 import fit.tele.com.telefit.modelBean.SubExerciseBean;
-import fit.tele.com.telefit.modelBean.SubOptionsBean;
 import fit.tele.com.telefit.utils.CommonUtils;
-import fit.tele.com.telefit.utils.OnLoadMoreListener;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -76,6 +73,7 @@ public class GymActivity extends BaseActivity implements View.OnClickListener {
         binding.llNutrition.setOnClickListener(this);
         binding.llFitness.setOnClickListener(this);
         binding.llGoals.setOnClickListener(this);
+        binding.llSocial.setOnClickListener(this);
         binding.txtNext.setOnClickListener(this);
 
         binding.rvGym.setLayoutManager(new GridLayoutManager(this, 3));
@@ -143,6 +141,12 @@ public class GymActivity extends BaseActivity implements View.OnClickListener {
 
             case R.id.ll_goals:
                 intent = new Intent(context, GoalsActivity.class);
+                startActivity(intent);
+                this.overridePendingTransition(0, 0);
+                break;
+
+            case R.id.ll_social:
+                intent = new Intent(context, SocialActivity.class);
                 startActivity(intent);
                 this.overridePendingTransition(0, 0);
                 break;

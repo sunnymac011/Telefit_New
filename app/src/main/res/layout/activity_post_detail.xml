@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/rl_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_15sdp"
+                android:background="@color/main_color">
+
+                <ImageView
+                    android:id="@+id/img_side_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/vect_back"/>
+
+                <TextView
+                    android:id="@+id/txt_header_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Post Detail"
+                    android:textSize="@dimen/_14sdp"
+                    android:textColor="@color/white"
+                    android:layout_centerVertical="true"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/rubik"
+                    android:layout_centerHorizontal="true"/>
+
+
+                <TextView
+                    android:id="@+id/txt_new"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Post "
+                    android:textAlignment="center"
+                    android:textColor="@color/light_blue"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/rubik"
+                    android:gravity="center_vertical"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:drawableLeft="@drawable/add_icon"
+                    android:drawablePadding="@dimen/_5sdp"
+                    android:visibility="gone"/>
+
+
+
+
+            </RelativeLayout>
+
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/rl_header"
+                android:fillViewport="true">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    android:paddingLeft="@dimen/_20sdp"
+                    android:paddingRight="@dimen/_20sdp"
+                    android:paddingTop="@dimen/_20sdp">
+
+                    <ImageView
+                        android:id="@+id/img_createpost"
+                        android:layout_width="@dimen/_90sdp"
+                        android:layout_height="@dimen/_90sdp"
+                        android:src="@drawable/camera_new"
+                        android:scaleType="centerCrop"/>
+
+                    <TextView
+                        android:id="@+id/lbl_viewpost"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:layout_below="@id/img_createpost"
+                        android:textSize="16sp"
+                        android:textColor="#0d5676"
+                        android:textStyle="bold"
+                        android:lineSpacingExtra="8sp"
+                        android:fontFamily="@font/rubik"
+                        android:text="" />
+
+                    <EditText
+                        android:id="@+id/input_post"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:layout_below="@id/lbl_createpost"
+                        android:hint=""
+                        android:singleLine="false"
+                        android:visibility="gone"
+                        android:textColor="@color/main_color"
+                        android:textColorHint="@color/main_color"
+                        android:fontFamily="@font/rubik"/>
+
+
+
+
+                </RelativeLayout>
+
+            </ScrollView>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_centerInParent="true">
+
+            <ProgressBar
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</layout>

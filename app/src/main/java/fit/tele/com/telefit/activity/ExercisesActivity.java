@@ -3,14 +3,11 @@ package fit.tele.com.telefit.activity;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import fit.tele.com.telefit.R;
 import fit.tele.com.telefit.adapter.ExercisesAdapter;
@@ -18,11 +15,9 @@ import fit.tele.com.telefit.adapter.ExercisesTestAdapter;
 import fit.tele.com.telefit.apiBase.FetchServiceBase;
 import fit.tele.com.telefit.base.BaseActivity;
 import fit.tele.com.telefit.databinding.ActivityExercisesBinding;
-import fit.tele.com.telefit.modelBean.ExercisesBean;
 import fit.tele.com.telefit.modelBean.ExercisesListBean;
 import fit.tele.com.telefit.modelBean.ModelBean;
 import fit.tele.com.telefit.modelBean.SelectedItemsBean;
-import fit.tele.com.telefit.modelBean.SubOptionsBean;
 import fit.tele.com.telefit.modelBean.YogaApiBean;
 import fit.tele.com.telefit.utils.CommonUtils;
 import fit.tele.com.telefit.utils.OnLoadMoreListener;
@@ -57,6 +52,7 @@ public class ExercisesActivity extends BaseActivity implements View.OnClickListe
         binding.llNutrition.setOnClickListener(this);
         binding.llFitness.setOnClickListener(this);
         binding.llGoals.setOnClickListener(this);
+        binding.llSocial.setOnClickListener(this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         binding.rvExercises.setLayoutManager(linearLayoutManager);
@@ -168,6 +164,12 @@ public class ExercisesActivity extends BaseActivity implements View.OnClickListe
 
             case R.id.ll_goals:
                 intent = new Intent(context, GoalsActivity.class);
+                startActivity(intent);
+                this.overridePendingTransition(0, 0);
+                break;
+
+            case R.id.ll_social:
+                intent = new Intent(context, SocialActivity.class);
                 startActivity(intent);
                 this.overridePendingTransition(0, 0);
                 break;

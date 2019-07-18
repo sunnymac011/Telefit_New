@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/rr_main_header"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/rl_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_15sdp"
+                android:background="@color/main_color">
+
+                <ImageView
+                    android:id="@+id/img_side_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/vect_back"/>
+
+
+                <TextView
+                    android:id="@+id/txt_invite_friend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="32sp"
+                    android:textColor="#16c8bc"
+                    android:layout_below="@id/img_side_bar"
+                    android:layout_marginTop="@dimen/_40sdp"
+                    android:layout_marginLeft="@dimen/_20sdp"
+                    android:lineSpacingExtra="6sp"
+                    android:text="Invite your friend"
+                    android:fontFamily="@font/rubik"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_below="@id/txt_invite_friend"
+                    android:textColor="#ffffff"
+                    android:layout_marginLeft="@dimen/_20sdp"
+                    android:lineSpacingExtra="4sp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:text="Enjoy Telefit with your friends. "
+                    android:layout_marginBottom="@dimen/_20sdp"
+                    android:fontFamily="@font/rubik" />
+
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/txt_tellus_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginLeft="@dimen/_30sdp"
+                android:layout_marginRight="@dimen/_30sdp"
+                android:textColor="#0d5676"
+                android:lineSpacingExtra="4sp"
+                android:layout_below="@+id/rl_header"
+                android:text="Tell us more about your friend."/>
+
+            <LinearLayout
+                android:id="@+id/ll_fname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1"
+                android:layout_below="@+id/txt_tellus_more">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.50">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/input_layout_fname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/rl_header"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:layout_marginLeft="@dimen/_30sdp"
+                        android:layout_marginRight="@dimen/_30sdp">
+                        <EditText
+                            android:id="@+id/input_fname"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="First Name"
+                            android:textColor="@color/main_color"
+                            android:textColorHint="@color/main_color"
+                            android:inputType="textCapWords"
+                            android:fontFamily="@font/rubik"/>
+                    </android.support.design.widget.TextInputLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.50">
+
+                    <android.support.design.widget.TextInputLayout
+                        android:id="@+id/input_layout_lname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/rl_header"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:layout_marginLeft="@dimen/_30sdp"
+                        android:layout_marginRight="@dimen/_30sdp">
+                        <EditText
+                            android:id="@+id/input_lname"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Last Name"
+                            android:textColor="@color/main_color"
+                            android:textColorHint="@color/main_color"
+                            android:inputType="textCapWords"
+                            android:fontFamily="@font/rubik"/>
+                    </android.support.design.widget.TextInputLayout>
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_fname"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginLeft="@dimen/_30sdp"
+                android:layout_marginRight="@dimen/_30sdp">
+
+                <EditText
+                    android:id="@+id/input_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Friend's Email"
+                    android:textColor="@color/main_color"
+                    android:textColorHint="@color/main_color"
+                    android:inputType="textEmailAddress"
+                    android:fontFamily="@font/rubik"
+                    android:imeOptions="actionDone"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/btn_send_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_60sdp"
+                android:layout_marginLeft="@dimen/_30sdp"
+                android:layout_marginRight="@dimen/_30sdp"
+                android:layout_marginBottom="@dimen/_30sdp"
+                android:layout_below="@id/input_layout_email"
+                android:text="Send Invite"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:background="@drawable/rectangle_main_blue_bg"
+                android:fontFamily="@font/rubik"/>
+
+
+        </RelativeLayout>
+
+
+
+
+
+        <RelativeLayout
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_centerInParent="true">
+
+            <ProgressBar
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+    </ScrollView>
+</layout>

@@ -56,5 +56,10 @@ public class AboutTeleFitActivity extends BaseActivity implements View.OnClickLi
             case R.id.rl_terms :
                 break;
         }
+
+        //Changes sunny
+        //New thing
+        // again
+        //HEllo
     }
 }

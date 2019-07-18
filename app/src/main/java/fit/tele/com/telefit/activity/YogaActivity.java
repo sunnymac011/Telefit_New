@@ -10,16 +10,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fit.tele.com.telefit.R;
-import fit.tele.com.telefit.adapter.ExercisesAdapter;
 import fit.tele.com.telefit.adapter.MultiSelectAdapter;
 import fit.tele.com.telefit.apiBase.FetchServiceBase;
 import fit.tele.com.telefit.base.BaseActivity;
 import fit.tele.com.telefit.databinding.ActivityGymBinding;
-import fit.tele.com.telefit.modelBean.ExercisesBean;
 import fit.tele.com.telefit.modelBean.ModelBean;
-import fit.tele.com.telefit.modelBean.SubCatId;
 import fit.tele.com.telefit.modelBean.SubExerciseBean;
-import fit.tele.com.telefit.modelBean.SubOptionsBean;
 import fit.tele.com.telefit.modelBean.YogaApiBean;
 import fit.tele.com.telefit.modelBean.YogaSubCatId;
 import fit.tele.com.telefit.utils.CommonUtils;
@@ -59,6 +55,7 @@ public class YogaActivity extends BaseActivity implements View.OnClickListener {
         binding.llNutrition.setOnClickListener(this);
         binding.llFitness.setOnClickListener(this);
         binding.llGoals.setOnClickListener(this);
+        binding.llSocial.setOnClickListener(this);
 
         binding.txtNext.setOnClickListener(this);
         binding.txtHeaderName.setText("Yoga");
@@ -104,6 +101,12 @@ public class YogaActivity extends BaseActivity implements View.OnClickListener {
 
             case R.id.ll_goals:
                 intent = new Intent(context, GoalsActivity.class);
+                startActivity(intent);
+                this.overridePendingTransition(0, 0);
+                break;
+
+            case R.id.ll_social:
+                intent = new Intent(context, SocialActivity.class);
                 startActivity(intent);
                 this.overridePendingTransition(0, 0);
                 break;
