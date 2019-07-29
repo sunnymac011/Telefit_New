@@ -8,7 +8,6 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -18,12 +17,11 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,6 +33,8 @@ import java.net.URL;
 import java.util.List;
 
 import fit.tele.com.telefit.R;
+import fit.tele.com.telefit.activity.MainActivity;
+import fit.tele.com.telefit.activity.SocialActivity;
 import fit.tele.com.telefit.utils.Preferences;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
@@ -47,6 +47,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         try {
             JSONObject json = new JSONObject(remoteMessage.getData().toString());
+
+            Log.e("Firebase response ",""+json);
             JSONObject data = json.getJSONObject("data");
             JSONObject payload = data.getJSONObject("payload");
             msg = data.getString("message");
@@ -54,6 +56,25 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.e("Firebase response ",""+json.toString());
 
             preferences = new Preferences(getApplicationContext());
+
+            if(notification_type.equalsIgnoreCase("chat_message")){
+                Intent intent = new Intent(getApplicationContext(), SocialActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                // startActivity(intent);
+                final PendingIntent resultPendingIntent =
+                        PendingIntent.getActivity(getApplicationContext(),0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                sendNotification(remoteMessage,resultPendingIntent);
+            }else {
+
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                // startActivity(intent);
+                final PendingIntent resultPendingIntent =
+                        PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                sendNotification(remoteMessage,resultPendingIntent);
+            }
+
+
 
 
         } catch (JSONException e) {
@@ -85,7 +106,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             notificationBuilder.setTicker("TeleFit").setWhen(0)
                     .setAutoCancel(true)
-                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setSmallIcon(R.drawable.app_logo)
                     .setContentTitle("TeleFit")
                     .setContentIntent(resultPendingIntent)
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))

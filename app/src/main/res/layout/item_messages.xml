@@ -27,7 +27,7 @@
         android:layout_marginLeft="@dimen/_80sdp"/>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_food"
+        android:id="@+id/rv_messages"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/txt_total_exercises"

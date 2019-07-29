@@ -19,6 +19,7 @@ import fit.tele.com.telefit.modelBean.SubExerciseBean;
 import fit.tele.com.telefit.modelBean.SubOptionsBean;
 import fit.tele.com.telefit.modelBean.YogaApiBean;
 import fit.tele.com.telefit.modelBean.YogaExerciseDetailsBean;
+import fit.tele.com.telefit.modelBean.chat.UserModel;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -120,6 +121,9 @@ public interface FetchServiceInterFace {
 
     @POST("customer/post-list")
     Observable<ModelBean<ArrayList<CreatePostBean>>> getAllActivities(@Body Map<String, String> params); //done
+
+     @POST("customer/send-notification")
+    Observable<ModelBean<UserModel>> sendNotification(@Body Map<String, String> params); //done
 
 
 }

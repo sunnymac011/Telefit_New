@@ -125,5 +125,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     implementation 'com.github.zcweng:switch-button:0.0.3@aar'
+   // implementation 'com.vanniktech:emoji-ios:0.5.1'
+    compile 'com.vanniktech:emoji-ios:0.5.1'
+    implementation 'com.github.marlonlom:timeago:3.0.1'
 }
 apply plugin: 'com.google.gms.google-services'

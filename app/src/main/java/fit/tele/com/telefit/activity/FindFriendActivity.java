@@ -49,25 +49,19 @@ public class FindFriendActivity extends BaseActivity implements View.OnClickList
                     addFriend(String.valueOf(bean.getId()));
             }
         });
-
         binding.rvCustomers.setAdapter(customerDetailAdapterr);
-
 
         binding.edtSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 customerDetailAdapterr.filter(binding.edtSearch.getText().toString());
               //  binding.txtTotalExercises.setText(exercisesAdapter.getItemCount()+" exercises");
             }
-
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         });
 
@@ -85,7 +79,6 @@ public class FindFriendActivity extends BaseActivity implements View.OnClickList
                 onBackPressed();
             }
         });
-
         binding.llProfile.setOnClickListener(this);
         binding.llNutrition.setOnClickListener(this);
         binding.llFitness.setOnClickListener(this);

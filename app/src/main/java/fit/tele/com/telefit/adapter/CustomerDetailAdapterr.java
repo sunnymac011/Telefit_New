@@ -184,7 +184,9 @@ public class CustomerDetailAdapterr extends RecyclerView.Adapter<RecyclerView.Vi
         {
             for (CustomerDetailBean wp : listFill)
             {
-                if (wp.getName().toLowerCase(Locale.getDefault()).contains(charText) || wp.getlName().toLowerCase(Locale.getDefault()).contains(charText))
+                String fullName =  wp.getName().toLowerCase(Locale.getDefault())+" "+wp.getlName().toLowerCase(Locale.getDefault());
+                String fullName1 =  wp.getlName().toLowerCase(Locale.getDefault())+ " "+wp.getName().toLowerCase(Locale.getDefault());
+                if (wp.getName().toLowerCase(Locale.getDefault()).contains(charText) || wp.getlName().toLowerCase(Locale.getDefault()).contains(charText) || fullName.contains(charText) || fullName1.contains(charText))
                 {
                     list.add(wp);
                 }
