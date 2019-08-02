@@ -90,6 +90,7 @@
                     android:textStyle="bold"
                     android:lineSpacingExtra="8sp"
                     android:fontFamily="@font/rubik"
+                    android:visibility="gone"
                     android:text="Hey guys, just lost 3 more pounds doing my HIIT training this week." />
 
                 <EditText
@@ -98,10 +99,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_20sdp"
                     android:layout_below="@id/lbl_createpost"
-                    android:hint=""
+                    android:hint="Write post here."
                     android:singleLine="false"
                     android:textColor="@color/main_color"
-                    android:textColorHint="@color/main_color"
+                    android:textColorHint="@color/light_gray"
                     android:fontFamily="@font/rubik"/>
 
 

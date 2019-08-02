@@ -81,6 +81,10 @@ public class MessageActivity extends BaseActivity implements ClickListenerChatFi
         mLinearLayoutManager = new LinearLayoutManager(context);
         mLinearLayoutManager.setStackFromEnd(true);
 
+        if (user!=null){
+            binding.txtHeaderName.setText(user.getName());
+        }
+
       //  setUpEmojiPopup();
 
         binding.imgSideBar.setOnClickListener(new View.OnClickListener() {
@@ -201,6 +205,9 @@ public class MessageActivity extends BaseActivity implements ClickListenerChatFi
                             Log.w("GoIn", "set user data");
                               mFirebaseDatabaseReference.child(CHAT_REFERENCE).child("chatModel").push().setValue(user);
                         }
+//                        if (dataSnapshot.exists()){
+//                            mFirebaseDatabaseReference.child(CHAT_REFERENCE).child("chatModel").updateChildren().setValue(user);
+//                        }
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {

@@ -17,11 +17,11 @@ repositories {
 }
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     defaultConfig {
         applicationId "fit.tele.com.telefit"
-        minSdkVersion 17
-        targetSdkVersion 27
+        minSdkVersion 16
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -84,8 +84,11 @@ dependencies {
     //noinspection GradleCompatible
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:multidex:1.0.3'
+    //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:27.1.1'
+    //noinspection GradleCompatible
     implementation 'com.android.support:support-v4:27.1.1'
+    //noinspection GradleCompatible
     implementation 'com.android.support:support-v13:27.1.1'
 
     implementation 'com.squareup.picasso:picasso:2.5.2'
@@ -126,7 +129,7 @@ dependencies {
 
     implementation 'com.github.zcweng:switch-button:0.0.3@aar'
    // implementation 'com.vanniktech:emoji-ios:0.5.1'
-    compile 'com.vanniktech:emoji-ios:0.5.1'
+    implementation 'com.vanniktech:emoji-ios:0.5.1'
     implementation 'com.github.marlonlom:timeago:3.0.1'
 }
 apply plugin: 'com.google.gms.google-services'

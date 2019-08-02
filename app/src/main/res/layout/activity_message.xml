@@ -88,10 +88,7 @@
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/_5sdp"
                 android:paddingRight="@dimen/_5sdp"
-                android:paddingTop="@dimen/_10sdp"
-                android:paddingBottom="@dimen/_10sdp"
                 android:orientation="horizontal"
-                android:background="@color/colorAccent"
                 android:visibility="visible">
 
                 <LinearLayout
@@ -99,9 +96,9 @@
                     android:layout_weight="1"
                     android:orientation="horizontal"
                     android:layout_gravity="center_vertical"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/_40sdp"
                     android:layout_width="wrap_content"
-                    android:background="@drawable/rectangle_edt">
+                    android:background="@drawable/message_edit_bg">
 
                     <ImageButton
                         android:id="@+id/img_emoji"
@@ -111,7 +108,7 @@
                         android:padding="12dp"
                         android:visibility="gone"
                         android:scaleType="centerCrop"
-                        tools:ignore="ContentDescription"/>
+                        tools:ignore="ContentDescription" />
 
                     <!--<com.vanniktech.emoji.EmojiEditText-->
 
@@ -120,8 +117,6 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/_5sdp"
-                        android:paddingBottom="@dimen/_5sdp"
                         android:background="@null"
                         android:paddingLeft="@dimen/_10sdp"
                         android:paddingRight="@dimen/_10sdp"
@@ -139,19 +134,22 @@
                         android:visibility="gone"
                         android:scaleType="centerCrop"
                         tools:ignore="ContentDescription"/>
+
+                    <ImageView
+                        android:id="@+id/img_send"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:layout_margin="@dimen/_5sdp"
+                        android:scaleType="center"
+                        android:gravity="center"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/send_button"
+                        tools:ignore="ContentDescription"/>
                 </LinearLayout>
 
-                <ImageView
-                    android:id="@+id/img_send"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:layout_margin="@dimen/_5sdp"
-                    android:scaleType="center"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:background="@drawable/send_button"
-                    tools:ignore="ContentDescription"/>
+
             </LinearLayout>
 
         </RelativeLayout>
@@ -160,7 +158,8 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="@dimen/_15sdp"
+            android:paddingLeft="@dimen/_10sdp"
+            android:paddingRight="@dimen/_10sdp"
             android:layout_below="@+id/rl_header"
             tools:listitem="@layout/item_message_left"
             android:layout_above="@+id/rr_emogi_bar"

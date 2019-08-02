@@ -61,6 +61,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/txt_total_exercises"
         android:layout_marginTop="@dimen/_3sdp"
+        android:paddingTop="@dimen/_10sdp"
         tools:listitem="@layout/item_rv_activity"/>
 
 </RelativeLayout>
