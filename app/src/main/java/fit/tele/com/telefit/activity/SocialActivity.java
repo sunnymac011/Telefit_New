@@ -6,9 +6,15 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,12 +24,15 @@ import fit.tele.com.telefit.R;
 import fit.tele.com.telefit.adapter.ActivityAdapter;
 import fit.tele.com.telefit.adapter.AllFriendsAdapter;
 import fit.tele.com.telefit.adapter.FriendRequestAdapter;
+import fit.tele.com.telefit.adapter.MessageFirebaseAdapter;
 import fit.tele.com.telefit.apiBase.FetchServiceBase;
 import fit.tele.com.telefit.base.BaseActivity;
 import fit.tele.com.telefit.databinding.ActivitySocialBinding;
 import fit.tele.com.telefit.modelBean.CreatePostBean;
 import fit.tele.com.telefit.modelBean.CustomerDetailBean;
+import fit.tele.com.telefit.modelBean.LoginBean;
 import fit.tele.com.telefit.modelBean.ModelBean;
+import fit.tele.com.telefit.modelBean.chat.UserModel;
 import fit.tele.com.telefit.utils.CommonUtils;
 import fit.tele.com.telefit.utils.Preferences;
 import rx.Observable;
@@ -37,13 +46,19 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
     private int strSelectedTab = 1;
     LinearLayoutManager linearLayoutManager;
     RecyclerView rv_req_customers;
-    RecyclerView rv_customers,rv_activities;
+    RecyclerView rv_customers,rv_activities,rv_messages;
     LinearLayout ll_create_post;
 
     FriendRequestAdapter friendRequestAdapter;
     AllFriendsAdapter allFriendsAdapter;
     ActivityAdapter activityAdapter;
+
+
     Preferences preferences;
+    private DatabaseReference mFirebaseDatabaseReference;
+    private String CHAT_REFERENCE = "";
+    LinearLayoutManager mLinearLayoutManager;
+
 
     @Override
     public int getLayoutResId() {
@@ -102,6 +117,7 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
             getAllActivities();
 
         }
+        rv_messages = (RecyclerView)findViewById(R.id.rv_messages);
 
     }
 
@@ -184,6 +200,12 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
                 binding.viewFriends.setVisibility(View.GONE);
                 binding.txtRequestsTab.setTextColor(getResources().getColor(R.color.light_gray));
                 binding.viewRequests.setVisibility(View.GONE);
+
+
+                getMesagesDetail();
+
+
+
                 break;
 
             case R.id.ll_friends_tab:
@@ -210,7 +232,18 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
                     public void onClick(int id, CustomerDetailBean bean) {
                         if(id==50001){
                             if(bean.getFriend_id()!=null)
-                                showComfirmDialog(String.valueOf(bean.getUser_id()),"Are you sure want to unfriend?","3");
+                                showComfirmDialog(String.valueOf(bean.getFriend_id()),"Are you sure want to unfriend?","3");
+                        }
+                        if (id==50002){
+                            final UserModel model = new UserModel();
+                            model.setUser_id(String.valueOf(bean.getUser_id()));
+                            model.setName(bean.getName()+" "+bean.getlName());
+                            model.setFriend_id(String.valueOf(bean.getFriend_id()));
+                            model.setPhoto_profile(bean.getProfilePic());
+                            Log.w("friendId","From social "+model.getFriend_id());
+                            Intent in = new Intent(context,MessageActivity.class);
+                            in.putExtra("user_model", model);
+                            startActivity(in);
                         }
                     }
                 });
@@ -459,4 +492,56 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
 
         }
     }
+
+    public void getMesagesDetail(){
+
+        LoginBean saveLogiBean = null;
+        Preferences preferences = new Preferences(context);
+        if (preferences.getUserDataPref() != null)
+            saveLogiBean = preferences.getUserDataPref();
+        if (saveLogiBean != null && saveLogiBean.getId() != null)
+            CHAT_REFERENCE = String.valueOf(saveLogiBean.getId()) + "/chatModel";
+
+        mLinearLayoutManager = new LinearLayoutManager(context);
+        mLinearLayoutManager.setStackFromEnd(false);
+
+        FirebaseOptions options = new FirebaseOptions.Builder()
+         .setApiKey("AIzaSyBHW9m9Xbz-fqY3uMBLpmzgu4ymdR89nk8")
+                .setApplicationId("1:323428350483:android:13d70f9ddb40214a")
+                .setDatabaseUrl("https://telfittest.firebaseio.com/")
+                .setStorageBucket("gs://telfittest.appspot.com")
+                .build();
+        try {
+            FirebaseApp secondApp = FirebaseApp.initializeApp(context, options, "second app");
+            mFirebaseDatabaseReference = FirebaseDatabase.getInstance(secondApp).getReference();
+        }catch (IllegalStateException e){
+            e.printStackTrace();
+            try {
+                mFirebaseDatabaseReference = FirebaseDatabase.getInstance(FirebaseApp.getInstance("second app")).getReference();
+            } catch (IllegalStateException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        if(mFirebaseDatabaseReference != null && !TextUtils.isEmpty(CHAT_REFERENCE)) {
+
+            Log.w("Document_check",""+mFirebaseDatabaseReference.child(CHAT_REFERENCE));
+
+            final MessageFirebaseAdapter firebaseAdapter = new MessageFirebaseAdapter(context, mFirebaseDatabaseReference.child(CHAT_REFERENCE));
+            firebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+                @Override
+                public void onItemRangeInserted(int positionStart, int itemCount) {
+                    super.onItemRangeInserted(positionStart, itemCount);
+                }
+            });
+
+            rv_messages.setLayoutManager(mLinearLayoutManager);
+            rv_messages.setAdapter(firebaseAdapter);
+
+        }
+
+
+    }
+
+
 }

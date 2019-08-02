@@ -190,7 +190,9 @@
                         android:text="Invite "
                         android:textColor="@color/light_blue"
                         android:textStyle="bold"
+                        android:gravity="center"
                         android:fontFamily="@font/rubik"
+                        android:drawableLeft="@drawable/send_request"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:drawablePadding="@dimen/_10sdp"/>

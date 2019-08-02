@@ -32,6 +32,20 @@
             android:fontFamily="@font/rubik"
             android:layout_marginLeft="@dimen/_10sdp"/>
 
+        <TextView
+            android:id="@+id/txt_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Address"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:textColor="@color/light_gray"
+            android:textSize="@dimen/_10sdp"
+            android:fontFamily="@font/rubik"
+            android:layout_marginLeft="@dimen/_10sdp"/>
+
+
+
 
     </LinearLayout>
 

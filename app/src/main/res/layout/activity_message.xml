@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:id="@+id/rl_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_15sdp"
+            android:background="@color/main_color">
+
+            <ImageView
+                android:id="@+id/img_side_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/vect_back"/>
+
+            <TextView
+                android:id="@+id/txt_header_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Message"
+                android:textSize="@dimen/_14sdp"
+                android:textColor="@color/white"
+                android:layout_centerVertical="true"
+                android:textStyle="bold"
+                android:fontFamily="@font/rubik"
+                android:layout_centerHorizontal="true"/>
+
+            <TextView
+                android:id="@+id/txt_new"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add "
+                android:textColor="@color/light_blue"
+                android:textStyle="bold"
+                android:fontFamily="@font/rubik"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:drawableLeft="@drawable/add_icon"
+                android:drawablePadding="@dimen/_10sdp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/txt_setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/light_blue"
+                android:textStyle="bold"
+                android:background="@drawable/pencil"
+                android:fontFamily="@font/rubik"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:drawablePadding="@dimen/_10sdp"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rr_emogi_bar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_alignParentBottom="true">
+
+            <TextView
+                android:id="@+id/lny_close_chat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:visibility="gone"
+                android:textColor="@color/white"
+                android:text=""
+                android:textStyle="bold"
+                android:padding="@dimen/_15sdp"
+                android:background="@color/blue"/>
+
+
+            <LinearLayout
+                android:id="@+id/lny_emoji_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/_5sdp"
+                android:paddingRight="@dimen/_5sdp"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_width="wrap_content"
+                    android:background="@drawable/message_edit_bg">
+
+                    <ImageButton
+                        android:id="@+id/img_emoji"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="12dp"
+                        android:visibility="gone"
+                        android:scaleType="centerCrop"
+                        tools:ignore="ContentDescription" />
+
+                    <!--<com.vanniktech.emoji.EmojiEditText-->
+
+                    <EditText
+                        android:id="@+id/edt_chat_bottom_message"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:paddingLeft="@dimen/_10sdp"
+                        android:paddingRight="@dimen/_10sdp"
+                        android:textColor="@color/black"
+                        android:imeOptions="actionSend|flagNoExtractUi"
+                        android:inputType="textCapSentences|textMultiLine"
+                        android:maxLines="3"/>
+
+                    <ImageButton
+                        android:id="@+id/img_attachment"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="12dp"
+                        android:visibility="gone"
+                        android:scaleType="centerCrop"
+                        tools:ignore="ContentDescription"/>
+
+                    <ImageView
+                        android:id="@+id/img_send"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:layout_margin="@dimen/_5sdp"
+                        android:scaleType="center"
+                        android:gravity="center"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/send_button"
+                        tools:ignore="ContentDescription"/>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/_10sdp"
+            android:paddingRight="@dimen/_10sdp"
+            android:layout_below="@+id/rl_header"
+            tools:listitem="@layout/item_message_left"
+            android:layout_above="@+id/rr_emogi_bar"
+            />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_centerInParent="true" />
+
+    </RelativeLayout>
+</layout>

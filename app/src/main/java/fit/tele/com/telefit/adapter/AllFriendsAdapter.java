@@ -169,6 +169,14 @@ public class AllFriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             return false;
                         }
                     });
+
+                    itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (listener != null)
+                                listener.onClick(50002, list.get(position));
+                        }
+                    });
                 }
 
 
