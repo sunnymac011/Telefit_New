@@ -129,12 +129,13 @@ public class CustomerDetailAdapterr extends RecyclerView.Adapter<RecyclerView.Vi
 
     private class Header extends RecyclerView.ViewHolder {
         int position;
-        private TextView txt_customer_name, txt_add;
+        private TextView txt_customer_name, txt_add,txt_address;
         private ImageView img_customer;
 
         Header(View v) {
             super(v);
             txt_customer_name = (TextView) v.findViewById(R.id.txt_customer_name);
+            txt_address = (TextView) v.findViewById(R.id.txt_address);
             txt_add = (TextView) v.findViewById(R.id.txt_add);
             img_customer = (ImageView) v.findViewById(R.id.img_customer);
         }
@@ -147,6 +148,11 @@ public class CustomerDetailAdapterr extends RecyclerView.Adapter<RecyclerView.Vi
                         txt_customer_name.setText(list.get(position).getName() + " " + list.get(position).getlName());
                     } else {
                         txt_customer_name.setText("");
+                    }
+                    if (list.get(position).getAddress() != null && !TextUtils.isEmpty(list.get(position).getAddress())) {
+                        txt_address.setText(list.get(position).getAddress() );
+                    } else {
+                        txt_address.setVisibility(View.GONE);
                     }
 
                     if (list.get(pos).getProfilePic() != null && !list.get(pos).getProfilePic().equalsIgnoreCase("")

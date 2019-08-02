@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="Create new post > "
-            android:textColor="@color/light_blue"
+            android:textColor="#16c8bc"
             android:layout_marginLeft="@dimen/_10sdp"
             android:textStyle="bold"
             android:fontFamily="@font/rubik"
