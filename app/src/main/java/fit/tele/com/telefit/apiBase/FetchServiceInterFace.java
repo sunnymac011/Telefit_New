@@ -122,8 +122,11 @@ public interface FetchServiceInterFace {
     @POST("customer/post-list")
     Observable<ModelBean<ArrayList<CreatePostBean>>> getAllActivities(@Body Map<String, String> params); //done
 
-     @POST("customer/send-notification")
+    @POST("customer/send-notification")
     Observable<ModelBean<UserModel>> sendNotification(@Body Map<String, String> params); //done
+
+    @POST("customer/social-settings")
+    Observable<ModelBean<LoginBean>> getSocialSetting(@Body Map<String, String> params); //done
 
 
 }

@@ -60,6 +60,23 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             if(notification_type.equalsIgnoreCase("chat_message")){
                 Intent intent = new Intent(getApplicationContext(), SocialActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra("tabStatus",2);
+                // startActivity(intent);
+                final PendingIntent resultPendingIntent =
+                        PendingIntent.getActivity(getApplicationContext(),0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                sendNotification(remoteMessage,resultPendingIntent);
+            }else if(notification_type.equalsIgnoreCase("request_accepted")){
+                Intent intent = new Intent(getApplicationContext(), SocialActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra("tabStatus",3);
+                // startActivity(intent);
+                final PendingIntent resultPendingIntent =
+                        PendingIntent.getActivity(getApplicationContext(),0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                sendNotification(remoteMessage,resultPendingIntent);
+            }else if(notification_type.equalsIgnoreCase("send_request")){
+                Intent intent = new Intent(getApplicationContext(), SocialActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra("tabStatus",4);
                 // startActivity(intent);
                 final PendingIntent resultPendingIntent =
                         PendingIntent.getActivity(getApplicationContext(),0, intent, PendingIntent.FLAG_CANCEL_CURRENT);

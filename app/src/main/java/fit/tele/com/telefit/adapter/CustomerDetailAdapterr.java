@@ -20,6 +20,7 @@ import fit.tele.com.telefit.R;
 import fit.tele.com.telefit.modelBean.CustomerDetailBean;
 import fit.tele.com.telefit.utils.CircleTransform;
 import fit.tele.com.telefit.utils.OnLoadMoreListener;
+import fit.tele.com.telefit.utils.Preferences;
 
 public class CustomerDetailAdapterr extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int VIEW_TYPE_ITEM = 0;
@@ -32,11 +33,13 @@ public class CustomerDetailAdapterr extends RecyclerView.Adapter<RecyclerView.Vi
     private OnLoadMoreListener onLoadMoreListener;
     CustomerDetailListner listener;
     private ArrayList<CustomerDetailBean> listFill = new ArrayList<>();
+    Preferences preferences;
 
     public CustomerDetailAdapterr(Context context, RecyclerView recyclerView, CustomerDetailListner listener) {
         this.context = context;
         list = new ArrayList<>();
         this.listener = listener;
+        preferences = new Preferences(context);
 
         final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -100,6 +103,11 @@ public class CustomerDetailAdapterr extends RecyclerView.Adapter<RecyclerView.Vi
         notifyDataSetChanged();
     }
 
+    public void dataChanged(int position){
+        list.get(position).setIs_request(true);
+        notifyItemChanged(position);
+
+    }
     public void addAllList(ArrayList<CustomerDetailBean> data) {
         list.addAll(data);
         listFill.addAll(data);
@@ -164,13 +172,19 @@ public class CustomerDetailAdapterr extends RecyclerView.Adapter<RecyclerView.Vi
                                 .transform(new CircleTransform())
                                 .into(img_customer);
                     }
+
+                    if(preferences.getUserDataPref().getId()==list.get(pos).getId() || list.get(pos).getIs_request()) {
+                        txt_add.setVisibility(View.INVISIBLE);
+                    } else {
+                        txt_add.setVisibility(View.VISIBLE);
+                    }
                 }
 
                 txt_add.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (listener != null)
-                            listener.onClick(50001, list.get(position));
+                            listener.onClick(50001, list.get(position),position);
                     }
                 });
             }
@@ -205,6 +219,6 @@ public class CustomerDetailAdapterr extends RecyclerView.Adapter<RecyclerView.Vi
 
 
     public interface CustomerDetailListner {
-        void onClick(int id,CustomerDetailBean bean);
+        void onClick(int id,CustomerDetailBean bean,int position);
     }
 }
