@@ -3,6 +3,7 @@ package fit.tele.com.telefit.activity;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -15,13 +16,19 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareDialog;
 import com.squareup.picasso.Picasso;
 import com.tbruyelle.rxpermissions.Permission;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -83,8 +90,15 @@ public class CreatePost extends BaseActivity {
         binding.txtNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(validation())
+                if(validation()) {
+
+                //   shareOnInsta();
+                    //   shareTwitter("This is my message for testing");
+                 //   shareOnSnapchat();
+
                     callCreatePost();
+                }
+
             }
         });
     }
@@ -334,9 +348,12 @@ public class CreatePost extends BaseActivity {
                             binding.progress.setVisibility(View.GONE);
                             if (loginBean.getStatus() == 1) {
                                 CommonUtils.toast(context, "Your post is successfully created.");
-                                Intent in = new Intent(CreatePost.this,SocialActivity.class);
-                                setResult(RESULT_OK,in);
-                                finish();
+
+                                shareOnFacebook();
+                                
+//                                Intent in = new Intent(CreatePost.this,SocialActivity.class);
+//                                setResult(RESULT_OK,in);
+//                                finish();
                             } else {
                                 CommonUtils.toast(context, loginBean.getMessage());
                             }
@@ -345,6 +362,100 @@ public class CreatePost extends BaseActivity {
         } else {
             CommonUtils.toast(context, getString(R.string.snack_bar_no_internet));
         }
+    }
+
+    public void shareOnFacebook() {
+        Log.w("imagebitmap", "" + adjustedBitmap);
+        if (adjustedBitmap != null) {
+            if (validation()) {
+                SharePhoto photo = new SharePhoto.Builder()
+                        .setBitmap(adjustedBitmap)
+                        .build();
+                SharePhotoContent content = new SharePhotoContent.Builder()
+                        .addPhoto(photo)
+                        .build();
+
+                ShareDialog shareDialog = new ShareDialog(this);
+                shareDialog.show(content, ShareDialog.Mode.AUTOMATIC);
+            }
+        }else {
+            CommonUtils.toast(context,"Please select photo upload on social media");
+        }
+    }
+
+    public void shareOnInsta(){
+        Intent intent = getPackageManager().getLaunchIntentForPackage("com.instagram.android");
+        if (intent != null)
+        {
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.setPackage("com.instagram.android");
+            try {
+                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(MediaStore.Images.Media.insertImage(getContentResolver(),adjustedBitmap , "I am Happy", "Share happy !")));
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            shareIntent.setType("image/jpeg");
+
+            startActivity(shareIntent);
+        }
+        else
+        {
+            // bring user to the market to download the app.
+            // or let them choose an app?
+            Intent intent1 = new Intent(Intent.ACTION_VIEW);
+            intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent1.setData(Uri.parse("market://details?id="+"com.instagram.android"));
+            startActivity(intent1);
+        }
+    }
+
+    private void shareTwitter(String message) {
+        Intent tweetIntent = new Intent(Intent.ACTION_SEND);
+        tweetIntent.putExtra(Intent.EXTRA_TEXT, "This is a Test.");
+        tweetIntent.setType("text/plain");
+
+        PackageManager packManager = getPackageManager();
+        List<ResolveInfo> resolvedInfoList = packManager.queryIntentActivities(tweetIntent, PackageManager.MATCH_DEFAULT_ONLY);
+
+        boolean resolved = false;
+        for (ResolveInfo resolveInfo : resolvedInfoList) {
+            if (resolveInfo.activityInfo.packageName.startsWith("com.twitter.android")) {
+                tweetIntent.setClassName(
+                        resolveInfo.activityInfo.packageName,
+                        resolveInfo.activityInfo.name);
+                resolved = true;
+                break;
+            }
+        }
+        if (resolved) {
+            startActivity(tweetIntent);
+        } else {
+            Intent i = new Intent();
+            i.putExtra(Intent.EXTRA_TEXT, message);
+            i.setAction(Intent.ACTION_VIEW);
+            i.setData(Uri.parse("https://twitter.com/intent/tweet?text=" + urlEncode(message)));
+            startActivity(i);
+            Toast.makeText(this, "Twitter app isn't found", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private String urlEncode(String s) {
+        try {
+            return URLEncoder.encode(s, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            Log.wtf("Check", "UTF-8 should always be supported", e);
+            return "";
+        }
+    }
+
+    public void shareOnSnapchat(){
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("*/*");
+        intent.setPackage("com.snapchat.android");
+        intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(MediaStore.Images.Media.insertImage(getContentResolver(),adjustedBitmap , "I am Happy", "Share happy !")));
+        startActivity(Intent.createChooser(intent, "Open Snapchat"));
     }
 
 }

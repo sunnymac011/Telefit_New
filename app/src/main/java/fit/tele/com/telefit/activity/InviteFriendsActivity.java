@@ -39,10 +39,11 @@ public class InviteFriendsActivity extends BaseActivity {
                     Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                             "mailto",binding.inputEmail.getText().toString(), null));
                    // emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
-                    emailIntent.putExtra(Intent.EXTRA_TEXT, "Hello "+binding.inputFname.getText().toString()+" "
-                            +binding.inputLname.getText().toString()+"\n");
+//                    emailIntent.putExtra(Intent.EXTRA_TEXT, "Hello "+binding.inputFname.getText().toString()+" "
+//                            +binding.inputLname.getText().toString()+"\n");
+                    String shareBody = "https://play.google.com/store/apps/details?id=" + context.getPackageName();
+                    emailIntent.putExtra(Intent.EXTRA_TEXT, "I would like to add you to TeleFit as a Friend, click the link below to download the app and be part of the great fitness community.\n\nLink: "+shareBody);
                     startActivity(Intent.createChooser(emailIntent, "Send email"));
-
                 }
             }
         });

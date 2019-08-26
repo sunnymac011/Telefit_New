@@ -77,6 +77,26 @@ public class LoginBean extends BaseObservable implements Parcelable {
     @Expose
     private Object forgotOtp;
 
+    @SerializedName("Is_friend_share")
+    @Expose
+    private String Is_friend_share;
+    @SerializedName("Is_trainer_share")
+    @Expose
+    private String Is_trainer_share;
+    @SerializedName("Is_facebook_share")
+    @Expose
+    private String Is_facebook_share;
+    @SerializedName("Is_twiter_share")
+    @Expose
+    private String Is_twiter_share;
+    @SerializedName("Is_instagram_share")
+    @Expose
+    private String Is_instagram_share;
+    @SerializedName("Is_snapchat_share")
+    @Expose
+    private String Is_snapchat_share;
+
+
     protected LoginBean(Parcel in) {
         if (in.readByte() == 0) {
             id = null;
@@ -110,6 +130,12 @@ public class LoginBean extends BaseObservable implements Parcelable {
         } else {
             isDelete = in.readInt();
         }
+        Is_friend_share = in.readString();
+        Is_trainer_share = in.readString();
+        Is_facebook_share = in.readString();
+        Is_twiter_share = in.readString();
+        Is_instagram_share = in.readString();
+        Is_snapchat_share = in.readString();
     }
 
     public static final Creator<LoginBean> CREATOR = new Creator<LoginBean>() {
@@ -300,6 +326,54 @@ public class LoginBean extends BaseObservable implements Parcelable {
         this.forgotOtp = forgotOtp;
     }
 
+    public String getIs_friend_share() {
+        return Is_friend_share;
+    }
+
+    public void setIs_friend_share(String is_friend_share) {
+        Is_friend_share = is_friend_share;
+    }
+
+    public String getIs_trainer_share() {
+        return Is_trainer_share;
+    }
+
+    public void setIs_trainer_share(String is_trainer_share) {
+        Is_trainer_share = is_trainer_share;
+    }
+
+    public String getIs_facebook_share() {
+        return Is_facebook_share;
+    }
+
+    public void setIs_facebook_share(String is_facebook_share) {
+        Is_facebook_share = is_facebook_share;
+    }
+
+    public String getIs_twiter_share() {
+        return Is_twiter_share;
+    }
+
+    public void setIs_twiter_share(String is_twiter_share) {
+        Is_twiter_share = is_twiter_share;
+    }
+
+    public String getIs_instagram_share() {
+        return Is_instagram_share;
+    }
+
+    public void setIs_instagram_share(String is_instagram_share) {
+        Is_instagram_share = is_instagram_share;
+    }
+
+    public String getIs_snapchat_share() {
+        return Is_snapchat_share;
+    }
+
+    public void setIs_snapchat_share(String is_snapchat_share) {
+        Is_snapchat_share = is_snapchat_share;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -342,5 +416,11 @@ public class LoginBean extends BaseObservable implements Parcelable {
             dest.writeByte((byte) 1);
             dest.writeInt(isDelete);
         }
+        dest.writeString(Is_friend_share);
+        dest.writeString(Is_trainer_share);
+        dest.writeString(Is_facebook_share);
+        dest.writeString(Is_twiter_share);
+        dest.writeString(Is_instagram_share);
+        dest.writeString(Is_snapchat_share);
     }
 }

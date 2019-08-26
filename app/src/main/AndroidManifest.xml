@@ -242,6 +242,11 @@
         </activity>
 
         <provider
+            android:authorities="com.facebook.app.FacebookContentProvider1981780252117081"
+            android:name="com.facebook.FacebookContentProvider"
+            android:exported="true"/>
+
+        <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="fit.tele.com.telefit.provider"
             android:exported="false"

@@ -86,6 +86,9 @@ public class CustomerDetailBean extends BaseObservable implements Parcelable {
     @SerializedName("forgot_otp")
     @Expose
     private Object forgotOtp;
+    @SerializedName("Is_request")
+    @Expose
+    private Boolean is_request=false;
 
     protected CustomerDetailBean(Parcel in) {
         if (in.readByte() == 0) {
@@ -135,6 +138,8 @@ public class CustomerDetailBean extends BaseObservable implements Parcelable {
         } else {
             isDelete = in.readInt();
         }
+        byte tmpIs_request = in.readByte();
+        is_request = tmpIs_request == 0 ? null : tmpIs_request == 1;
     }
 
     public static final Creator<CustomerDetailBean> CREATOR = new Creator<CustomerDetailBean>() {
@@ -349,65 +354,74 @@ public class CustomerDetailBean extends BaseObservable implements Parcelable {
         this.forgotOtp = forgotOtp;
     }
 
+    public Boolean getIs_request() {
+        return is_request;
+    }
+
+    public void setIs_request(Boolean is_request) {
+        this.is_request = is_request;
+    }
+
     @Override
     public int describeContents() {
         return 0;
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
+    public void writeToParcel(Parcel dest, int flags) {
         if (id == null) {
-            parcel.writeByte((byte) 0);
+            dest.writeByte((byte) 0);
         } else {
-            parcel.writeByte((byte) 1);
-            parcel.writeInt(id);
+            dest.writeByte((byte) 1);
+            dest.writeInt(id);
         }
         if (user_id == null) {
-            parcel.writeByte((byte) 0);
+            dest.writeByte((byte) 0);
         } else {
-            parcel.writeByte((byte) 1);
-            parcel.writeInt(user_id);
+            dest.writeByte((byte) 1);
+            dest.writeInt(user_id);
         }
         if (friend_id == null) {
-            parcel.writeByte((byte) 0);
+            dest.writeByte((byte) 0);
         } else {
-            parcel.writeByte((byte) 1);
-            parcel.writeInt(friend_id);
+            dest.writeByte((byte) 1);
+            dest.writeInt(friend_id);
         }
         if (is_accept == null) {
-            parcel.writeByte((byte) 0);
+            dest.writeByte((byte) 0);
         } else {
-            parcel.writeByte((byte) 1);
-            parcel.writeInt(is_accept);
+            dest.writeByte((byte) 1);
+            dest.writeInt(is_accept);
         }
-        parcel.writeString(name);
-        parcel.writeString(lName);
-        parcel.writeString(profilePic);
-        parcel.writeString(email);
-        parcel.writeString(sessionToken);
-        parcel.writeString(gender);
-        parcel.writeString(address);
-        parcel.writeString(dob);
-        parcel.writeString(height);
-        parcel.writeString(weight);
-        parcel.writeString(deviceToken);
-        parcel.writeString(deviceType);
-        parcel.writeString(loginBy);
-        parcel.writeString(isSocial);
-        parcel.writeString(createdAt);
-        parcel.writeString(updatedAt);
+        dest.writeString(name);
+        dest.writeString(lName);
+        dest.writeString(profilePic);
+        dest.writeString(email);
+        dest.writeString(sessionToken);
+        dest.writeString(gender);
+        dest.writeString(address);
+        dest.writeString(dob);
+        dest.writeString(height);
+        dest.writeString(weight);
+        dest.writeString(deviceToken);
+        dest.writeString(deviceType);
+        dest.writeString(loginBy);
+        dest.writeString(isSocial);
+        dest.writeString(createdAt);
+        dest.writeString(updatedAt);
         if (registerStatus == null) {
-            parcel.writeByte((byte) 0);
+            dest.writeByte((byte) 0);
         } else {
-            parcel.writeByte((byte) 1);
-            parcel.writeInt(registerStatus);
+            dest.writeByte((byte) 1);
+            dest.writeInt(registerStatus);
         }
-        parcel.writeString(isEmailVerify);
+        dest.writeString(isEmailVerify);
         if (isDelete == null) {
-            parcel.writeByte((byte) 0);
+            dest.writeByte((byte) 0);
         } else {
-            parcel.writeByte((byte) 1);
-            parcel.writeInt(isDelete);
+            dest.writeByte((byte) 1);
+            dest.writeInt(isDelete);
         }
+        dest.writeByte((byte) (is_request == null ? 0 : is_request ? 1 : 2));
     }
 }

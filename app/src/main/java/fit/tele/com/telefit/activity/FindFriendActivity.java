@@ -44,9 +44,9 @@ public class FindFriendActivity extends BaseActivity implements View.OnClickList
 
         customerDetailAdapterr = new CustomerDetailAdapterr(context, binding.rvCustomers, new CustomerDetailAdapterr.CustomerDetailListner() {
             @Override
-            public void onClick(int id, CustomerDetailBean bean) {
+            public void onClick(int id, CustomerDetailBean bean,int position) {
                 if(id==50001)
-                    addFriend(String.valueOf(bean.getId()));
+                    addFriend(String.valueOf(bean.getId()),position);
             }
         });
         binding.rvCustomers.setAdapter(customerDetailAdapterr);
@@ -124,7 +124,7 @@ public class FindFriendActivity extends BaseActivity implements View.OnClickList
         }
     }
 
-    private void addFriend(String id) {
+    private void addFriend(String id,int position) {
         if (CommonUtils.isInternetOn(context)) {
             binding.progress.setVisibility(View.VISIBLE);
             Map<String, String> map = new HashMap<>();
@@ -151,8 +151,7 @@ public class FindFriendActivity extends BaseActivity implements View.OnClickList
                             CommonUtils.toast(context,loginBean.getMessage());
                             binding.progress.setVisibility(View.GONE);
                             if(loginBean.getStatus()==1){
-
-
+                                customerDetailAdapterr.dataChanged(position);
                             }
                         }
                     });

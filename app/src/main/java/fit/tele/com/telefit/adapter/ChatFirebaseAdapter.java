@@ -118,12 +118,15 @@ public class ChatFirebaseAdapter extends FirebaseRecyclerAdapter<ChatModel,ChatF
         public void setIvUser(String urlPhotoUser){
             if (ivUser == null)
                 return;
-            Picasso.with(ivUser.getContext())
-                    .load(urlPhotoUser)
-                    .placeholder(R.drawable.user_placeholder)
-                    .error(R.drawable.user_placeholder)
-                    .transform(new CircleTransform())
-                    .into(ivUser);
+
+            if (urlPhotoUser != null && !TextUtils.isEmpty(urlPhotoUser)) {
+                Picasso.with(ivUser.getContext())
+                        .load(urlPhotoUser)
+                        .placeholder(R.drawable.user_placeholder)
+                        .error(R.drawable.user_placeholder)
+                        .transform(new CircleTransform())
+                        .into(ivUser);
+            }
         }
 
         public void setTvTimestamp(String timestamp){
@@ -134,7 +137,8 @@ public class ChatFirebaseAdapter extends FirebaseRecyclerAdapter<ChatModel,ChatF
         public void setIvChatPhoto(String url){
             if (ivChatPhoto == null)
                 return;
-            if(url != null && !TextUtils.isEmpty(url))
+
+                if(url != null && !TextUtils.isEmpty(url))
                 Picasso.with(ivChatPhoto.getContext())
                     .load(url)
                     .into(ivChatPhoto);

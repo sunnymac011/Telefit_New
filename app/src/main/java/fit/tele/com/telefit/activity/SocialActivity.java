@@ -70,9 +70,9 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
         binding = (ActivitySocialBinding)getBindingObj();
         preferences = new Preferences(this);
 
-        Log.w("myid",""+preferences.getUserDataPref().getId());
-
-        ll_create_post = findViewById(R.id.ll_create_post);
+        if (getIntent()!=null){
+            strSelectedTab =  getIntent().getIntExtra("tabStatus",1);
+        }
 
         setListner();
     }
@@ -84,6 +84,26 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
                 onBackPressed();
             }
         });
+
+
+
+        ll_create_post = findViewById(R.id.ll_create_post);
+
+        rv_activities = (RecyclerView)findViewById(R.id.rv_activities);
+        linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        rv_activities.setLayoutManager(linearLayoutManager);
+
+        rv_messages = (RecyclerView)findViewById(R.id.rv_messages);
+
+        if(strSelectedTab==1){
+            setActivity();
+        } if(strSelectedTab==2){
+            setMessage();
+        } if(strSelectedTab==3){
+            setFriends();
+        } if(strSelectedTab==4){
+            setRequests();
+        }
 
         binding.llProfile.setOnClickListener(this);
         binding.llNutrition.setOnClickListener(this);
@@ -97,28 +117,6 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
         binding.txtNew.setOnClickListener(this);
         ll_create_post.setOnClickListener(this);
         binding.txtSetting.setOnClickListener(this);
-
-        if(strSelectedTab==1){
-            rv_activities = (RecyclerView)findViewById(R.id.rv_activities);
-            linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-            rv_activities.setLayoutManager(linearLayoutManager);
-
-            activityAdapter = new ActivityAdapter(context, preferences.getUserDataPref().getId(), rv_activities, new ActivityAdapter.ActivitiesListner() {
-                @Override
-                public void onClick(int id, CreatePostBean bean) {
-                    if(id==50001) {
-                        Intent in = new Intent(context, PostDetailActivity.class);
-                        in.putExtra("postDetail",bean);
-                        startActivity(in);
-                    }
-                }
-            });
-            rv_activities.setAdapter(activityAdapter);
-            getAllActivities();
-
-        }
-        rv_messages = (RecyclerView)findViewById(R.id.rv_messages);
-
     }
 
     @Override
@@ -156,138 +154,20 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
                 break;
 
             case R.id.ll_activity_tab:
-                strSelectedTab = 1;
-                binding.vf.setDisplayedChild(0);
-
-                if(activityAdapter==null){
-                    activityAdapter = new ActivityAdapter(context,preferences.getUserDataPref().getId(),rv_activities, new ActivityAdapter.ActivitiesListner() {
-                        @Override
-                        public void onClick(int id, CreatePostBean bean) {
-                            if(id==50001) {
-                                Intent in = new Intent(context, PostDetailActivity.class);
-                                in.putExtra("postDetail",bean);
-                                startActivity(in);
-                            }
-                        }
-                    });
-                    rv_activities.setAdapter(activityAdapter);
-                }
-
-                binding.txtSetting.setVisibility(View.VISIBLE);
-                binding.txtNew.setVisibility(View.GONE);
-                binding.txtActivityTab.setTextColor(getResources().getColor(R.color.white));
-                binding.viewActivity.setVisibility(View.VISIBLE);
-                binding.txtMessagesTab.setTextColor(getResources().getColor(R.color.light_gray));
-                binding.viewMessage.setVisibility(View.GONE);
-                binding.txtFriendsTab.setTextColor(getResources().getColor(R.color.light_gray));
-                binding.viewFriends.setVisibility(View.GONE);
-                binding.txtRequestsTab.setTextColor(getResources().getColor(R.color.light_gray));
-                binding.viewRequests.setVisibility(View.GONE);
-                getAllActivities();
-
+                setActivity();
                 break;
 
             case R.id.ll_messages_tab:
-                strSelectedTab = 2;
-                binding.vf.setDisplayedChild(1);
-                binding.txtSetting.setVisibility(View.GONE);
-                binding.txtNew.setVisibility(View.VISIBLE);
-                binding.txtActivityTab.setTextColor(getResources().getColor(R.color.light_gray));
-                binding.viewActivity.setVisibility(View.GONE);
-                binding.txtMessagesTab.setTextColor(getResources().getColor(R.color.white));
-                binding.viewMessage.setVisibility(View.VISIBLE);
-                binding.txtFriendsTab.setTextColor(getResources().getColor(R.color.light_gray));
-                binding.viewFriends.setVisibility(View.GONE);
-                binding.txtRequestsTab.setTextColor(getResources().getColor(R.color.light_gray));
-                binding.viewRequests.setVisibility(View.GONE);
-
-
-                getMesagesDetail();
-
-
-
+                setMessage();
                 break;
 
             case R.id.ll_friends_tab:
-                strSelectedTab = 3;
-                binding.vf.setDisplayedChild(2);
-                binding.txtSetting.setVisibility(View.GONE);
-                binding.txtNew.setVisibility(View.VISIBLE);
-                binding.txtActivityTab.setTextColor(getResources().getColor(R.color.light_gray));
-                binding.viewActivity.setVisibility(View.GONE);
-                binding.txtMessagesTab.setTextColor(getResources().getColor(R.color.light_gray));
-                binding.viewMessage.setVisibility(View.GONE);
-                binding.txtFriendsTab.setTextColor(getResources().getColor(R.color.white));
-                binding.viewFriends.setVisibility(View.VISIBLE);
-                binding.txtRequestsTab.setTextColor(getResources().getColor(R.color.light_gray));
-                binding.viewRequests.setVisibility(View.GONE);
-
-
-                rv_customers = (RecyclerView)findViewById(R.id.rv_customers);
-                linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-                rv_customers.setLayoutManager(linearLayoutManager);
-
-                allFriendsAdapter = new AllFriendsAdapter(context, rv_customers, new AllFriendsAdapter.FriendRequestListner() {
-                    @Override
-                    public void onClick(int id, CustomerDetailBean bean) {
-                        if(id==50001){
-                            if(bean.getFriend_id()!=null)
-                                showComfirmDialog(String.valueOf(bean.getFriend_id()),"Are you sure want to unfriend?","3");
-                        }
-                        if (id==50002){
-                            final UserModel model = new UserModel();
-                            model.setUser_id(String.valueOf(bean.getUser_id()));
-                            model.setName(bean.getName()+" "+bean.getlName());
-                            model.setFriend_id(String.valueOf(bean.getFriend_id()));
-                            model.setPhoto_profile(bean.getProfilePic());
-                            Log.w("friendId","From social "+model.getFriend_id());
-                            Intent in = new Intent(context,MessageActivity.class);
-                            in.putExtra("user_model", model);
-                            startActivity(in);
-                        }
-                    }
-                });
-
-                rv_customers.setAdapter(allFriendsAdapter);
-                getAllFriends();
+                setFriends();
 
                 break;
 
             case R.id.ll_requests_tab:
-
-                strSelectedTab = 4;
-                binding.vf.setDisplayedChild(3);
-                binding.txtSetting.setVisibility(View.GONE);
-                binding.txtNew.setVisibility(View.VISIBLE);
-                binding.txtActivityTab.setTextColor(getResources().getColor(R.color.light_gray));
-                binding.viewActivity.setVisibility(View.GONE);
-                binding.txtMessagesTab.setTextColor(getResources().getColor(R.color.light_gray));
-                binding.viewMessage.setVisibility(View.GONE);
-                binding.txtFriendsTab.setTextColor(getResources().getColor(R.color.light_gray));
-                binding.viewFriends.setVisibility(View.GONE);
-                binding.txtRequestsTab.setTextColor(getResources().getColor(R.color.white));
-                binding.viewRequests.setVisibility(View.VISIBLE);
-
-                rv_req_customers = (RecyclerView)findViewById(R.id.rv_req_customers);
-                linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-                rv_req_customers.setLayoutManager(linearLayoutManager);
-
-               friendRequestAdapter = new FriendRequestAdapter(context, rv_req_customers, new FriendRequestAdapter.FriendRequestListner() {
-                   @Override
-                   public void onClick(int id, CustomerDetailBean bean) {
-                        if(id==50001){
-                            if(bean.getFriend_id()!=null)
-                                showComfirmDialog(String.valueOf(bean.getUser_id()),"Are you sure want to accept friend request?","1");
-
-                        }else if(id==50002){
-                            if(bean.getFriend_id()!=null)
-                                showComfirmDialog(String.valueOf(bean.getUser_id()),"Are you sure want to decline friend request?","2");
-                        }
-                   }
-               });
-
-                rv_req_customers.setAdapter(friendRequestAdapter);
-                getAllRequests();
+                setRequests();
 
                 break;
 
@@ -540,6 +420,131 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
 
         }
 
+
+    }
+
+    public void setActivity(){
+        strSelectedTab = 1;
+        binding.vf.setDisplayedChild(0);
+        if(activityAdapter==null){
+            activityAdapter = new ActivityAdapter(context,preferences.getUserDataPref().getId(),rv_activities, new ActivityAdapter.ActivitiesListner() {
+                @Override
+                public void onClick(int id, CreatePostBean bean) {
+                    if(id==50001) {
+                        Intent in = new Intent(context, PostDetailActivity.class);
+                        in.putExtra("postDetail",bean);
+                        startActivity(in);
+                    }
+                }
+            });
+            rv_activities.setAdapter(activityAdapter);
+        }
+        binding.txtSetting.setVisibility(View.VISIBLE);
+        binding.txtNew.setVisibility(View.GONE);
+        binding.txtActivityTab.setTextColor(getResources().getColor(R.color.white));
+        binding.viewActivity.setVisibility(View.VISIBLE);
+        binding.txtMessagesTab.setTextColor(getResources().getColor(R.color.light_gray));
+        binding.viewMessage.setVisibility(View.GONE);
+        binding.txtFriendsTab.setTextColor(getResources().getColor(R.color.light_gray));
+        binding.viewFriends.setVisibility(View.GONE);
+        binding.txtRequestsTab.setTextColor(getResources().getColor(R.color.light_gray));
+        binding.viewRequests.setVisibility(View.GONE);
+        getAllActivities();
+    }
+    public void setMessage(){
+        strSelectedTab = 2;
+        binding.vf.setDisplayedChild(1);
+        binding.txtSetting.setVisibility(View.GONE);
+        binding.txtNew.setVisibility(View.VISIBLE);
+        binding.txtActivityTab.setTextColor(getResources().getColor(R.color.light_gray));
+        binding.viewActivity.setVisibility(View.GONE);
+        binding.txtMessagesTab.setTextColor(getResources().getColor(R.color.white));
+        binding.viewMessage.setVisibility(View.VISIBLE);
+        binding.txtFriendsTab.setTextColor(getResources().getColor(R.color.light_gray));
+        binding.viewFriends.setVisibility(View.GONE);
+        binding.txtRequestsTab.setTextColor(getResources().getColor(R.color.light_gray));
+        binding.viewRequests.setVisibility(View.GONE);
+
+        getMesagesDetail();
+
+    }
+    public void setFriends(){
+        strSelectedTab = 3;
+        binding.vf.setDisplayedChild(2);
+        binding.txtSetting.setVisibility(View.GONE);
+        binding.txtNew.setVisibility(View.VISIBLE);
+        binding.txtActivityTab.setTextColor(getResources().getColor(R.color.light_gray));
+        binding.viewActivity.setVisibility(View.GONE);
+        binding.txtMessagesTab.setTextColor(getResources().getColor(R.color.light_gray));
+        binding.viewMessage.setVisibility(View.GONE);
+        binding.txtFriendsTab.setTextColor(getResources().getColor(R.color.white));
+        binding.viewFriends.setVisibility(View.VISIBLE);
+        binding.txtRequestsTab.setTextColor(getResources().getColor(R.color.light_gray));
+        binding.viewRequests.setVisibility(View.GONE);
+
+        rv_customers = (RecyclerView)findViewById(R.id.rv_customers);
+        linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        rv_customers.setLayoutManager(linearLayoutManager);
+
+        allFriendsAdapter = new AllFriendsAdapter(context, rv_customers, new AllFriendsAdapter.FriendRequestListner() {
+            @Override
+            public void onClick(int id, CustomerDetailBean bean) {
+                if(id==50001){
+                    if(bean.getFriend_id()!=null)
+                        showComfirmDialog(String.valueOf(bean.getUser_id()),"Are you sure want to unfriend?","3");
+                }
+                if (id==50002){
+                    final UserModel model = new UserModel();
+                    model.setUser_id(String.valueOf(bean.getUser_id()));
+                    model.setName(bean.getName()+" "+bean.getlName());
+                    model.setFriend_id(String.valueOf(bean.getFriend_id()));
+                    model.setPhoto_profile(bean.getProfilePic());
+                    Log.w("friendId","From social "+model.getFriend_id());
+                    Intent in = new Intent(context,MessageActivity.class);
+                    in.putExtra("user_model", model);
+                    startActivity(in);
+                }
+            }
+        });
+
+        rv_customers.setAdapter(allFriendsAdapter);
+        getAllFriends();
+
+    }
+    public void setRequests(){
+        strSelectedTab = 4;
+        binding.vf.setDisplayedChild(3);
+        binding.txtSetting.setVisibility(View.GONE);
+        binding.txtNew.setVisibility(View.VISIBLE);
+        binding.txtActivityTab.setTextColor(getResources().getColor(R.color.light_gray));
+        binding.viewActivity.setVisibility(View.GONE);
+        binding.txtMessagesTab.setTextColor(getResources().getColor(R.color.light_gray));
+        binding.viewMessage.setVisibility(View.GONE);
+        binding.txtFriendsTab.setTextColor(getResources().getColor(R.color.light_gray));
+        binding.viewFriends.setVisibility(View.GONE);
+        binding.txtRequestsTab.setTextColor(getResources().getColor(R.color.white));
+        binding.viewRequests.setVisibility(View.VISIBLE);
+
+        rv_req_customers = (RecyclerView)findViewById(R.id.rv_req_customers);
+        linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        rv_req_customers.setLayoutManager(linearLayoutManager);
+
+        friendRequestAdapter = new FriendRequestAdapter(context, rv_req_customers, new FriendRequestAdapter.FriendRequestListner() {
+            @Override
+            public void onClick(int id, CustomerDetailBean bean) {
+                if(id==50001){
+                    if(bean.getFriend_id()!=null)
+                        showComfirmDialog(String.valueOf(bean.getUser_id()),"Are you sure want to accept friend request?","1");
+
+                }else if(id==50002){
+                    if(bean.getFriend_id()!=null)
+                        showComfirmDialog(String.valueOf(bean.getUser_id()),"Are you sure want to decline friend request?","2");
+                }
+            }
+        });
+
+        rv_req_customers.setAdapter(friendRequestAdapter);
+        getAllRequests();
 
     }
 
