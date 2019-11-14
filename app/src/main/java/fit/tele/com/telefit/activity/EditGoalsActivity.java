@@ -239,12 +239,14 @@ public class EditGoalsActivity extends BaseActivity implements View.OnClickListe
                 break;
 
             case R.id.txt_weight_count:
-                addGoalsWeightDialog = new AddGoalsWeightDialog(context, "Consumed", new AddGoalsWeightDialog.SetDataListener() {
+                String strType = preferences.getUserDataPref().getWeightType();
+                addGoalsWeightDialog = new AddGoalsWeightDialog(context, "Set Value in "+strType, new AddGoalsWeightDialog.SetDataListener() {
                     @Override
-                    public void onContinueClick(String goal, String consumed, String weightType) {
-                        binding.txtWeightCount.setText(goal+weightType+", "+consumed+weightType);
+                    public void onContinueClick(String goal, String consumed) {
+                        binding.txtWeightCount.setText(goal+strType+", "+consumed+strType);
                         map.put("weight", consumed);
                         map.put("goal_weight", goal);
+                        map.put("weight_type", strType);
                     }
                 });
                 addGoalsWeightDialog.show();

@@ -64,7 +64,7 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
     TextView txt_nutrients_tab,txt_calories_tab,txt_log_calories,txt_log_nutrients,txt_show_log_nutrients,txt_show_log_calories,
             txt_show_chart_calories,txt_show_chart_nutrients, txt_calories_date, txt_under, txt_daily_count, txt_food_count, txt_exercise_count,
             txt_net_count, txt_total_calories_detail, txt_nutrition_date,txt_total_calories, txt_per, txt_per_text, txt_fat_percentage, txt_carbohydrates_percentage,
-            txt_protein_percentage, txt_second_text;
+            txt_protein_percentage, txt_second_text, txt_calories_remainder_date;
     LinearLayout ll_calories_details,ll_nutrients_details;
     RelativeLayout rl_calories_bar,rl_nutrients_bar;
     private CaloriesBarBean caloriesBarBean;
@@ -120,6 +120,7 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
         txt_carbohydrates_percentage = (TextView) findViewById(R.id.txt_carbohydrates_percentage);
         txt_carbohydrates_percentage = (TextView) findViewById(R.id.txt_carbohydrates_percentage);
         txt_protein_percentage = (TextView) findViewById(R.id.txt_protein_percentage);
+        txt_calories_remainder_date = (TextView) findViewById(R.id.txt_calories_remainder_date);
         txt_calories_tab = (TextView) findViewById(R.id.txt_calories_tab);
         txt_calories_tab.setOnClickListener(this);
         txt_log_calories = (TextView) findViewById(R.id.txt_log_calories);
@@ -250,6 +251,53 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
     }
 
     private void setCaloriesBarChart() {
+
+        if (caloriesBarBean.getGoal() != null && caloriesBarBean.getGoal().get(0).getWeight() != null &&
+                caloriesBarBean.getGoal().get(0).getGoalWeight() != null && caloriesBarBean.getGoal().get(0).getWeightType() != null)
+        {
+            double dWeight = 0, dgWeight = 0,dGoal =0, dWeeks =0;
+            if (caloriesBarBean.getGoal().get(0).getWeightType().equalsIgnoreCase("kg")) {
+                dWeight = Double.parseDouble(caloriesBarBean.getGoal().get(0).getWeight());
+                dgWeight = Double.parseDouble(caloriesBarBean.getGoal().get(0).getGoalWeight());
+                dWeight = dWeight*2.20462;
+                dgWeight = dgWeight*2.20462;
+            }
+            else {
+                dWeight = Double.parseDouble(caloriesBarBean.getGoal().get(0).getWeight());
+                dgWeight = Double.parseDouble(caloriesBarBean.getGoal().get(0).getGoalWeight());
+            }
+
+            if (preferences.getUserDataPref() != null && preferences.getUserDataPref().getMaintainWeight() != null
+                    && !TextUtils.isEmpty(preferences.getUserDataPref().getMaintainWeight())) {
+                if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Lose 1 pound per week"))
+                    dGoal = 1;
+                if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Lose 1.5 pounds per week"))
+                    dGoal = 1.5;
+                if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Lose 2 pounds per week"))
+                    dGoal = 2;
+                if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Gain 0.5 pound per week"))
+                    dGoal = 0.5;
+                if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Gain 1 pound per week"))
+                    dGoal = 1;
+                if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Gain 1.5 pounds per week"))
+                    dGoal = 1.5;
+            }
+
+            dWeeks = (dWeight-dgWeight)/dGoal;
+            Calendar cal = Calendar.getInstance();
+            SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
+            Date newDate = null;
+            try {
+                newDate = s.parse(caloriesBarBean.getGoal().get(0).getGoalDate());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            cal.setTime(newDate);
+            Log.e("datessss ",dWeeks+"  "+dWeight+"  "+dGoal+"    "+s.format(cal.getTime()));
+            cal.add(Calendar.WEEK_OF_YEAR, (int)Math.floor(dWeeks));
+            Log.e("Goal date",(int)Math.floor(dWeeks)+"     "+caloriesBarBean.getGoal().get(0).getGoalDate()+"    "+s.format(cal.getTime()));
+
+        }
 
         if (preferences.getUserDataPref().getWeightType().equalsIgnoreCase("kg"))
             weight = Float.parseFloat(preferences.getUserDataPref().getWeight());
@@ -1144,6 +1192,7 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
                             if (apiFoodBean.getStatus().toString().equalsIgnoreCase("1") )
                             {
                                 caloriesBarBean = apiFoodBean.getResult();
+
                                 setCaloriesBarChart();
                                 addCaloriesBarDataSet();
 

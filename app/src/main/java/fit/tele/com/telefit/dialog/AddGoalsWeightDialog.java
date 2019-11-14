@@ -17,12 +17,11 @@ import fit.tele.com.telefit.R;
 import fit.tele.com.telefit.utils.CommonUtils;
 
 public class AddGoalsWeightDialog extends Dialog implements View.OnClickListener {
-    private EditText input_goal,input_consume;
-    private NumberPicker np_weight_type;
+    private EditText input_goal,input_consume, txt_header;
     private Button btn_set;
     private SetDataListener setDataListener;
     private Context context;
-    private String strHint, strWeightType = "lbs";
+    private String strHint;
 
     public AddGoalsWeightDialog(@NonNull Context context, String strHint, SetDataListener setDataListener) {
         super(context);
@@ -56,29 +55,12 @@ public class AddGoalsWeightDialog extends Dialog implements View.OnClickListener
             //window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
             //window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
+        txt_header = (EditText) contentView.findViewById(R.id.txt_header);
         input_goal = (EditText) contentView.findViewById(R.id.input_goal);
         input_consume = (EditText) contentView.findViewById(R.id.input_consume);
-        input_consume.setHint(strHint);
-        np_weight_type = (NumberPicker) contentView.findViewById(R.id.np_weight_type);
-        np_weight_type.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        txt_header.setText(strHint);
         btn_set = (Button) contentView.findViewById(R.id.btn_set);
         btn_set.setOnClickListener(this);
-
-        final String[] values= {"lbs","kg"};
-
-        np_weight_type.setMinValue(0);
-        np_weight_type.setMaxValue(values.length-1);
-        np_weight_type.setDisplayedValues(values);
-        np_weight_type.setWrapSelectorWheel(true);
-        np_weight_type.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal){
-                if (newVal == 0)
-                    strWeightType = "lbs";
-                if (newVal == 1)
-                    strWeightType = "kg";
-            }
-        });
 
     }
 
@@ -91,7 +73,7 @@ public class AddGoalsWeightDialog extends Dialog implements View.OnClickListener
                 else if (input_consume.getText().toString().isEmpty())
                     CommonUtils.toast(context,"Please enter consumed!");
                 else {
-                    setDataListener.onContinueClick(input_goal.getText().toString(),input_consume.getText().toString(), strWeightType);
+                    setDataListener.onContinueClick(input_goal.getText().toString(),input_consume.getText().toString());
                     dismiss();
                 }
                 break;
@@ -99,6 +81,6 @@ public class AddGoalsWeightDialog extends Dialog implements View.OnClickListener
     }
 
     public interface SetDataListener {
-        void onContinueClick(String goal, String consumed, String weightType);
+        void onContinueClick(String goal, String consumed);
     }
 }

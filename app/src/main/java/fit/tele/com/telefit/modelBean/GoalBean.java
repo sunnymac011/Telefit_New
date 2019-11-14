@@ -42,6 +42,9 @@ public class GoalBean implements Parcelable {
     @SerializedName("weight")
     @Expose
     public String weight;
+    @SerializedName("weight_type")
+    @Expose
+    public String weightType;
     @SerializedName("goal_body_fat")
     @Expose
     public String goalBodyFat;
@@ -91,6 +94,7 @@ public class GoalBean implements Parcelable {
         fiber = in.readString();
         water = in.readString();
         weight = in.readString();
+        weightType = in.readString();
         goalBodyFat = in.readString();
         goalWater = in.readString();
         goalWeight = in.readString();
@@ -203,6 +207,14 @@ public class GoalBean implements Parcelable {
 
     public void setWeight(String weight) {
         this.weight = weight;
+    }
+
+    public String getWeightType() {
+        return weightType;
+    }
+
+    public void setWeightType(String weightType) {
+        this.weightType = weightType;
     }
 
     public String getGoalBodyFat() {
@@ -319,6 +331,7 @@ public class GoalBean implements Parcelable {
         dest.writeString(fiber);
         dest.writeString(water);
         dest.writeString(weight);
+        dest.writeString(weightType);
         dest.writeString(goalBodyFat);
         dest.writeString(goalWater);
         dest.writeString(goalWeight);
@@ -347,6 +360,7 @@ public class GoalBean implements Parcelable {
                 ", fiber='" + fiber + '\'' +
                 ", water='" + water + '\'' +
                 ", weight='" + weight + '\'' +
+                ", weightType='" + weightType + '\'' +
                 ", goalBodyFat='" + goalBodyFat + '\'' +
                 ", goalWater='" + goalWater + '\'' +
                 ", goalWeight='" + goalWeight + '\'' +
