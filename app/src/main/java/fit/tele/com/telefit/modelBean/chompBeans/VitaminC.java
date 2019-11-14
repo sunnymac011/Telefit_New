@@ -22,6 +22,9 @@ public class VitaminC implements Parcelable {
     @Expose
     private String perServing;
 
+    public VitaminC() {
+    }
+
     protected VitaminC(Parcel in) {
         name = in.readString();
         measurement = in.readString();

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
+import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -14,19 +15,24 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import fit.tele.com.telefit.R;
 import fit.tele.com.telefit.utils.CommonUtils;
 
 public class SetsRepsDialog extends Dialog implements View.OnClickListener {
-    private EditText input_sets,input_reps,input_time;
+    private EditText input_sets,input_reps,input_time,input_weight,input_exe_time;
     private Button btn_ok,btn_cancel;
+    private LinearLayout ll_all_details;
+    private TextInputLayout input_layout_exe_time;
     private SetDataListener setDataListener;
     private Context context;
+    private boolean isExerciseTime;
 
-    public SetsRepsDialog(@NonNull Context context, SetDataListener setDataListener) {
+    public SetsRepsDialog(@NonNull Context context, SetDataListener setDataListener, boolean isExerciseTime) {
         super(context);
+        this.isExerciseTime = isExerciseTime;
         this.setDataListener = setDataListener;
         this.context = context;
     }
@@ -59,6 +65,20 @@ public class SetsRepsDialog extends Dialog implements View.OnClickListener {
         input_sets = (EditText) contentView.findViewById(R.id.input_sets);
         input_reps = (EditText) contentView.findViewById(R.id.input_reps);
         input_time = (EditText) contentView.findViewById(R.id.input_time);
+        input_weight = (EditText) contentView.findViewById(R.id.input_weight);
+        input_exe_time = (EditText) contentView.findViewById(R.id.input_exe_time);
+        input_layout_exe_time = (TextInputLayout) contentView.findViewById(R.id.input_layout_exe_time);
+        ll_all_details = (LinearLayout) contentView.findViewById(R.id.ll_all_details);
+        if (isExerciseTime)
+        {
+            ll_all_details.setVisibility(View.GONE);
+            input_layout_exe_time.setVisibility(View.VISIBLE);
+        }
+        else {
+
+            ll_all_details.setVisibility(View.VISIBLE);
+            input_layout_exe_time.setVisibility(View.GONE);
+        }
         btn_ok = (Button) contentView.findViewById(R.id.btn_ok);
         btn_ok.setOnClickListener(this);
         btn_cancel = (Button) contentView.findViewById(R.id.btn_cancel);
@@ -90,14 +110,28 @@ public class SetsRepsDialog extends Dialog implements View.OnClickListener {
         switch (view.getId()) {
             case R.id.btn_ok:
                 dismiss();
-                if (TextUtils.isEmpty(input_sets.getText().toString()) && input_sets.getText().toString().equalsIgnoreCase("0"))
-                    CommonUtils.toast(context,"Please enter Sets");
-                else if (TextUtils.isEmpty(input_reps.getText().toString()) && input_reps.getText().toString().equalsIgnoreCase("0"))
-                    CommonUtils.toast(context,"Please enter Reps");
-                else {
-                    if(setDataListener != null)
-                        setDataListener.onContinueClick(input_sets.getText().toString().trim(),input_reps.getText().toString().trim(),input_time.getText().toString().trim());
+                if (isExerciseTime) {
+                    if (TextUtils.isEmpty(input_exe_time.getText().toString()) && input_exe_time.getText().toString().equalsIgnoreCase("0"))
+                        CommonUtils.toast(context,"Please enter Exercise Time");
+                    else {
+                        if(setDataListener != null)
+                            setDataListener.onContinueClick(input_sets.getText().toString().trim(),input_reps.getText().toString().trim(),input_exe_time.getText().toString().trim(),input_weight.getText().toString().trim());
+                    }
                 }
+                else
+                {
+                    if (TextUtils.isEmpty(input_sets.getText().toString()) && input_sets.getText().toString().equalsIgnoreCase("0"))
+                        CommonUtils.toast(context,"Please enter Sets");
+                    else if (TextUtils.isEmpty(input_reps.getText().toString()) && input_reps.getText().toString().equalsIgnoreCase("0"))
+                        CommonUtils.toast(context,"Please enter Reps");
+                    else if (TextUtils.isEmpty(input_weight.getText().toString()) && input_weight.getText().toString().equalsIgnoreCase("0"))
+                        CommonUtils.toast(context,"Please enter Weight");
+                    else {
+                        if(setDataListener != null)
+                            setDataListener.onContinueClick(input_sets.getText().toString().trim(),input_reps.getText().toString().trim(),input_time.getText().toString().trim(),input_weight.getText().toString().trim());
+                    }
+                }
+
                 break;
             case R.id.btn_cancel:
                 dismiss();
@@ -106,6 +140,6 @@ public class SetsRepsDialog extends Dialog implements View.OnClickListener {
     }
 
     public interface SetDataListener {
-        void onContinueClick(String strSets, String strReps, String strTime);
+        void onContinueClick(String strSets, String strReps, String strTime, String strWeight);
     }
 }

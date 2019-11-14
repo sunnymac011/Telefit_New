@@ -9,8 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.daimajia.swipe.SwipeLayout;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -18,6 +20,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
@@ -29,10 +32,12 @@ import fit.tele.com.telefit.utils.CircleTransform;
 public class MessageFirebaseAdapter extends FirebaseRecyclerAdapter<UserModel, MessageFirebaseAdapter.Header> {
     private Context context;
     private DatabaseReference mFirebaseDatabaseReference;
+    String userID="";
 
-    public MessageFirebaseAdapter(Context context, DatabaseReference ref) {
+    public MessageFirebaseAdapter(Context context, String userID, DatabaseReference ref) {
         super(UserModel.class, R.layout.item_item_message, MessageFirebaseAdapter.Header.class, ref);
         this.context = context;
+        this.userID = userID;
     }
 
     @Override
@@ -48,14 +53,19 @@ public class MessageFirebaseAdapter extends FirebaseRecyclerAdapter<UserModel, M
 
     public class Header extends RecyclerView.ViewHolder {
         private UserModel model;
-        private TextView txtName;
+        private TextView txtName, txt_delete_msg;
         private ImageView imgProfile;
+        private SwipeLayout swipeLayout;
+        private RelativeLayout rl_details;
 
         Header(View v) {
             super(v);
          //   layout = (ConstraintLayout) v.findViewById(R.id.layout_main);
+            swipeLayout = (SwipeLayout) v.findViewById(R.id.swipe);
             txtName = (TextView) v.findViewById(R.id.txt_user_name);
+            txt_delete_msg = (TextView) v.findViewById(R.id.txt_delete_msg);
             imgProfile = (ImageView) v.findViewById(R.id.img_profile);
+            rl_details = (RelativeLayout) v.findViewById(R.id.rl_details);
         }
 
         public void bindData(UserModel bean) {
@@ -106,7 +116,7 @@ public class MessageFirebaseAdapter extends FirebaseRecyclerAdapter<UserModel, M
             mFirebaseDatabaseReference.child(CHAT_REFERENCE).addListenerForSingleValueEvent(eventListener);
 
 
-            itemView.setOnClickListener(new View.OnClickListener() {
+            rl_details.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(context, MessageActivity.class);
@@ -114,9 +124,36 @@ public class MessageFirebaseAdapter extends FirebaseRecyclerAdapter<UserModel, M
                     context.startActivity(intent);
                 }
             });
+
+            swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
+
+            swipeLayout.addDrag(SwipeLayout.DragEdge.Left, swipeLayout.findViewById(R.id.bottom_wrapper));
+            swipeLayout.addDrag(SwipeLayout.DragEdge.Right, swipeLayout.findViewById(R.id.bottom_wrapper1));
+
+            txt_delete_msg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                    Query applesQuery = ref.child(userID);
+
+                    applesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            swipeLayout.close();
+                            for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
+                                appleSnapshot.getRef().removeValue();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.e( "onCancelled", ""+databaseError.toException());
+                        }
+                    });
+                }
+            });
         }
     }
-
 
 }
 

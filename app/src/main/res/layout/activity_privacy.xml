@@ -38,64 +38,58 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/rl_header">
 
-            <TextView
-                android:id="@+id/txt_private"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Private"
-                android:textColor="@color/main_color"
-                android:textSize="@dimen/_14sdp"
-                android:fontFamily="@font/rubik"
-                android:layout_centerVertical="true"
-                android:layout_margin="@dimen/_20sdp"/>
+                android:layout_margin="@dimen/_20sdp">
+
+                <TextView
+                    android:id="@+id/txt_private"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Private"
+                    android:textColor="@color/main_color"
+                    android:textSize="@dimen/_14sdp"
+                    android:fontFamily="@font/rubik"
+                    android:layout_toLeftOf="@+id/img_private"/>
+
+                <ImageView
+                    android:id="@+id/img_private"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:src="@drawable/light_tick"
+                    android:layout_alignParentRight="true"
+                    android:visibility="gone"/>
+
+            </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/light_gray"/>
 
-            <TextView
-                android:id="@+id/txt_default"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Default"
-                android:textColor="@color/main_color"
-                android:textSize="@dimen/_14sdp"
-                android:fontFamily="@font/rubik"
-                android:layout_centerVertical="true"
-                android:layout_margin="@dimen/_20sdp"/>
+                android:layout_margin="@dimen/_20sdp">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/light_gray"/>
+                <TextView
+                    android:id="@+id/txt_public"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Public"
+                    android:textColor="@color/main_color"
+                    android:textSize="@dimen/_14sdp"
+                    android:fontFamily="@font/rubik"/>
 
-            <TextView
-                android:id="@+id/txt_public"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Public"
-                android:textColor="@color/main_color"
-                android:textSize="@dimen/_14sdp"
-                android:fontFamily="@font/rubik"
-                android:layout_centerVertical="true"
-                android:layout_margin="@dimen/_20sdp"/>
+                <ImageView
+                    android:id="@+id/img_public"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:src="@drawable/light_tick"
+                    android:layout_alignParentRight="true"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/light_gray"/>
-
-            <TextView
-                android:id="@+id/txt_Custom"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Custom"
-                android:textColor="@color/main_color"
-                android:textSize="@dimen/_14sdp"
-                android:fontFamily="@font/rubik"
-                android:layout_centerVertical="true"
-                android:layout_margin="@dimen/_20sdp"/>
+            </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -103,6 +97,19 @@
                 android:background="@color/light_gray"/>
 
         </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_centerInParent="true">
+
+            <ProgressBar
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
 
     </RelativeLayout>
 

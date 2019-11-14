@@ -69,6 +69,12 @@ public class CommonUtils {
         return !m.matches();
     }
 
+    public static Boolean checkDate(String date) {
+        Pattern p = Pattern.compile("(0?[1-9]|1[012]) [/.-] (0?[1-9]|[12][0-9]|3[01]) [/.-] ((19|20)\\\\d\\\\d)");
+        Matcher m = p.matcher(date);
+        return !m.matches();
+    }
+
     public static boolean checkFloat(String input) {
         Pattern p = Pattern.compile(
                 "[\\x00-\\x20]*[+-]?(NaN|Infinity|((((\\p{Digit}+)(\\.)?((\\p{Digit}+)?)" +
@@ -438,5 +444,22 @@ public class CommonUtils {
                 }
             }
         });
+    }
+
+    public static Integer getAge(int year, int month, int day){
+        Calendar dob = Calendar.getInstance();
+        Calendar today = Calendar.getInstance();
+
+        dob.set(year, month, day);
+
+        int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+
+        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)){
+            age--;
+        }
+
+        Integer ageInt = new Integer(age);
+
+        return ageInt;
     }
 }

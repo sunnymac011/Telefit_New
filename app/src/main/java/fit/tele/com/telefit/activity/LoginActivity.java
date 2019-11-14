@@ -111,6 +111,9 @@ public class LoginActivity extends BaseActivity {
                 } else if (binding.inputPassword.getText().toString().isEmpty()) {
                     binding.inputPassword.setError("Please enter Password!");
                     return false;
+                } else if (binding.inputPassword.length() < 6) {
+                    binding.inputEmail.setError("Passwords must be at least 6 characters in length!");
+                    return false;
                 } else
                     return true;
             }
@@ -171,7 +174,12 @@ public class LoginActivity extends BaseActivity {
                                 startActivity(intent);
                                 finishAffinity();
                             } else
-                                CommonUtils.toast(context,loginBean.getMessage());
+                            {
+                                if (loginBean.getMessage() != null && !TextUtils.isEmpty(loginBean.getMessage()))
+                                    CommonUtils.toast(context,loginBean.getMessage());
+                                else
+                                    CommonUtils.toast(context, "Please try again later!");
+                            }
                         }
                     });
 

@@ -38,8 +38,7 @@
                     android:id="@+id/txt_desc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Continue with your diet goal
-where you left."
+                    android:text="Continue with your diet and exercise plan."
                     android:textColor="#fff"
                     android:layout_below="@+id/txt_title"
                     android:layout_marginLeft="@dimen/_30sdp"

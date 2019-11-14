@@ -1,55 +1,129 @@
 package fit.tele.com.telefit.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
+import java.util.Collections;
 
 import fit.tele.com.telefit.R;
+import fit.tele.com.telefit.helper.ItemTouchHelperAdapter;
+import fit.tele.com.telefit.helper.ItemTouchHelperViewHolder;
+import fit.tele.com.telefit.helper.OnStartDragListener;
+import fit.tele.com.telefit.modelBean.ExercisesListBean;
 import fit.tele.com.telefit.modelBean.chompBeans.ChompProductBean;
+import fit.tele.com.telefit.utils.CircleTransform;
 
-public class RecipeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private final int VIEW_TYPE_ITEM = 0;
-    private final int VIEW_TYPE_LOADING = 1;
+public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.ItemViewHolder> implements ItemTouchHelperAdapter {
     private Context context;
     private ArrayList<ChompProductBean> list;
+    private final OnStartDragListener mDragStartListener;
+    private ClickListener clickListener;
 
-    public RecipeListAdapter(Context context) {
+    public RecipeListAdapter(Context context, OnStartDragListener dragStartListener, ClickListener clickListener) {
         this.context = context;
+        mDragStartListener = dragStartListener;
+        this.clickListener = clickListener;
         list = new ArrayList<>();
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == VIEW_TYPE_ITEM) {
-            View view = LayoutInflater.from(context).inflate(R.layout.item_recipe_list, parent, false);
-            return new Header(view);
-        } else if (viewType == VIEW_TYPE_LOADING) {
-            View view = LayoutInflater.from(context).inflate(R.layout.item_progress, parent, false);
-            return new LoadingViewHolder(view);
-        }
-        return null;
+    public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recipe_list, parent, false);
+        ItemViewHolder itemViewHolder = new ItemViewHolder(view);
+        return itemViewHolder;
     }
 
     @Override
-    public int getItemViewType(int position) {
-        return list.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+    public void onBindViewHolder(final ItemViewHolder holder, int position) {
+        if (list != null && position >= 0 && position < list.size() && list.get(position) != null) {
+
+            if(list.get(position).getDetails() != null && list.get(position).getDetails().getImages() != null &&
+                    list.get(position).getDetails().getImages().getFront() != null &&
+                    list.get(position).getDetails().getImages().getFront().getSmall() != null && !TextUtils.isEmpty(list.get(position).getDetails().getImages().getFront().getSmall())) {
+                Picasso.with(context)
+                        .load(list.get(position).getDetails().getImages().getFront().getSmall())
+                        .error(R.drawable.empty_food)
+                        .placeholder(R.drawable.empty_food)
+                        .transform(new CircleTransform())
+                        .into(holder.img_recipe);
+            }
+            else
+                holder.img_recipe.setImageResource(R.drawable.empty_food);
+
+            if(list.get(position).getName() != null && !TextUtils.isEmpty(list.get(position).getName()))
+                holder.txt_food.setText(Html.fromHtml(list.get(position).getName()));
+
+            if (list.get(position).getDetails().getNutritionLabel() != null && list.get(position).getDetails().getNutritionLabel().getCalories() != null) {
+                String strCalories = calculateCalories(list.get(position).getDetails().getNutritionLabel().getCalories().getPerServing(), list.get(position).getServingQty(), list.get(position).getServingQtySecond());
+                double convertedCal = Double.parseDouble(strCalories)/4.184;
+                if (list.get(position).getServingQty() == 1)
+                {
+                    if (list.get(position).getServingQtySecond() == 0)
+                    {
+                        holder.txt_food_calories_serving.setText(String.format("%.2f", convertedCal)+" cals per serving");
+                    }
+                    else
+                        holder.txt_food_calories_serving.setText(String.format("%.2f", convertedCal)+" cals per "+list.get(position).getServingQty()+" and "+list.get(position).getServingQtySecond()+" serving");
+                }
+                else {
+                    if (list.get(position).getServingQtySecond() == 0)
+                        holder.txt_food_calories_serving.setText(String.format("%.2f", convertedCal)+" cals per "+list.get(position).getServingQty()+" serving");
+                    else
+                        holder.txt_food_calories_serving.setText(String.format("%.2f", convertedCal)+" cals per "+list.get(position).getServingQty()+" and "+list.get(position).getServingQtySecond()+" serving");
+                }
+            }
+        }
+
+        holder.btn_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(clickListener != null && list != null && position >= 0 && position < list.size() && list.get(position) != null) {
+                    clickListener.onClick(list.get(position));
+                }
+            }
+        });
+
+        // Start a drag whenever the handle view it touched
+        holder.ll_details.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
+                    mDragStartListener.onStartDrag(holder);
+                }
+                return false;
+            }
+        });
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof Header) {
-            ((Header) holder).bindData(position);
-        } else if (holder instanceof LoadingViewHolder) {
-            LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
-            loadingViewHolder.progressBar.setIndeterminate(true);
-        }
+    public void onItemDismiss(int position) {
+        list.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        Collections.swap(list, fromPosition, toPosition);
+        notifyItemMoved(fromPosition, toPosition);
+        return true;
     }
 
     @Override
@@ -79,50 +153,37 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private class LoadingViewHolder extends RecyclerView.ViewHolder {
-        public ProgressBar progressBar;
+    public static class ItemViewHolder extends RecyclerView.ViewHolder implements
+            ItemTouchHelperViewHolder {
 
-        public LoadingViewHolder(View view) {
-            super(view);
-//            progressBar = (ProgressBar) view.findViewById(R.id.progressBar1);
+        private TextView txt_food;
+        private ImageView img_recipe;
+        private TextView txt_food_calories_serving;
+        private Button btn_edit;
+        private LinearLayout ll_details;
+
+        public ItemViewHolder(View itemView) {
+            super(itemView);
+            img_recipe = (ImageView) itemView.findViewById(R.id.img_recipe);
+            txt_food = (TextView) itemView.findViewById(R.id.txt_food);
+            txt_food_calories_serving = (TextView) itemView.findViewById(R.id.txt_food_calories_serving);
+            btn_edit = (Button) itemView.findViewById(R.id.btn_edit);
+            ll_details = (LinearLayout) itemView.findViewById(R.id.ll_details);
+        }
+
+        @Override
+        public void onItemSelected() {
+            itemView.setBackgroundColor(Color.LTGRAY);
+        }
+
+        @Override
+        public void onItemClear() {
+            itemView.setBackgroundColor(0);
         }
     }
 
-    private class Header extends RecyclerView.ViewHolder {
-        private int pos;
-        private TextView txt_food;
-        private TextView txt_food_calories_serving;
-
-        Header(View v) {
-            super(v);
-            txt_food = (TextView) v.findViewById(R.id.txt_food);
-            txt_food_calories_serving = (TextView) v.findViewById(R.id.txt_food_calories_serving);
-        }
-
-        public void bindData(int position) {
-            this.pos = position;
-            if (list != null && pos >= 0 && pos < list.size() && list.get(pos) != null) {
-                if(list.get(pos).getName() != null && !TextUtils.isEmpty(list.get(pos).getName()))
-                    txt_food.setText(list.get(pos).getName());
-
-                String strCalories = calculateCalories(list.get(pos).getDetails().getNutritionLabel().getCalories().getPerServing(), list.get(pos).getServingQty(), list.get(pos).getServingQtySecond());
-                if (list.get(pos).getServingQty() == 1)
-                {
-                    if (list.get(pos).getServingQtySecond() == 0)
-                    {
-                        txt_food_calories_serving.setText(strCalories+" cals serving");
-                    }
-                    else
-                        txt_food_calories_serving.setText(strCalories+" cals per "+list.get(pos).getServingQtySecond()+" serving");
-                }
-                else {
-                    if (list.get(pos).getServingQtySecond() == 0)
-                        txt_food_calories_serving.setText(strCalories+" cals per "+list.get(pos).getServingQty()+" serving");
-                    else
-                        txt_food_calories_serving.setText(strCalories+" cals per "+list.get(pos).getServingQty()+" and "+list.get(pos).getServingQtySecond()+" serving");
-                }
-            }
-        }
+    public ArrayList<ChompProductBean> getAllData() {
+        return list;
     }
 
     private String calculateCalories(String strCalories, int intQty, double doubleHalfQty) {
@@ -136,5 +197,9 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         return calCalories;
+    }
+
+    public interface ClickListener {
+        void onClick(ChompProductBean chompProductBean);
     }
 }

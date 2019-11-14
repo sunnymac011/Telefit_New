@@ -22,6 +22,9 @@ public class Salt implements Parcelable {
     @Expose
     private String perServing;
 
+    public Salt() {
+    }
+
     protected Salt(Parcel in) {
         name = in.readString();
         measurement = in.readString();

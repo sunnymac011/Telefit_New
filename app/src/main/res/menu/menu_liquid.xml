@@ -5,6 +5,6 @@
         android:title="Fluid Ounces" />
 
     <item
-        android:id="@+id/menu_kg"
-        android:title="Fluid Ounces" />
+        android:id="@+id/menu_ml"
+        android:title="Milliliter" />
 </menu>

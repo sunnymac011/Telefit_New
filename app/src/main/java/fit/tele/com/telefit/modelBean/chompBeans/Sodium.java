@@ -22,6 +22,9 @@ public class Sodium implements Parcelable {
     @Expose
     private String perServing;
 
+    public Sodium() {
+    }
+
     protected Sodium(Parcel in) {
         name = in.readString();
         measurement = in.readString();

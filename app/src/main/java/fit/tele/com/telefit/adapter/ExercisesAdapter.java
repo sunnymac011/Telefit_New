@@ -149,8 +149,18 @@ public class ExercisesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 @Override
                 public void onClick(View view) {
                     if(clickListener != null && list != null && pos >= 0 && pos < list.size() && list.get(pos) != null) {
-                        clickListener.onClick(list.get(pos).getId(),list.get(pos));
+                        clickListener.onClick(list.get(pos).getId(),list.get(pos), true);
                     }
+                }
+            });
+
+            v.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if(clickListener != null && list != null && pos >= 0 && pos < list.size() && list.get(pos) != null) {
+                        clickListener.onClick(list.get(pos).getId(),list.get(pos), false);
+                    }
+                    return true;
                 }
             });
         }
@@ -198,6 +208,6 @@ public class ExercisesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public interface ClickListener {
-        void onClick(String exe_id, ExercisesListBean exercisesListBean);
+        void onClick(String exe_id, ExercisesListBean exercisesListBean, boolean isLongClick);
     }
 }

@@ -52,6 +52,7 @@ public class GirlsActivity extends BaseActivity implements View.OnClickListener 
         binding.llProfile.setOnClickListener(this);
         binding.llNutrition.setOnClickListener(this);
         binding.llGoals.setOnClickListener(this);
+        binding.llSocial.setOnClickListener(this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         binding.rvGirl.setLayoutManager(linearLayoutManager);
@@ -83,7 +84,7 @@ public class GirlsActivity extends BaseActivity implements View.OnClickListener 
                         startActivity(intent);
                     }
                     else
-                        CommonUtils.toast(context,"Please selecte category!");
+                        CommonUtils.toast(context,"Please select category!");
                 }
             });
         }

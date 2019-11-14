@@ -71,6 +71,9 @@ public class SignUpActivity extends BaseActivity {
                 } else if (binding.inputPassword.getText().toString().isEmpty()) {
                     binding.inputPassword.setError("Please enter Password");
                     return false;
+                } else if (binding.inputPassword.length() < 6) {
+                    binding.inputEmail.setError("Passwords must be at least 6 characters in length!");
+                    return false;
                 } else if (binding.inputConfPassword.getText().toString().isEmpty()) {
                     binding.inputConfPassword.setError("Please enter Confirm password");
                     return false;

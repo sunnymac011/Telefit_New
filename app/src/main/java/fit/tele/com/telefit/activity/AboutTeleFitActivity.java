@@ -1,5 +1,6 @@
 package fit.tele.com.telefit.activity;
 
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.view.View;
@@ -40,10 +41,12 @@ public class AboutTeleFitActivity extends BaseActivity implements View.OnClickLi
     private void setListner(){
         binding.rlPrivacy.setOnClickListener(this);
         binding.rlTerms.setOnClickListener(this);
+        binding.imgSideBar.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
+        Intent intent;
         switch (v.getId())
         {
             case R.id.img_side_bar :
@@ -51,9 +54,15 @@ public class AboutTeleFitActivity extends BaseActivity implements View.OnClickLi
                 break;
 
             case R.id.rl_privacy :
+                intent = new Intent(this, PrivacyPolicyActivity.class);
+                intent.putExtra("from","privacy");
+                startActivity(intent);
                 break;
 
             case R.id.rl_terms :
+                intent = new Intent(this, PrivacyPolicyActivity.class);
+                intent.putExtra("from","terms");
+                startActivity(intent);
                 break;
         }
 

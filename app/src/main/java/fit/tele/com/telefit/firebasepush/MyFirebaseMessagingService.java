@@ -42,6 +42,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     String msg;
     Bitmap bitmap;
     private Preferences preferences;
+    private PendingIntent resultPendingIntent;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -56,44 +57,36 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.e("Firebase response ",""+json.toString());
 
             preferences = new Preferences(getApplicationContext());
-
+            Intent intent;
             if(notification_type.equalsIgnoreCase("chat_message")){
-                Intent intent = new Intent(getApplicationContext(), SocialActivity.class);
+                intent = new Intent(getApplicationContext(), SocialActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.putExtra("tabStatus",2);
-                // startActivity(intent);
-                final PendingIntent resultPendingIntent =
-                        PendingIntent.getActivity(getApplicationContext(),0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-                sendNotification(remoteMessage,resultPendingIntent);
             }else if(notification_type.equalsIgnoreCase("request_accepted")){
-                Intent intent = new Intent(getApplicationContext(), SocialActivity.class);
+                intent = new Intent(getApplicationContext(), SocialActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.putExtra("tabStatus",3);
-                // startActivity(intent);
-                final PendingIntent resultPendingIntent =
-                        PendingIntent.getActivity(getApplicationContext(),0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-                sendNotification(remoteMessage,resultPendingIntent);
             }else if(notification_type.equalsIgnoreCase("send_request")){
-                Intent intent = new Intent(getApplicationContext(), SocialActivity.class);
+                intent = new Intent(getApplicationContext(), SocialActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.putExtra("tabStatus",4);
-                // startActivity(intent);
-                final PendingIntent resultPendingIntent =
-                        PendingIntent.getActivity(getApplicationContext(),0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            }else if(notification_type.equalsIgnoreCase("encourage_notification")){
+                intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                resultPendingIntent =
+                        PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
                 sendNotification(remoteMessage,resultPendingIntent);
             }else {
-
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                // startActivity(intent);
-                final PendingIntent resultPendingIntent =
+            }
+
+            if (preferences.getUserDataPref().getNotificationAlert().equalsIgnoreCase("1") && !notification_type.equalsIgnoreCase("encourage_notification")) {
+                resultPendingIntent =
                         PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
                 sendNotification(remoteMessage,resultPendingIntent);
             }
-
-
-
-
         } catch (JSONException e) {
             e.printStackTrace();
         }

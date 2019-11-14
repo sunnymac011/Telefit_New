@@ -124,6 +124,7 @@ public class SocialSetting extends BaseActivity implements View.OnClickListener{
         binding.llNutrition.setOnClickListener(this);
         binding.llFitness.setOnClickListener(this);
         binding.llGoals.setOnClickListener(this);
+        binding.llSocial.setOnClickListener(this);
     }
 
     @Override

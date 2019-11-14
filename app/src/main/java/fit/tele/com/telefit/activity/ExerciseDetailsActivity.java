@@ -2,6 +2,7 @@ package fit.tele.com.telefit.activity;
 
 import android.content.Intent;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
@@ -18,14 +19,21 @@ import java.util.List;
 
 import fit.tele.com.telefit.R;
 import fit.tele.com.telefit.adapter.ExeVideoAdapter;
+import fit.tele.com.telefit.adapter.GirlAdapter;
+import fit.tele.com.telefit.adapter.SubCatAdapter;
 import fit.tele.com.telefit.apiBase.FetchServiceBase;
 import fit.tele.com.telefit.base.BaseActivity;
 import fit.tele.com.telefit.databinding.ActivityExerciseDetailsBinding;
+import fit.tele.com.telefit.dialog.SetTimeDialog;
 import fit.tele.com.telefit.dialog.SetsRepsDialog;
 import fit.tele.com.telefit.dialog.VideoDialog;
 import fit.tele.com.telefit.modelBean.ExerciseDetailsBean;
 import fit.tele.com.telefit.modelBean.ExercisesListBean;
+import fit.tele.com.telefit.modelBean.ExxDetial;
 import fit.tele.com.telefit.modelBean.ModelBean;
+import fit.tele.com.telefit.modelBean.RoutinePlanBean;
+import fit.tele.com.telefit.modelBean.RoutinePlanDetailsBean;
+import fit.tele.com.telefit.modelBean.SubCatId;
 import fit.tele.com.telefit.modelBean.VideoArrayBean;
 import fit.tele.com.telefit.modelBean.YogaExerciseDetailsBean;
 import fit.tele.com.telefit.utils.CommonUtils;
@@ -46,7 +54,11 @@ public class ExerciseDetailsActivity extends BaseActivity implements View.OnClic
     ExeVideoAdapter exeVideoAdapter;
     ExercisesListBean exercisesListBean;
     ArrayList<ExercisesListBean> exercisesListBeans;
-    private SetsRepsDialog setsRepsDialog;
+    private RoutinePlanDetailsBean routinePlanDetailsBean;
+    private SetTimeDialog setTimeDialog;
+    private boolean isExerciseTime = false;
+    private SubCatAdapter subCatAdapter;
+    private ExxDetial exxDetial = new ExxDetial();
 
     @Override
     public int getLayoutResId() {
@@ -74,20 +86,29 @@ public class ExerciseDetailsActivity extends BaseActivity implements View.OnClic
 
         Intent intent = getIntent();
         if(intent != null) {
+            if (intent.hasExtra("From"))
+                strFrom = intent.getStringExtra("From");
             if (intent.hasExtra("ExerciseDetails"))
                 exerciseId = intent.getStringExtra("ExerciseDetails");
-            if (intent.hasExtra("from"))
-                strFrom = intent.getStringExtra("from");
             if(getIntent() != null && getIntent().hasExtra("ExercisesListBean"))
                 exercisesListBean = intent.getParcelableExtra("ExercisesListBean");
         }
 
-        if (strFrom.equalsIgnoreCase("gym") || strFrom.equalsIgnoreCase("hiit"))
+        if (exercisesListBean.getCatId().equalsIgnoreCase("1") || exercisesListBean.getCatId().equalsIgnoreCase("3"))
+        {
+            isExerciseTime = false;
             callExerciseDetailsApi(exerciseId);
-        else if (strFrom.equalsIgnoreCase("yoga"))
+        }
+        else if (exercisesListBean.getCatId().equalsIgnoreCase("4"))
+        {
+            isExerciseTime = true;
             callYogaExerciseDetailsApi(exerciseId);
-        else if (strFrom.equalsIgnoreCase("crossfit"))
+        }
+        else if (exercisesListBean.getCatId().equalsIgnoreCase("2"))
+        {
+            isExerciseTime = true;
             callCrossFitExerciseDetailsApi(exerciseId);
+        }
 
     }
 
@@ -126,42 +147,34 @@ public class ExerciseDetailsActivity extends BaseActivity implements View.OnClic
                 break;
 
             case R.id.txt_add:
-                setsRepsDialog = new SetsRepsDialog(context, new SetsRepsDialog.SetDataListener() {
-                    @Override
-                    public void onContinueClick(String strSets, String strReps, String strTime) {
-                        if (preferences.getRoutineDataPref() != null) {
-                            Gson gson = new Gson();
-                            exercisesListBeans = gson.fromJson(preferences.getRoutineDataPref(), new TypeToken<List<ExercisesListBean>>(){}.getType());
-                        }
-                        else
-                            exercisesListBeans = new ArrayList<>();
-
-                        exercisesListBean.setSets(strSets);
-                        exercisesListBean.setReps(strReps);
-                        exercisesListBean.setTime_between_sets(strTime);
-                        exercisesListBeans.add(exercisesListBean);
-                        preferences.saveRoutineData(exercisesListBeans);
-
-                        Intent intent = new Intent(context, CreateRoutineActivity.class);
-                        startActivity(intent);
-                    }
-                });
-                setsRepsDialog.show();
+                addExercise();
                 break;
         }
     }
 
     private void setData() {
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        binding.rvSubCat.setLayoutManager(linearLayoutManager);
+        binding.rvVideo.setVisibility(View.GONE);
+        if (subCatAdapter == null)
+        {
+            subCatAdapter = new SubCatAdapter(context);
+        }
+        binding.rvSubCat.setAdapter(subCatAdapter);
+        subCatAdapter.clearAll();
+
         if(exercisesBean != null || yogaExerciseDetailsBean != null) {
             binding.txtExerciseDetails.setMovementMethod(new ScrollingMovementMethod());
-            if (strFrom.equalsIgnoreCase("yoga")) {
-                binding.rvVideo.setVisibility(View.GONE);
-                binding.llMuscle.setVisibility(View.GONE);
-                binding.txtEquipment.setText("Category");
-                if (yogaExerciseDetailsBean != null && yogaExerciseDetailsBean.getOptArray() != null && !TextUtils.isEmpty(yogaExerciseDetailsBean.getOptArray().get(0).getSubCatName()))
-                    binding.txtEquipmentType.setText(yogaExerciseDetailsBean.getOptArray().get(0).getSubCatName());
-                if (yogaExerciseDetailsBean.getExeTitle() != null && !TextUtils.isEmpty(yogaExerciseDetailsBean.getExeTitle()))
-                    binding.txtExerciseType.setText(yogaExerciseDetailsBean.getCatName());
+            if (exercisesListBean.getCatId().equalsIgnoreCase("4")) {
+                binding.llInstruction.setVisibility(View.GONE);
+                subCatAdapter.addAllList(yogaExerciseDetailsBean.getOptArray());
+//                binding.llMuscle.setVisibility(View.GONE);
+//                binding.txtEquipment.setText("Category");
+//                if (yogaExerciseDetailsBean != null && yogaExerciseDetailsBean.getOptArray() != null && !TextUtils.isEmpty(yogaExerciseDetailsBean.getOptArray().get(0).getSubCatName()))
+//                    binding.txtEquipmentType.setText(yogaExerciseDetailsBean.getOptArray().get(0).getSubCatName());
+//                if (yogaExerciseDetailsBean.getExeTitle() != null && !TextUtils.isEmpty(yogaExerciseDetailsBean.getExeTitle()))
+//                    binding.txtExerciseType.setText(yogaExerciseDetailsBean.getCatName());
 
                 if (yogaExerciseDetailsBean != null && yogaExerciseDetailsBean.getVideoArray() != null && !TextUtils.isEmpty(yogaExerciseDetailsBean.getVideoArray().get(0).getExeImageUrl())) {
                     Picasso.with(this)
@@ -190,14 +203,15 @@ public class ExerciseDetailsActivity extends BaseActivity implements View.OnClic
                     }
                 });
             }
-            else if (strFrom.equalsIgnoreCase("crossfit")) {
+            else if (exercisesListBean.getCatId().equalsIgnoreCase("2")) {
                 binding.rvVideo.setVisibility(View.VISIBLE);
-                binding.llMuscle.setVisibility(View.GONE);
-                binding.txtEquipment.setText("Category");
-                if (yogaExerciseDetailsBean != null && yogaExerciseDetailsBean.getOptArray() != null && !TextUtils.isEmpty(yogaExerciseDetailsBean.getOptArray().get(0).getSubCatName()))
-                    binding.txtEquipmentType.setText(yogaExerciseDetailsBean.getOptArray().get(0).getSubCatName());
-                if (yogaExerciseDetailsBean.getExeTitle() != null && !TextUtils.isEmpty(yogaExerciseDetailsBean.getExeTitle()))
-                    binding.txtExerciseType.setText(yogaExerciseDetailsBean.getCatName());
+                subCatAdapter.addAllList(yogaExerciseDetailsBean.getOptArray());
+//                binding.llMuscle.setVisibility(View.GONE);
+//                binding.txtEquipment.setText("Category");
+//                if (yogaExerciseDetailsBean != null && yogaExerciseDetailsBean.getOptArray() != null && !TextUtils.isEmpty(yogaExerciseDetailsBean.getOptArray().get(0).getSubCatName()))
+//                    binding.txtEquipmentType.setText(yogaExerciseDetailsBean.getOptArray().get(0).getSubCatName());
+//                if (yogaExerciseDetailsBean.getExeTitle() != null && !TextUtils.isEmpty(yogaExerciseDetailsBean.getExeTitle()))
+//                    binding.txtExerciseType.setText(yogaExerciseDetailsBean.getCatName());
 
                 if (yogaExerciseDetailsBean != null && yogaExerciseDetailsBean.getVideoArray() != null && !TextUtils.isEmpty(yogaExerciseDetailsBean.getVideoArray().get(0).getExeImageUrl())) {
                     Picasso.with(this)
@@ -267,15 +281,17 @@ public class ExerciseDetailsActivity extends BaseActivity implements View.OnClic
 
             }
             else {
+                binding.llInstruction.setVisibility(View.GONE);
                 binding.rvVideo.setVisibility(View.GONE);
-                binding.llMuscle.setVisibility(View.VISIBLE);
-                binding.txtEquipment.setText("Equipment");
-                if (exercisesBean.getSubArray().get(0).getSubCatOption() != null && !TextUtils.isEmpty(exercisesBean.getSubArray().get(0).getSubCatOption()))
-                    binding.txtMuscleType.setText(exercisesBean.getSubArray().get(0).getSubCatOption());
-                if (exercisesBean.getSubArray().get(1).getSubCatOption() != null && !TextUtils.isEmpty(exercisesBean.getSubArray().get(1).getSubCatOption()))
-                    binding.txtExerciseType.setText(exercisesBean.getSubArray().get(1).getSubCatOption());
-                if (exercisesBean.getSubArray().get(2).getSubCatOption() != null && !TextUtils.isEmpty(exercisesBean.getSubArray().get(2).getSubCatOption()))
-                    binding.txtEquipmentType.setText(exercisesBean.getSubArray().get(2).getSubCatOption());
+                subCatAdapter.addAllList(exercisesBean.getSubArray());
+//                binding.llMuscle.setVisibility(View.VISIBLE);
+//                binding.txtEquipment.setText("Equipment");
+//                if (exercisesBean.getSubArray().get(0).getSubCatOption() != null && !TextUtils.isEmpty(exercisesBean.getSubArray().get(0).getSubCatOption()))
+//                    binding.txtMuscleType.setText(exercisesBean.getSubArray().get(0).getSubCatOption());
+//                if (exercisesBean.getSubArray().get(1).getSubCatOption() != null && !TextUtils.isEmpty(exercisesBean.getSubArray().get(1).getSubCatOption()))
+//                    binding.txtExerciseType.setText(exercisesBean.getSubArray().get(1).getSubCatOption());
+//                if (exercisesBean.getSubArray().get(2).getSubCatOption() != null && !TextUtils.isEmpty(exercisesBean.getSubArray().get(2).getSubCatOption()))
+//                    binding.txtEquipmentType.setText(exercisesBean.getSubArray().get(2).getSubCatOption());
 
                 if (exercisesBean.getExeImageUrl() != null && !TextUtils.isEmpty(exercisesBean.getExeImageUrl())) {
                     Picasso.with(this)
@@ -299,6 +315,103 @@ public class ExerciseDetailsActivity extends BaseActivity implements View.OnClic
                         videoDialog.show();
                     }
                 });
+            }
+        }
+    }
+
+    private void addExercise() {
+
+        if (exercisesListBean != null) {
+            if (exercisesListBean.getCatId().equalsIgnoreCase("2") || exercisesListBean.getCatId().equalsIgnoreCase("4")) {
+                int intHour=0,intMin=0,intSec=0;
+                if (exercisesListBean.getExeHours() != null)
+                    intHour = Integer.parseInt(exercisesListBean.getExeHours());
+                if (exercisesListBean.getExeMin() != null)
+                    intMin = Integer.parseInt(exercisesListBean.getExeMin());
+                if (exercisesListBean.getExeSec() != null)
+                    intSec = Integer.parseInt(exercisesListBean.getExeSec());
+
+                setTimeDialog = new SetTimeDialog(context, intHour, intMin, intSec, new SetTimeDialog.SetDataListener() {
+                    @Override
+                    public void onContinueClick(String strHour, String strMin, String strSec) {
+                        if (preferences.getIsUpdatePlan() != null && !TextUtils.isEmpty(preferences.getIsUpdatePlan()))
+                        {
+                            if (preferences.getUpdateRoutineDataPref() != null) {
+                                Gson gson = new Gson();
+                                routinePlanDetailsBean = gson.fromJson(preferences.getUpdateRoutineDataPref(), new TypeToken<RoutinePlanDetailsBean>(){}.getType());
+                            }
+                            else
+                                routinePlanDetailsBean = new RoutinePlanDetailsBean();
+
+                            exercisesListBean.setExeHours(strHour);
+                            exercisesListBean.setExeMin(strMin);
+                            exercisesListBean.setExeSec(strSec);
+
+                            if (strFrom != null && strFrom.equalsIgnoreCase("ExercisesActivity")) {
+                                exxDetial.setUserId(preferences.getUserDataPref().getId().toString().trim());
+                                exxDetial.setId(preferences.getIsUpdatePlan().trim());
+                                exxDetial.setExes(exercisesListBean);
+                                exxDetial.setExeHours(strHour);
+                                exxDetial.setExeMin(strMin);
+                                exxDetial.setExeSec(strSec);
+                                routinePlanDetailsBean.getExxDetial().add(exxDetial);
+                                preferences.saveUpdateRoutineData(routinePlanDetailsBean);
+                            }
+                            else {
+                                for (int i=0;i<routinePlanDetailsBean.getExxDetial().size();i++) {
+                                    if (exerciseId.equalsIgnoreCase(routinePlanDetailsBean.getExxDetial().get(i).getExes().getId())) {
+                                        routinePlanDetailsBean.getExxDetial().get(i).setUserId(preferences.getUserDataPref().getId().toString().trim());
+                                        routinePlanDetailsBean.getExxDetial().get(i).setId(preferences.getIsUpdatePlan().trim());
+                                        routinePlanDetailsBean.getExxDetial().get(i).setExeHours(strHour);
+                                        routinePlanDetailsBean.getExxDetial().get(i).setExeMin(strMin);
+                                        routinePlanDetailsBean.getExxDetial().get(i).setExeSec(strSec);
+                                        routinePlanDetailsBean.getExxDetial().get(i).setExes(exercisesListBean);
+                                        preferences.saveUpdateRoutineData(routinePlanDetailsBean);
+                                    }
+                                }
+                            }
+
+                            Intent intent = new Intent(context, UpdateRoutineActivity.class);
+                            startActivity(intent);
+                        }
+                        else {
+                            if (preferences.getRoutineDataPref() != null) {
+                                Gson gson = new Gson();
+                                exercisesListBeans = gson.fromJson(preferences.getRoutineDataPref(), new TypeToken<List<ExercisesListBean>>(){}.getType());
+                            }
+                            else
+                                exercisesListBeans = new ArrayList<>();
+
+                            if (strFrom != null && strFrom.equalsIgnoreCase("ExercisesActivity")) {
+                                exercisesListBean.setExeHours(strHour);
+                                exercisesListBean.setExeMin(strMin);
+                                exercisesListBean.setExeSec(strSec);
+                                exercisesListBeans.add(exercisesListBean);
+                                preferences.saveRoutineData(exercisesListBeans);
+                            }
+                            else {
+                                for (int i=0;i<exercisesListBeans.size();i++) {
+                                    if (exerciseId.equalsIgnoreCase(exercisesListBeans.get(i).getId())) {
+                                        exercisesListBeans.get(i).setExeHours(strHour);
+                                        exercisesListBeans.get(i).setExeMin(strMin);
+                                        exercisesListBeans.get(i).setExeSec(strSec);
+                                        preferences.saveRoutineData(exercisesListBeans);
+                                    }
+                                }
+                            }
+
+                            Intent intent = new Intent(context, CreateRoutineActivity.class);
+                            startActivity(intent);
+                        }
+                    }
+                });
+                setTimeDialog.show();
+            }
+            else {
+                Intent intent = new Intent(context, SetsRepsDetailsActivity.class);
+                intent.putExtra("From", strFrom);
+                intent.putExtra("ExercisesListBean",exercisesListBean);
+                startActivity(intent);
             }
         }
     }

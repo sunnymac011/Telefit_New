@@ -44,11 +44,13 @@ public class MainExercisesActivity extends BaseActivity implements View.OnClickL
         binding.llProfile.setOnClickListener(this);
         binding.llNutrition.setOnClickListener(this);
         binding.llGoals.setOnClickListener(this);
+        binding.llSocial.setOnClickListener(this);
 
         binding.rlGym.setOnClickListener(this);
         binding.rlCrossfit.setOnClickListener(this);
         binding.rlHiit.setOnClickListener(this);
         binding.rlYoga.setOnClickListener(this);
+        binding.txtTrainers.setOnClickListener(this);
 
         callCategoryApi();
     }
@@ -122,7 +124,11 @@ public class MainExercisesActivity extends BaseActivity implements View.OnClickL
                 startActivity(intent);
                 this.overridePendingTransition(0, 0);
                 break;
-
+            case R.id.ll_social:
+                intent = new Intent(context, SocialActivity.class);
+                startActivity(intent);
+                this.overridePendingTransition(0, 0);
+                break;
             case R.id.rl_gym:
                 intent = new Intent(context, GymActivity.class);
                 intent.putExtra("exerciseType","1");
@@ -148,6 +154,12 @@ public class MainExercisesActivity extends BaseActivity implements View.OnClickL
                 intent.putExtra("exerciseType","4");
                 startActivity(intent);
                 this.overridePendingTransition(0, 0);
+                break;
+
+            case R.id.txt_trainers:
+                intent = new Intent(context, TrainersActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
                 break;
         }
     }

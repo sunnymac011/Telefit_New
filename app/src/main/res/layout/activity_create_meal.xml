@@ -194,7 +194,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/rl_header"
             android:layout_above="@+id/ll_bottom_tab"
-            android:layout_margin="@dimen/_20sdp">
+            android:layout_margin="@dimen/_20sdp"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -228,7 +229,7 @@ No Meals entered on previous days available."
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <TextView
                     android:id="@+id/txt_header_txt"
@@ -240,11 +241,103 @@ Add foods as you prefer."
                     android:textColor="@color/light_gray"
                     android:fontFamily="@font/rubik"/>
 
+                <LinearLayout
+                    android:id="@+id/ll_add_snack"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:src="@drawable/add_exercises"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Add Snack >"
+                        android:textStyle="bold"
+                        android:textColor="@color/light_blue_text"
+                        android:fontFamily="@font/rubik"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/_5sdp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_meals"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    android:layout_marginLeft="@dimen/_10sdp">
+
+                    <TextView
+                        android:id="@+id/txt_gender_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Meal"
+                        android:textColor="@color/main_color"
+                        android:fontFamily="@font/rubik"/>
+
+                    <Spinner
+                        android:id="@+id/spi_meal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/_15sdp"
+                        android:textStyle="bold"
+                        android:textColor="@color/main_color"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:fontFamily="@font/rubik"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_1sdp"
+                        android:background="@color/main_color"
+                        android:layout_marginTop="@dimen/_5sdp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_meal_date"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    android:layout_marginLeft="@dimen/_10sdp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Meal Date"
+                        android:textColor="@color/main_color"
+                        android:fontFamily="@font/rubik"/>
+
+                    <TextView
+                        android:id="@+id/txt_meal_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="12/24/2019"
+                        android:textColor="@color/main_color"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_1sdp"
+                        android:background="@color/main_color"
+                        android:layout_marginTop="@dimen/_5sdp"/>
+
+                </LinearLayout>
+
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/input_layout_meal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:visibility="gone"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:layout_marginLeft="@dimen/_10sdp"
                     android:layout_marginRight="@dimen/_10sdp">
@@ -257,7 +350,8 @@ Add foods as you prefer."
                         android:textColor="@color/main_color"
                         android:textColorHint="@color/main_color"
                         android:fontFamily="@font/rubik"
-                        android:inputType="textPersonName"/>
+                        android:inputType="textPersonName"
+                        android:enabled="false"/>
 
                 </android.support.design.widget.TextInputLayout>
 

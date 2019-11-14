@@ -51,6 +51,8 @@ import fit.tele.com.telefit.apiBase.FetchServiceBase;
 import fit.tele.com.telefit.base.BaseActivity;
 import fit.tele.com.telefit.databinding.ActivityEditProfileBinding;
 import fit.tele.com.telefit.dialog.MediaOption;
+import fit.tele.com.telefit.dialog.SetHeightDialog;
+import fit.tele.com.telefit.dialog.SetNumbersDialog;
 import fit.tele.com.telefit.modelBean.LoginBean;
 import fit.tele.com.telefit.modelBean.ModelBean;
 import fit.tele.com.telefit.themes.EditProfileActivityTheme;
@@ -79,8 +81,8 @@ public class EditProfileActivity extends BaseActivity implements DatePickerDialo
     private Uri outputFileUri;
     private File fileProfile;
     GoogleApiClient mGoogleApiClient;
-    Location mSelectedLocation;
-    int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+    private SetNumbersDialog setNumbersDialog;
+    private SetHeightDialog setHeightDialog;
 
     @Override
     public int getLayoutResId() {
@@ -120,12 +122,24 @@ public class EditProfileActivity extends BaseActivity implements DatePickerDialo
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_custom_spinner, list);
         binding.spiGender.setAdapter(adapter);
 
-        binding.llDob.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                datePicker();
-            }
-        });
+        List<String> list1 = new ArrayList<>();
+        list1.add("Sedentary");
+        list1.add("Lightly active");
+        list1.add("Moderately active");
+        list1.add("Very active");
+        list1.add("Extra active");
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this, R.layout.item_custom_spinner, list1);
+        binding.spiActivity.setAdapter(adapter1);
+
+        List<String> list2 = new ArrayList<>();
+        list2.add("Lose 1 pound per week");
+        list2.add("Lose 1.5 pound per week");
+        list2.add("Lose 2 pounds per week");
+        list2.add("Gain 0.5 pound per week");
+        list2.add("Gain 1 pound per week");
+        list2.add("Gain 1.5 pounds per week");
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, R.layout.item_custom_spinner, list2);
+        binding.spiMaintain.setAdapter(adapter2);
 
         binding.btnUploadImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,20 +148,41 @@ public class EditProfileActivity extends BaseActivity implements DatePickerDialo
             }
         });
 
-//        binding.llAddress.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                try {
-//                    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
-//                            .build(EditProfileActivity.this);
-//                    startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
-//                } catch (GooglePlayServicesRepairableException e) {
-//                    // TODO: Handle the error.
-//                } catch (GooglePlayServicesNotAvailableException e) {
-//                    // TODO: Handle the error.
-//                }
-//            }
-//        });
+        binding.txtHeight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setHeightDialog = new SetHeightDialog(context, "Set Height", new SetHeightDialog.SetDataListener() {
+                    @Override
+                    public void onContinueClick(String strNumbers, String strNumbersTwo, String strWeightType) {
+                        if (strWeightType.equalsIgnoreCase("cm"))
+                        {
+                            binding.txtHeight.setText(strNumbers);
+                            binding.txtWeightType.setText("kg");
+                        }
+                        else
+                        {
+                            binding.txtHeight.setText(strNumbers+"'"+strNumbersTwo);
+                            binding.txtWeightType.setText("lbs");
+                        }
+                        binding.txtHeightType.setText(strWeightType);
+                    }
+                });
+                setHeightDialog.show();
+            }
+        });
+
+        binding.txtWeight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setNumbersDialog = new SetNumbersDialog(context, "Set Weight", false,false, new SetNumbersDialog.SetDataListener() {
+                    @Override
+                    public void onContinueClick(String strNumbers, String strNumbersTwo, String strWeightType) {
+                        binding.txtWeight.setText(strNumbers);
+                    }
+                });
+                setNumbersDialog.show();
+            }
+        });
 
         binding.btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,7 +193,7 @@ public class EditProfileActivity extends BaseActivity implements DatePickerDialo
 
             private boolean validation() {
                 if (binding.spiGender.getSelectedItem().toString().isEmpty()) {
-                    CommonUtils.toast(context,"Please selecte Gender!");
+                    CommonUtils.toast(context,"Please select Gender!");
                     return false;
                 } else if (binding.inputFname.getText().toString().isEmpty()) {
                     binding.inputFname.setError("Please enter First name");
@@ -166,11 +201,11 @@ public class EditProfileActivity extends BaseActivity implements DatePickerDialo
                 } else if (binding.inputLname.getText().toString().isEmpty()) {
                     binding.inputLname.setError("Please enter Last name");
                     return false;
-                } else if (binding.edtHeight.getText().toString().isEmpty()) {
-                    binding.edtHeight.setError("Please enter Height!");
+                } else if (binding.txtHeight.getText().toString().isEmpty()) {
+                    binding.txtHeight.setError("Please enter Height!");
                     return false;
-                } else if (binding.edtWeight.getText().toString().isEmpty()) {
-                    binding.edtWeight.setError("Please enter Weight!");
+                } else if (binding.txtWeight.getText().toString().isEmpty()) {
+                    binding.txtWeight.setError("Please enter Weight!");
                     return false;
                 } else if (binding.inputAddress.getText().toString().isEmpty()) {
                     binding.inputAddress.setError("Please enter Address!");
@@ -184,8 +219,8 @@ public class EditProfileActivity extends BaseActivity implements DatePickerDialo
                 } else if (fileProfile == null && saveLogiBean.getProfilePic() == null) {
                     CommonUtils.toast(context,"Please upload profile image!");
                     return false;
-                } else if (binding.txtDob.getText().toString().isEmpty()) {
-                    CommonUtils.toast(context, "Please enter Birthdate!");
+                } else if (binding.edtMm.getText().toString().isEmpty() || binding.edtDd.getText().toString().isEmpty() || binding.edtYyyy.getText().toString().isEmpty()) {
+                    CommonUtils.toast(context, "Please enter Birth Date!");
                     return false;
                 } else
                     return true;
@@ -222,7 +257,16 @@ public class EditProfileActivity extends BaseActivity implements DatePickerDialo
             binding.inputAddress.setText(saveLogiBean.getAddress());
         if (saveLogiBean != null && saveLogiBean.getDob() != null
                 && !TextUtils.isEmpty(saveLogiBean.getDob()))
-            binding.txtDob.setText(saveLogiBean.getDob());
+        {
+            String[] items1 = saveLogiBean.getDob().split("[/-]");
+            String year = items1[0];
+            String month = items1[1];
+            String date1 = items1[2];
+
+            binding.edtMm.setText(month);
+            binding.edtDd.setText(date1);
+            binding.edtYyyy.setText(year);
+        }
         if (saveLogiBean != null && saveLogiBean.getGender() != null
                 && !TextUtils.isEmpty(saveLogiBean.getGender())) {
             if (saveLogiBean.getGender().equalsIgnoreCase("male"))
@@ -232,50 +276,79 @@ public class EditProfileActivity extends BaseActivity implements DatePickerDialo
             if (saveLogiBean.getGender().equalsIgnoreCase("other"))
                 binding.spiGender.setSelection(2);
         }
+        if (saveLogiBean != null && saveLogiBean.getActivity() != null
+                && !TextUtils.isEmpty(saveLogiBean.getActivity())) {
+            if (saveLogiBean.getActivity().equalsIgnoreCase("Sedentary"))
+                binding.spiActivity.setSelection(0);
+            if (saveLogiBean.getActivity().equalsIgnoreCase("Lightly active"))
+                binding.spiActivity.setSelection(1);
+            if (saveLogiBean.getActivity().equalsIgnoreCase("Moderately active"))
+                binding.spiActivity.setSelection(2);
+            if (saveLogiBean.getActivity().equalsIgnoreCase("Very active"))
+                binding.spiActivity.setSelection(3);
+            if (saveLogiBean.getActivity().equalsIgnoreCase("Extra active"))
+                binding.spiActivity.setSelection(4);
+        }
+        if (saveLogiBean != null && saveLogiBean.getMaintainWeight() != null
+                && !TextUtils.isEmpty(saveLogiBean.getMaintainWeight())) {
+            if (saveLogiBean.getMaintainWeight().equalsIgnoreCase("Lose 1 pound per week"))
+                binding.spiMaintain.setSelection(0);
+            if (saveLogiBean.getMaintainWeight().equalsIgnoreCase("Lose 1.5 pounds per week"))
+                binding.spiMaintain.setSelection(1);
+            if (saveLogiBean.getMaintainWeight().equalsIgnoreCase("Lose 2 pounds per week"))
+                binding.spiMaintain.setSelection(2);
+            if (saveLogiBean.getMaintainWeight().equalsIgnoreCase("Gain 0.5 pound per week"))
+                binding.spiMaintain.setSelection(3);
+            if (saveLogiBean.getMaintainWeight().equalsIgnoreCase("Gain 1 pound per week"))
+                binding.spiMaintain.setSelection(4);
+            if (saveLogiBean.getMaintainWeight().equalsIgnoreCase("Gain 1.5 pounds per week"))
+                binding.spiMaintain.setSelection(5);
+        }
         if (saveLogiBean != null && saveLogiBean.getHeight() != null
                 && !TextUtils.isEmpty(saveLogiBean.getHeight()))
-            binding.edtHeight.setText(saveLogiBean.getHeight());
+            binding.txtHeight.setText(saveLogiBean.getHeight());
         if (saveLogiBean != null && saveLogiBean.getWeight() != null
                 && !TextUtils.isEmpty(saveLogiBean.getWeight()))
-            binding.edtWeight.setText(saveLogiBean.getWeight());
+            binding.txtWeight.setText(saveLogiBean.getWeight());
+        if (saveLogiBean != null && saveLogiBean.getWeightType() != null
+                && !TextUtils.isEmpty(saveLogiBean.getWeightType()))
+            binding.txtWeightType.setText(saveLogiBean.getWeightType());
     }
 
     private void datePicker() {
-        if (dpd == null || !dpd.isVisible()) {
-            Calendar now = Calendar.getInstance();
-            int year = now.get(Calendar.YEAR);
-            int mm = now.get(Calendar.MONTH);
-            int dd = now.get(Calendar.DAY_OF_MONTH);
-
-            if(binding.txtDob != null && !binding.txtDob.getText().toString().equalsIgnoreCase("Birth Date")) {
-                String[] date = binding.txtDob.getText().toString().split("/");
-                if(date.length == 3) {
-                    dd = Integer.parseInt(date[1]);
-                    mm = Integer.parseInt(date[0]) - 1;
-                    year = Integer.parseInt(date[2]);
-                }
-            }
-
-            dpd = DatePickerDialog.newInstance(EditProfileActivity.this, year, mm, dd);
-            dpd.setThemeDark(false);
-            dpd.vibrate(false);
-            dpd.dismissOnPause(true);
-            dpd.setMaxDate(now);
-            dpd.showYearPickerFirst(false);
-            dpd.setVersion(DatePickerDialog.Version.VERSION_1);
-            dpd.setAccentColor(ContextCompat.getColor(context, R.color.colorAccent));
-            dpd.setTitle("Select date");
-
-            dpd.show(getFragmentManager(), "Datepickerdialog");
-        }
+//        if (dpd == null || !dpd.isVisible()) {
+//            Calendar now = Calendar.getInstance();
+//            int year = now.get(Calendar.YEAR);
+//            int mm = now.get(Calendar.MONTH);
+//            int dd = now.get(Calendar.DAY_OF_MONTH);
+//
+//            if(binding.txtDob != null && !binding.txtDob.getText().toString().equalsIgnoreCase("Birth Date")) {
+//                String[] date = binding.txtDob.getText().toString().split("/");
+//                if(date.length == 3) {
+//                    dd = Integer.parseInt(date[1]);
+//                    mm = Integer.parseInt(date[0]) - 1;
+//                    year = Integer.parseInt(date[2]);
+//                }
+//            }
+//
+//            dpd = DatePickerDialog.newInstance(EditProfileActivity.this, year, mm, dd);
+//            dpd.setThemeDark(false);
+//            dpd.vibrate(false);
+//            dpd.dismissOnPause(true);
+//            dpd.setMaxDate(now);
+//            dpd.showYearPickerFirst(false);
+//            dpd.setVersion(DatePickerDialog.Version.VERSION_1);
+//            dpd.setAccentColor(ContextCompat.getColor(context, R.color.colorAccent));
+//            dpd.setTitle("Select date");
+//
+//            dpd.show(getFragmentManager(), "Datepickerdialog");
+//        }
     }
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         String date = ((monthOfYear+1) > 9 ? (monthOfYear+1) : ("0"+(monthOfYear+1))) + "/" + dayOfMonth + "/" + year;
 
-        Log.e("onDateSet ",""+date);
-        binding.txtDob.setText(date);
         map.put("bdate", date);
     }
 
@@ -470,9 +543,14 @@ public class EditProfileActivity extends BaseActivity implements DatePickerDialo
             map.put("name", binding.inputFname.getText().toString());
             map.put("l_name", binding.inputLname.getText().toString());
             map.put("gender", binding.spiGender.getSelectedItem().toString());
-            map.put("height", binding.edtHeight.getText().toString());
-            map.put("weight", binding.edtWeight.getText().toString());
+            map.put("activity", binding.spiActivity.getSelectedItem().toString());
+            map.put("maintain_weight", binding.spiMaintain.getSelectedItem().toString());
+            map.put("height", binding.txtHeight.getText().toString());
+            map.put("height_type", binding.txtHeightType.getText().toString());
+            map.put("weight", binding.txtWeight.getText().toString());
+            map.put("weight_type", binding.txtWeightType.getText().toString());
             map.put("address", binding.inputAddress.getText().toString());
+            map.put("bdate", binding.edtMm.getText().toString().trim()+"/"+binding.edtDd.getText().toString().trim()+"/"+binding.edtYyyy.getText().toString().trim());
 
             MultipartBody.Part body = null;
             if (fileProfile != null) {

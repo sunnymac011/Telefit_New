@@ -4,6 +4,8 @@ package fit.tele.com.telefit.modelBean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -15,42 +17,57 @@ public class RoutinePlanDetailsBean implements Parcelable {
     @SerializedName("user_id")
     @Expose
     private String userId;
-    @SerializedName("u_exe_pln_id")
+    @SerializedName("routine_name")
     @Expose
-    private String uExePlnId;
-    @SerializedName("exe_id")
+    private String routineName;
+    @SerializedName("day_of_the_week")
     @Expose
-    private String exeId;
-    @SerializedName("sets")
+    private String dayOfTheWeek;
+    @SerializedName("routine_type")
     @Expose
-    private String sets;
-    @SerializedName("reps")
+    private String routineType;
+    @SerializedName("difficulty_level")
     @Expose
-    private String reps;
-    @SerializedName("timebetweenreps")
+    private String difficultyLevel;
+    @SerializedName("is_user_trainer")
     @Expose
-    private String timebetweenreps;
+    private String isUserTrainer;
+    @SerializedName("day_flag")
+    @Expose
+    private String dayFlag;
+    @SerializedName("is_delete")
+    @Expose
+    private String isDelete;
     @SerializedName("created_at")
     @Expose
     private String createdAt;
     @SerializedName("updated_at")
     @Expose
     private String updatedAt;
-    @SerializedName("exe")
+    @SerializedName("plane_date")
     @Expose
-    private RoutineExerciseBean exe;
+    private String planeDate;
+    @SerializedName("exes")
+    @Expose
+    private ArrayList<ExxDetial> exxDetial = null;
+
+    public RoutinePlanDetailsBean() {
+    }
 
     protected RoutinePlanDetailsBean(Parcel in) {
         id = in.readString();
         userId = in.readString();
-        uExePlnId = in.readString();
-        exeId = in.readString();
-        sets = in.readString();
-        reps = in.readString();
-        timebetweenreps = in.readString();
+        routineName = in.readString();
+        dayOfTheWeek = in.readString();
+        routineType = in.readString();
+        difficultyLevel = in.readString();
+        isUserTrainer = in.readString();
+        dayFlag = in.readString();
+        isDelete = in.readString();
         createdAt = in.readString();
         updatedAt = in.readString();
-        exe = in.readParcelable(RoutineExerciseBean.class.getClassLoader());
+        planeDate = in.readString();
+        exxDetial = in.createTypedArrayList(ExxDetial.CREATOR);
     }
 
     public static final Creator<RoutinePlanDetailsBean> CREATOR = new Creator<RoutinePlanDetailsBean>() {
@@ -81,44 +98,60 @@ public class RoutinePlanDetailsBean implements Parcelable {
         this.userId = userId;
     }
 
-    public String getuExePlnId() {
-        return uExePlnId;
+    public String getRoutineName() {
+        return routineName;
     }
 
-    public void setuExePlnId(String uExePlnId) {
-        this.uExePlnId = uExePlnId;
+    public void setRoutineName(String routineName) {
+        this.routineName = routineName;
     }
 
-    public String getExeId() {
-        return exeId;
+    public String getDayOfTheWeek() {
+        return dayOfTheWeek;
     }
 
-    public void setExeId(String exeId) {
-        this.exeId = exeId;
+    public void setDayOfTheWeek(String dayOfTheWeek) {
+        this.dayOfTheWeek = dayOfTheWeek;
     }
 
-    public String getSets() {
-        return sets;
+    public String getRoutineType() {
+        return routineType;
     }
 
-    public void setSets(String sets) {
-        this.sets = sets;
+    public void setRoutineType(String routineType) {
+        this.routineType = routineType;
     }
 
-    public String getReps() {
-        return reps;
+    public String getDifficultyLevel() {
+        return difficultyLevel;
     }
 
-    public void setReps(String reps) {
-        this.reps = reps;
+    public void setDifficultyLevel(String difficultyLevel) {
+        this.difficultyLevel = difficultyLevel;
     }
 
-    public String getTimebetweenreps() {
-        return timebetweenreps;
+    public String getIsUserTrainer() {
+        return isUserTrainer;
     }
 
-    public void setTimebetweenreps(String timebetweenreps) {
-        this.timebetweenreps = timebetweenreps;
+    public void setIsUserTrainer(String isUserTrainer) {
+        this.isUserTrainer = isUserTrainer;
+    }
+
+    public String getDayFlag() {
+        return dayFlag;
+    }
+
+    public void setDayFlag(String dayFlag) {
+        this.dayFlag = dayFlag;
+    }
+
+    public String getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(String isDelete) {
+        this.isDelete = isDelete;
     }
 
     public String getCreatedAt() {
@@ -137,12 +170,20 @@ public class RoutinePlanDetailsBean implements Parcelable {
         this.updatedAt = updatedAt;
     }
 
-    public RoutineExerciseBean getExe() {
-        return exe;
+    public String getPlaneDate() {
+        return planeDate;
     }
 
-    public void setExe(RoutineExerciseBean exe) {
-        this.exe = exe;
+    public void setPlaneDate(String planeDate) {
+        this.planeDate = planeDate;
+    }
+
+    public ArrayList<ExxDetial> getExxDetial() {
+        return exxDetial;
+    }
+
+    public void setExxDetial(ArrayList<ExxDetial> exxDetial) {
+        this.exxDetial = exxDetial;
     }
 
     @Override
@@ -154,14 +195,17 @@ public class RoutinePlanDetailsBean implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeString(userId);
-        dest.writeString(uExePlnId);
-        dest.writeString(exeId);
-        dest.writeString(sets);
-        dest.writeString(reps);
-        dest.writeString(timebetweenreps);
+        dest.writeString(routineName);
+        dest.writeString(dayOfTheWeek);
+        dest.writeString(routineType);
+        dest.writeString(difficultyLevel);
+        dest.writeString(isUserTrainer);
+        dest.writeString(dayFlag);
+        dest.writeString(isDelete);
         dest.writeString(createdAt);
         dest.writeString(updatedAt);
-        dest.writeParcelable(exe, flags);
+        dest.writeString(planeDate);
+        dest.writeTypedList(exxDetial);
     }
 
     @Override
@@ -169,14 +213,17 @@ public class RoutinePlanDetailsBean implements Parcelable {
         return "RoutinePlanDetailsBean{" +
                 "id='" + id + '\'' +
                 ", userId='" + userId + '\'' +
-                ", uExePlnId='" + uExePlnId + '\'' +
-                ", exeId='" + exeId + '\'' +
-                ", sets='" + sets + '\'' +
-                ", reps='" + reps + '\'' +
-                ", timebetweenreps='" + timebetweenreps + '\'' +
+                ", routineName='" + routineName + '\'' +
+                ", dayOfTheWeek='" + dayOfTheWeek + '\'' +
+                ", routineType='" + routineType + '\'' +
+                ", difficultyLevel='" + difficultyLevel + '\'' +
+                ", isUserTrainer='" + isUserTrainer + '\'' +
+                ", dayFlag='" + dayFlag + '\'' +
+                ", isDelete='" + isDelete + '\'' +
                 ", createdAt='" + createdAt + '\'' +
                 ", updatedAt='" + updatedAt + '\'' +
-                ", exe=" + exe +
+                ", planeDate='" + planeDate + '\'' +
+                ", exxDetial=" + exxDetial +
                 '}';
     }
 }

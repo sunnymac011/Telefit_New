@@ -64,7 +64,7 @@ public class YogaExerciseDetailsBean implements Parcelable {
     private String catName;
     @SerializedName("opt_array")
     @Expose
-    private ArrayList<OptArray> optArray = null;
+    private ArrayList<SubArray> optArray = null;
     @SerializedName("video_array")
     @Expose
     private ArrayList<VideoArrayBean> videoArray = null;
@@ -87,7 +87,8 @@ public class YogaExerciseDetailsBean implements Parcelable {
         deactiveDate = in.readString();
         isVideoDeactive = in.readString();
         catName = in.readString();
-        optArray = in.createTypedArrayList(OptArray.CREATOR);
+        optArray = in.createTypedArrayList(SubArray.CREATOR);
+        videoArray = in.createTypedArrayList(VideoArrayBean.CREATOR);
     }
 
     public static final Creator<YogaExerciseDetailsBean> CREATOR = new Creator<YogaExerciseDetailsBean>() {
@@ -238,11 +239,11 @@ public class YogaExerciseDetailsBean implements Parcelable {
         this.catName = catName;
     }
 
-    public ArrayList<OptArray> getOptArray() {
+    public ArrayList<SubArray> getOptArray() {
         return optArray;
     }
 
-    public void setOptArray(ArrayList<OptArray> optArray) {
+    public void setOptArray(ArrayList<SubArray> optArray) {
         this.optArray = optArray;
     }
 
@@ -279,6 +280,7 @@ public class YogaExerciseDetailsBean implements Parcelable {
         dest.writeString(isVideoDeactive);
         dest.writeString(catName);
         dest.writeTypedList(optArray);
+        dest.writeTypedList(videoArray);
     }
 
     @Override

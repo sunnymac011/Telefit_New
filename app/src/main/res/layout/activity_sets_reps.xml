@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/rl_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_15sdp"
+            android:background="@color/main_color">
+
+            <ImageView
+                android:id="@+id/img_side_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/vect_back"/>
+
+            <TextView
+                android:id="@+id/txt_header_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Set Exercise"
+                android:textSize="@dimen/_14sdp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:fontFamily="@font/rubik"
+                android:layout_centerHorizontal="true"/>
+
+            <TextView
+                android:id="@+id/txt_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add"
+                android:textStyle="bold"
+                android:textColor="@color/light_blue"
+                android:fontFamily="@font/rubik"
+                android:layout_alignParentRight="true"
+                android:drawableLeft="@drawable/add_icon"
+                android:drawablePadding="@dimen/_5sdp"
+                android:layout_centerVertical="true"/>
+
+        </RelativeLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/rl_header">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/_20sdp">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/txt_sets"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Sets"
+                        android:textSize="@dimen/_14sdp"
+                        android:textStyle="bold"
+                        android:textColor="@color/main_color"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:id="@+id/txt_reps"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Reps"
+                        android:textSize="@dimen/_14sdp"
+                        android:textStyle="bold"
+                        android:textColor="@color/main_color"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:id="@+id/txt_weight"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Weight"
+                        android:textSize="@dimen/_14sdp"
+                        android:textStyle="bold"
+                        android:textColor="@color/main_color"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:id="@+id/txt_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Rest Time"
+                        android:textSize="@dimen/_14sdp"
+                        android:textStyle="bold"
+                        android:textColor="@color/main_color"
+                        android:layout_weight="1"/>
+
+                </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:listitem="@layout/item_setsreps_details" />
+
+                <TextView
+                    android:id="@+id/txt_add_set"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add Set"
+                    android:textStyle="bold"
+                    android:textColor="@color/light_blue_text"
+                    android:textSize="@dimen/_14sdp"
+                    android:fontFamily="@font/rubik"
+                    android:layout_alignParentRight="true"
+                    android:drawableLeft="@drawable/add_icon"
+                    android:drawablePadding="@dimen/_5sdp"
+                    android:layout_marginTop="@dimen/_10sdp"/>
+
+            </LinearLayout> `
+
+        </ScrollView>
+
+        <RelativeLayout
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_centerInParent="true">
+
+            <ProgressBar
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</layout>

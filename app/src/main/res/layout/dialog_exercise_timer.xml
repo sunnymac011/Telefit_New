@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/rl_trip_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_10sdp"
+        android:background="@color/main_color">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time"
+            android:textColor="@color/white"
+            android:fontFamily="@font/rubik"
+            android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_timer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/white"
+        android:padding="@dimen/_20sdp"
+        android:layout_below="@+id/rl_trip_detail"
+        android:gravity="center">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_hours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_10sdp">
+
+            <EditText
+                android:id="@+id/edt_hours"
+                android:layout_width="@dimen/_35sdp"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:hint="HH"
+                android:maxLength="2"
+                android:textColor="@color/main_color"
+                android:fontFamily="@font/rubik"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:id="@+id/txt_hours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=":"
+            android:textStyle="bold"
+            android:textSize="@dimen/_14sdp"
+            android:textColor="@color/main_color"
+            android:fontFamily="@font/rubik"
+            android:layout_gravity="center_vertical"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_minute"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_5sdp">
+
+            <EditText
+                android:id="@+id/edt_minute"
+                android:layout_width="@dimen/_35sdp"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:hint="MM"
+                android:maxLength="2"
+                android:textColor="@color/main_color"
+                android:fontFamily="@font/rubik"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:id="@+id/txt_minute"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=":"
+            android:textStyle="bold"
+            android:textSize="@dimen/_14sdp"
+            android:textColor="@color/main_color"
+            android:fontFamily="@font/rubik"
+            android:layout_gravity="center_vertical"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_sec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_5sdp">
+
+            <EditText
+                android:id="@+id/edt_sec"
+                android:layout_width="@dimen/_35sdp"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:hint="SS"
+                android:maxLength="2"
+                android:textColor="@color/main_color"
+                android:fontFamily="@font/rubik"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:id="@+id/txt_sec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sec"
+            android:textStyle="bold"
+            android:textSize="@dimen/_14sdp"
+            android:textColor="@color/main_color"
+            android:fontFamily="@font/rubik"
+            android:layout_gravity="center_vertical"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_timer"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:layout_centerHorizontal="true"
+        android:text="Submit"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:fontFamily="@font/rubik"
+        android:background="@drawable/rectangle_bg"
+        android:backgroundTint="@color/main_color" />
+
+</RelativeLayout>

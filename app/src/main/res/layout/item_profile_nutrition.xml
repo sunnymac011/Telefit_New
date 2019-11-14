@@ -42,6 +42,7 @@
                     android:fontFamily="@font/rubik"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/img_right_icon"
+                    android:visibility="gone"
                     android:layout_marginRight="@dimen/_10sdp"/>
 
                 <ImageView
@@ -89,6 +90,7 @@
                     android:fontFamily="@font/rubik"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/img_meals_right_icon"
+                    android:visibility="gone"
                     android:layout_marginRight="@dimen/_10sdp"/>
 
                 <ImageView
@@ -136,6 +138,7 @@
                     android:fontFamily="@font/rubik"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/img_recipes_right_icon"
+                    android:visibility="gone"
                     android:layout_marginRight="@dimen/_10sdp"/>
 
                 <ImageView

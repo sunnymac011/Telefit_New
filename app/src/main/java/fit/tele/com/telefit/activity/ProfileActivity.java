@@ -2,7 +2,6 @@ package fit.tele.com.telefit.activity;
 
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -25,8 +24,9 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
 
     ActivityProfileBinding binding;
     LoginBean saveLogiBean;
-    RelativeLayout rl_notifications, rl_themes, rl_logout, rl_units, rl_about,rl_privacy;
-    TextView txt_themes_count;
+    RelativeLayout rl_notifications, rl_themes, rl_logout, rl_units, rl_about,rl_privacy, rl_food, rl_meals, rl_recipes, rl_help, rl_country,
+            rl_exercises, rl_trainer, rl_app_preferences,rl_device;
+    TextView txt_themes_count, txt_selected_country;
 
     @Override
     public int getLayoutResId() {
@@ -51,6 +51,16 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
         rl_units = (RelativeLayout) findViewById(R.id.rl_units);
         rl_about = (RelativeLayout) findViewById(R.id.rl_about);
         rl_privacy = (RelativeLayout) findViewById(R.id.rl_privacy);
+        rl_food = (RelativeLayout) findViewById(R.id.rl_food);
+        rl_meals = (RelativeLayout) findViewById(R.id.rl_meals);
+        rl_recipes = (RelativeLayout) findViewById(R.id.rl_recipes);
+        rl_help = (RelativeLayout) findViewById(R.id.rl_help);
+        rl_country = (RelativeLayout) findViewById(R.id.rl_country);
+        rl_exercises = (RelativeLayout) findViewById(R.id.rl_exercises);
+        rl_trainer = (RelativeLayout) findViewById(R.id.rl_trainer);
+        rl_app_preferences = (RelativeLayout) findViewById(R.id.rl_app_preferences);
+        rl_device = (RelativeLayout) findViewById(R.id.rl_device);
+        txt_selected_country = (TextView) findViewById(R.id.txt_selected_country);
         txt_themes_count = (TextView) findViewById(R.id.txt_themes_count);
         txt_themes_count.setText(preferences.getTheme());
 
@@ -66,10 +76,20 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
         binding.llFitnessTab.setOnClickListener(this);
         binding.llMoreTab.setOnClickListener(this);
 
+        rl_food.setOnClickListener(this);
+        rl_meals.setOnClickListener(this);
+        rl_recipes.setOnClickListener(this);
+
         rl_notifications.setOnClickListener(this);
         rl_themes.setOnClickListener(this);
         rl_units.setOnClickListener(this);
         rl_privacy.setOnClickListener(this);
+        rl_help.setOnClickListener(this);
+        rl_country.setOnClickListener(this);
+        rl_exercises.setOnClickListener(this);
+        rl_trainer.setOnClickListener(this);
+        rl_app_preferences.setOnClickListener(this);
+        rl_device.setOnClickListener(this);
 
         rl_logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,18 +126,21 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
         if (saveLogiBean != null && saveLogiBean.getHeight() != null
                 && !TextUtils.isEmpty(saveLogiBean.getHeight()))
         {
-            double doubleHeight = Double.parseDouble(saveLogiBean.getHeight());
+//            double doubleHeight = Double.parseDouble(saveLogiBean.getHeight());
             if (saveLogiBean != null && saveLogiBean.getWeight() != null
                     && !TextUtils.isEmpty(saveLogiBean.getWeight()))
             {
-                double doubleWeight = Double.parseDouble(saveLogiBean.getWeight());
-                binding.txtHeightWeight.setText(String.format("%.2f", doubleHeight)+"ft / "+String.format("%.2f", doubleWeight)+" kg");
+//                double doubleWeight = Double.parseDouble(saveLogiBean.getWeight());
+                binding.txtHeightWeight.setText(saveLogiBean.getHeight()+"ft / "+saveLogiBean.getWeight()+" "+saveLogiBean.getWeightType());
             }
         }
 
         if (saveLogiBean != null && saveLogiBean.getDob() != null
                 && !TextUtils.isEmpty(saveLogiBean.getDob()))
-            binding.txtAge.setText(""+getAge(saveLogiBean.getDob()));
+            binding.txtAge.setText(getAge(saveLogiBean.getDob())+" years old");
+        if (saveLogiBean != null && saveLogiBean.getMaintainWeight() != null
+                && !TextUtils.isEmpty(saveLogiBean.getMaintainWeight()))
+            binding.txtExerciseTime.setText(saveLogiBean.getMaintainWeight());
 
     }
 
@@ -148,6 +171,11 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
                 intent = new Intent(context, SocialActivity.class);
                 startActivity(intent);
                 this.overridePendingTransition(0, 0);
+                break;
+
+            case R.id.rl_help:
+                intent = new Intent(context, HelpActivity.class);
+                startActivity(intent);
                 break;
 
             case R.id.txt_edit :
@@ -206,7 +234,62 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
                 break;
 
             case R.id.rl_privacy :
-                intent = new Intent(context, PrivacyActiviry.class);
+                intent = new Intent(context, PrivacyActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.rl_food :
+                preferences.cleanRecipedata();
+                preferences.cleanMealNamedata();
+                preferences.cleanMealdata();
+                preferences.cleanMealIDdata();
+                preferences.cleanUpdateMeal();
+                intent = new Intent(context, SearchFoodActivity.class);
+                intent.putExtra("tab",2);
+                startActivity(intent);
+                break;
+
+            case R.id.rl_meals :
+                preferences.cleanMealNamedata();
+                preferences.cleanMealDatedata();
+                preferences.cleanMealdata();
+                preferences.cleanMealIDdata();
+                preferences.cleanUpdateMeal();
+                intent = new Intent(context, SearchFoodActivity.class);
+                intent.putExtra("tab",3);
+                startActivity(intent);
+                break;
+
+            case R.id.rl_recipes :
+                preferences.cleanRecipedata();
+                intent = new Intent(context, SearchFoodActivity.class);
+                intent.putExtra("tab",4);
+                startActivity(intent);
+                break;
+
+            case R.id.rl_country :
+                intent = new Intent(context, DatabaseCountryActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.rl_exercises :
+                intent = new Intent(context, FitnessActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+                break;
+
+            case R.id.rl_trainer:
+                intent = new Intent(context, TrainersActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.rl_app_preferences:
+                intent = new Intent(context, AppPreferencesActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.rl_device :
+                intent = new Intent(context, DeviceActivity.class);
                 startActivity(intent);
                 break;
         }
@@ -218,11 +301,14 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
         ProfileActivityTheme profileActivityTheme = new ProfileActivityTheme();
         profileActivityTheme.setTheme(binding, ProfileActivity.this);
         txt_themes_count.setText(preferences.getTheme());
+        if (preferences.getCountyPref() != null && !TextUtils.isEmpty(preferences.getCountyPref()))
+            txt_selected_country.setText(preferences.getCountyPref());
+        else
+            txt_selected_country.setText("");
     }
 
     private int getAge(String dobString){
 
-        Log.e("dobString befor ",""+dobString);
         Date date = null;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
@@ -231,7 +317,6 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
             e.printStackTrace();
         }
 
-        Log.e("dobString befor ",""+date);
         if(date == null) return 0;
 
         Calendar dob = Calendar.getInstance();
@@ -250,8 +335,6 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
         if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)){
             age--;
         }
-
-
 
         return age;
     }

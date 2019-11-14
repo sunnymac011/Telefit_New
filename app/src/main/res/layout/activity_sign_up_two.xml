@@ -47,184 +47,346 @@
 
             </RelativeLayout>
 
-            <TextView
-                android:id="@+id/txt_inst"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tell us more about you."
-                android:textColor="@color/main_color"
-                android:layout_below="@+id/rl_header"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:layout_marginLeft="@dimen/_30sdp"
-                android:fontFamily="@font/rubik"/>
-
-            <LinearLayout
-                android:id="@+id/ll_gender"
-                android:orientation="vertical"
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txt_inst"
-                android:layout_marginTop="@dimen/_20sdp"
-                android:layout_marginRight="@dimen/_30sdp"
-                android:layout_marginLeft="@dimen/_30sdp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Gender"
-                    android:textColor="@color/main_color"
-                    android:fontFamily="@font/rubik"/>
-
-                <Spinner
-                    android:id="@+id/spi_gender"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/_15sdp"
-                    android:textStyle="bold"
-                    android:textColor="@color/main_color"
-                    android:layout_marginTop="@dimen/_5sdp"
-                    android:fontFamily="@font/rubik"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_1sdp"
-                    android:background="@color/main_color"
-                    android:layout_marginTop="@dimen/_5sdp"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_hw"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/ll_gender"
-                android:layout_marginTop="@dimen/_20sdp"
-                android:layout_marginRight="@dimen/_30sdp"
-                android:layout_marginLeft="@dimen/_30sdp">
+                android:layout_height="match_parent"
+                android:layout_below="@+id/rl_header">
 
                 <LinearLayout
-                    android:id="@+id/ll_height"
                     android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginRight="@dimen/_10sdp">
+                    android:layout_height="match_parent">
 
                     <TextView
+                        android:id="@+id/txt_inst"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Height"
+                        android:text="Tell us more about you."
                         android:textColor="@color/main_color"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginLeft="@dimen/_30sdp"
                         android:fontFamily="@font/rubik"/>
 
                     <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <EditText
-                            android:id="@+id/edt_height"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@android:color/transparent"
-                            android:hint="5'8"
-                            android:inputType="numberDecimal"
-                            android:textSize="@dimen/_19sdp"
-                            android:textStyle="bold"
-                            android:textColor="@color/main_color"
-                            android:layout_marginTop="@dimen/_5sdp"
-                            android:fontFamily="@font/rubik"
-                            android:singleLine="true"/>
+                        android:id="@+id/ll_birthday"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txt_inst"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:layout_marginRight="@dimen/_30sdp"
+                        android:layout_marginLeft="@dimen/_30sdp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:text="ft"
+                            android:text="Birth Date"
                             android:textColor="@color/main_color"
-                            android:layout_marginLeft="@dimen/_10sdp"
-                            android:layout_marginBottom="@dimen/_6sdp"
                             android:fontFamily="@font/rubik"/>
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_5sdp">
+
+                            <EditText
+                                android:id="@+id/edt_mm"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/_14sdp"
+                                android:textStyle="bold"
+                                android:textColor="@color/main_color"
+                                android:inputType="date"
+                                android:maxLength="2"
+                                android:fontFamily="@font/rubik"
+                                android:hint="MM"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="/"
+                                android:textSize="@dimen/_14sdp"
+                                android:textStyle="bold"
+                                android:textColor="@color/main_color"
+                                android:fontFamily="@font/rubik"/>
+
+                            <EditText
+                                android:id="@+id/edt_dd"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/_14sdp"
+                                android:textStyle="bold"
+                                android:textColor="@color/main_color"
+                                android:inputType="date"
+                                android:maxLength="2"
+                                android:fontFamily="@font/rubik"
+                                android:hint="DD"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="/"
+                                android:textSize="@dimen/_14sdp"
+                                android:textStyle="bold"
+                                android:textColor="@color/main_color"
+                                android:fontFamily="@font/rubik"/>
+
+                            <EditText
+                                android:id="@+id/edt_yyyy"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/_14sdp"
+                                android:textStyle="bold"
+                                android:textColor="@color/main_color"
+                                android:inputType="date"
+                                android:maxLength="4"
+                                android:fontFamily="@font/rubik"
+                                android:hint="YYYY"/>
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_1sdp"
-                        android:background="@color/main_color"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ll_weight"
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginLeft="@dimen/_10sdp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Weight"
-                        android:textColor="@color/main_color"
-                        android:fontFamily="@font/rubik"/>
-
                     <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <EditText
-                            android:id="@+id/edt_weight"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@android:color/transparent"
-                            android:hint="65"
-                            android:inputType="number"
-                            android:textSize="@dimen/_19sdp"
-                            android:textStyle="bold"
-                            android:textColor="@color/main_color"
-                            android:layout_marginTop="@dimen/_5sdp"
-                            android:fontFamily="@font/rubik"
-                            android:imeOptions="actionDone"
-                            android:singleLine="true"/>
+                        android:id="@+id/ll_gender"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ll_birthday"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:layout_marginRight="@dimen/_30sdp"
+                        android:layout_marginLeft="@dimen/_30sdp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:text="kg"
+                            android:text="Gender"
                             android:textColor="@color/main_color"
-                            android:layout_marginLeft="@dimen/_10sdp"
-                            android:layout_marginBottom="@dimen/_6sdp"
                             android:fontFamily="@font/rubik"/>
+
+                        <Spinner
+                            android:id="@+id/spi_gender"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/_15sdp"
+                            android:textStyle="bold"
+                            android:textColor="@color/main_color"
+                            android:layout_marginTop="@dimen/_5sdp"
+                            android:fontFamily="@font/rubik"/>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_1sdp"
+                            android:background="@color/main_color"
+                            android:layout_marginTop="@dimen/_5sdp"/>
 
                     </LinearLayout>
 
-                    <View
+                    <LinearLayout
+                        android:id="@+id/ll_hw"
+                        android:orientation="horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_1sdp"
-                        android:background="@color/main_color"/>
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ll_gender"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:layout_marginRight="@dimen/_30sdp"
+                        android:layout_marginLeft="@dimen/_30sdp">
+
+                        <LinearLayout
+                            android:id="@+id/ll_height"
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginRight="@dimen/_10sdp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Height"
+                                android:textColor="@color/main_color"
+                                android:fontFamily="@font/rubik"/>
+
+                            <LinearLayout
+                                android:orientation="horizontal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:id="@+id/txt_height"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:hint="5'8"
+                                    android:textSize="@dimen/_19sdp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/main_color"
+                                    android:layout_marginTop="@dimen/_5sdp"
+                                    android:fontFamily="@font/rubik"
+                                    android:singleLine="true"/>
+
+                                <TextView
+                                    android:id="@+id/txt_height_type"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="bottom"
+                                    android:text="ft"
+                                    android:textColor="@color/main_color"
+                                    android:layout_marginLeft="@dimen/_10sdp"
+                                    android:fontFamily="@font/rubik"/>
+
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_1sdp"
+                                android:background="@color/main_color"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ll_weight"
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginLeft="@dimen/_10sdp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Weight"
+                                android:textColor="@color/main_color"
+                                android:fontFamily="@font/rubik"/>
+
+                            <LinearLayout
+                                android:orientation="horizontal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:id="@+id/txt_weight"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:hint="65"
+                                    android:textSize="@dimen/_19sdp"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/main_color"
+                                    android:layout_marginTop="@dimen/_5sdp"
+                                    android:fontFamily="@font/rubik"
+                                    android:imeOptions="actionDone"
+                                    android:singleLine="true"/>
+
+                                <TextView
+                                    android:id="@+id/txt_weight_type"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="bottom"
+                                    android:text="kg"
+                                    android:textColor="@color/main_color"
+                                    android:layout_marginLeft="@dimen/_10sdp"
+                                    android:fontFamily="@font/rubik"/>
+
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_1sdp"
+                                android:background="@color/main_color"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_activity_level"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ll_hw"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:layout_marginRight="@dimen/_30sdp"
+                        android:layout_marginLeft="@dimen/_30sdp">
+
+                        <TextView
+                            android:id="@+id/txt_activity_header"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Activity"
+                            android:textColor="@color/main_color"
+                            android:fontFamily="@font/rubik"/>
+
+                        <Spinner
+                            android:id="@+id/spi_activity"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/_15sdp"
+                            android:textStyle="bold"
+                            android:textColor="@color/main_color"
+                            android:layout_marginTop="@dimen/_5sdp"
+                            android:fontFamily="@font/rubik"/>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_1sdp"
+                            android:background="@color/main_color"
+                            android:layout_marginTop="@dimen/_5sdp"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_maintain_weight"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ll_activity_level"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:layout_marginRight="@dimen/_30sdp"
+                        android:layout_marginLeft="@dimen/_30sdp">
+
+                        <TextView
+                            android:id="@+id/txt_maintain_header"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Goal"
+                            android:textColor="@color/main_color"
+                            android:fontFamily="@font/rubik"/>
+
+                        <Spinner
+                            android:id="@+id/spi_maintain"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/_15sdp"
+                            android:textStyle="bold"
+                            android:textColor="@color/main_color"
+                            android:layout_marginTop="@dimen/_5sdp"
+                            android:fontFamily="@font/rubik"/>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_1sdp"
+                            android:background="@color/main_color"
+                            android:layout_marginTop="@dimen/_5sdp"/>
+
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/btn_create"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/ll_maintain_weight"
+                        android:layout_marginTop="@dimen/_30sdp"
+                        android:layout_marginLeft="@dimen/_30sdp"
+                        android:layout_marginRight="@dimen/_30sdp"
+                        android:text="Start your Journey"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:background="@drawable/rectangle_main_blue_bg"
+                        android:fontFamily="@font/rubik"/>
 
                 </LinearLayout>
 
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/btn_create"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/ll_hw"
-                android:layout_marginTop="@dimen/_30sdp"
-                android:layout_marginLeft="@dimen/_30sdp"
-                android:layout_marginRight="@dimen/_30sdp"
-                android:text="Start your Journey"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:background="@drawable/rectangle_main_blue_bg"
-                android:fontFamily="@font/rubik"/>
+            </ScrollView>
 
             <RelativeLayout
                 android:id="@+id/progress"

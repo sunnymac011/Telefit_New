@@ -7,29 +7,43 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 public class ExeDetl implements Parcelable {
 
     @SerializedName("exeid")
     @Expose
     private String exeid;
-    @SerializedName("sets")
+    @SerializedName("cat_id")
     @Expose
-    private String sets;
-    @SerializedName("reps")
+    private String catid;
+    @SerializedName("exe_hours")
     @Expose
-    private String reps;
-    @SerializedName("timebetweenreps")
+    private String exeHours;
+    @SerializedName("exe_min")
     @Expose
-    private String timebetweenreps;
+    private String exeMin;
+    @SerializedName("exe_sec")
+    @Expose
+    private String exeSec;
+    @SerializedName("routine_exe_order")
+    @Expose
+    private String routineExeOrder;
+    @SerializedName("setsReps")
+    @Expose
+    private ArrayList<SetsRepsBean> setsRepsBeans;
 
     public ExeDetl() {
     }
 
     protected ExeDetl(Parcel in) {
         exeid = in.readString();
-        sets = in.readString();
-        reps = in.readString();
-        timebetweenreps = in.readString();
+        catid = in.readString();
+        exeHours = in.readString();
+        exeMin = in.readString();
+        exeSec = in.readString();
+        routineExeOrder = in.readString();
+        setsRepsBeans = in.createTypedArrayList(SetsRepsBean.CREATOR);
     }
 
     public static final Creator<ExeDetl> CREATOR = new Creator<ExeDetl>() {
@@ -52,28 +66,52 @@ public class ExeDetl implements Parcelable {
         this.exeid = exeid;
     }
 
-    public String getSets() {
-        return sets;
+    public String getCatid() {
+        return catid;
     }
 
-    public void setSets(String sets) {
-        this.sets = sets;
+    public void setCatid(String catid) {
+        this.catid = catid;
     }
 
-    public String getReps() {
-        return reps;
+    public String getExeHours() {
+        return exeHours;
     }
 
-    public void setReps(String reps) {
-        this.reps = reps;
+    public void setExeHours(String exeHours) {
+        this.exeHours = exeHours;
     }
 
-    public String getTimebetweenreps() {
-        return timebetweenreps;
+    public String getExeMin() {
+        return exeMin;
     }
 
-    public void setTimebetweenreps(String timebetweenreps) {
-        this.timebetweenreps = timebetweenreps;
+    public void setExeMin(String exeMin) {
+        this.exeMin = exeMin;
+    }
+
+    public String getExeSec() {
+        return exeSec;
+    }
+
+    public void setExeSec(String exeSec) {
+        this.exeSec = exeSec;
+    }
+
+    public String getRoutineExeOrder() {
+        return routineExeOrder;
+    }
+
+    public void setRoutineExeOrder(String routineExeOrder) {
+        this.routineExeOrder = routineExeOrder;
+    }
+
+    public ArrayList<SetsRepsBean> getSetsRepsBeans() {
+        return setsRepsBeans;
+    }
+
+    public void setSetsRepsBeans(ArrayList<SetsRepsBean> setsRepsBeans) {
+        this.setsRepsBeans = setsRepsBeans;
     }
 
     @Override
@@ -84,18 +122,24 @@ public class ExeDetl implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(exeid);
-        dest.writeString(sets);
-        dest.writeString(reps);
-        dest.writeString(timebetweenreps);
+        dest.writeString(catid);
+        dest.writeString(exeHours);
+        dest.writeString(exeMin);
+        dest.writeString(exeSec);
+        dest.writeString(routineExeOrder);
+        dest.writeTypedList(setsRepsBeans);
     }
 
     @Override
     public String toString() {
         return "ExeDetl{" +
                 "exeid='" + exeid + '\'' +
-                ", sets='" + sets + '\'' +
-                ", reps='" + reps + '\'' +
-                ", timebetweenreps='" + timebetweenreps + '\'' +
+                ", catid='" + catid + '\'' +
+                ", exeHours='" + exeHours + '\'' +
+                ", exeMin='" + exeMin + '\'' +
+                ", exeSec='" + exeSec + '\'' +
+                ", routineExeOrder='" + routineExeOrder + '\'' +
+                ", setsRepsBeans=" + setsRepsBeans +
                 '}';
     }
 }

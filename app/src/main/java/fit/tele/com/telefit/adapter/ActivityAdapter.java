@@ -9,9 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.daimajia.swipe.SwipeLayout;
+import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
@@ -22,10 +24,12 @@ import java.util.Locale;
 
 import fit.tele.com.telefit.R;
 import fit.tele.com.telefit.modelBean.CreatePostBean;
+import fit.tele.com.telefit.modelBean.RoutinePlanBean;
 import fit.tele.com.telefit.utils.CircleTransform;
 import fit.tele.com.telefit.utils.OnLoadMoreListener;
 
-public class ActivityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+public class ActivityAdapter extends RecyclerSwipeAdapter<ActivityAdapter.SimpleViewHolder> {
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_ITEM_RIGHT =2;
     private final int VIEW_TYPE_LOADING = 1;
@@ -37,9 +41,9 @@ public class ActivityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private OnLoadMoreListener onLoadMoreListener;
     ActivitiesListner listener;
     private ArrayList<CreatePostBean> listFill = new ArrayList<>();
-    private int userId;
+    private String userId;
 
-    public ActivityAdapter(Context context,int userId, RecyclerView recyclerView, ActivitiesListner listener) {
+    public ActivityAdapter(Context context, String userId, RecyclerView recyclerView, ActivitiesListner listener) {
         this.context = context;
         list = new ArrayList<>();
         this.listener = listener;
@@ -60,58 +64,6 @@ public class ActivityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             }
         });
-    }
-
-    public void setOnLoadMoreListener(OnLoadMoreListener mOnLoadMoreListener) {
-        this.onLoadMoreListener = mOnLoadMoreListener;
-    }
-
-
-
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == VIEW_TYPE_ITEM) {
-            View view = LayoutInflater.from(context).inflate(R.layout.item_rv_activity, parent, false);
-            return new Header(view);
-        } else if (viewType == VIEW_TYPE_ITEM_RIGHT) {
-            View view = LayoutInflater.from(context).inflate(R.layout.item_rv_activity_right, parent, false);
-            return new Header(view);
-        }
-//        else if (viewType == VIEW_TYPE_LOADING) {
-//            View view = LayoutInflater.from(context).inflate(R.layout.item_progress, parent, false);
-//            return new LoadingViewHolder(view);
-//        }
-        return null;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-       // return list.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
-
-        if(list.get(position).getUser_id()==userId){
-            return list.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM_RIGHT;
-        }else {
-            return list.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
-        }
-    }
-
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof Header)
-            ((Header) holder).bindData(position);
-        else if (holder instanceof LoadingViewHolder) {
-            LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
-//            loadingViewHolder.progressBar.setIndeterminate(true);
-        }
-    }
-
-    @Override
-    public int getItemCount() {
-        return list.size();
-    }
-
-    public void setLoaded() {
-        isLoading = false;
     }
 
     public void clearAll() {
@@ -138,30 +90,57 @@ public class ActivityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    private class LoadingViewHolder extends RecyclerView.ViewHolder {
-        public ProgressBar progressBar;
+    @Override
+    public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == VIEW_TYPE_ITEM) {
+            View view = LayoutInflater.from(context).inflate(R.layout.item_rv_activity, parent, false);
+            return new ActivityAdapter.SimpleViewHolder(view);
+        } else if (viewType == VIEW_TYPE_ITEM_RIGHT) {
+            View view = LayoutInflater.from(context).inflate(R.layout.item_rv_activity_right, parent, false);
+            return new ActivityAdapter.SimpleViewHolder(view);
+        }
+        return null;
+    }
 
-        public LoadingViewHolder(View view) {
-            super(view);
-            progressBar = (ProgressBar) view.findViewById(R.id.progressBar1);
+    @Override
+    public void onBindViewHolder(final SimpleViewHolder viewHolder, final int position) {
+        if (list != null && position >= 0 && position < list.size() && list.get(position) != null) {
+            final CreatePostBean item = list.get(position);
+            viewHolder.toBinding(position, item);
+            mItemManger.bindView(viewHolder.itemView, position);
         }
     }
 
-    private class Header extends RecyclerView.ViewHolder {
-        int position;
-        private TextView txt_customer_name, txt_date,txt_list_desc;
-        private ImageView img_user;
+    @Override
+    public int getItemCount() {
+        return list.size();
+    }
 
-        Header(View v) {
+    @Override
+    public int getSwipeLayoutResourceId(int position) {
+        return R.id.swipe;
+    }
+
+    public class SimpleViewHolder extends RecyclerView.ViewHolder {
+        private SwipeLayout swipeLayout;
+        private TextView txt_customer_name, txt_date,txt_list_desc,txt_time,txt_delete;
+        private ImageView img_user;
+        int position;
+
+        public SimpleViewHolder(View v) {
             super(v);
+            swipeLayout = (SwipeLayout) v.findViewById(R.id.swipe);
             txt_customer_name = (TextView) v.findViewById(R.id.txt_list_title);
             txt_list_desc = (TextView) v.findViewById(R.id.txt_list_desc);
             txt_date = (TextView) v.findViewById(R.id.txt_date);
+            txt_time = (TextView) v.findViewById(R.id.txt_time);
+            txt_delete = (TextView) v.findViewById(R.id.txt_delete);
             img_user = (ImageView) v.findViewById(R.id.img_user);
         }
 
-        public void bindData(int pos) {
+        public void toBinding(int pos, CreatePostBean item) {
             position = pos;
+
             if (list != null && position >= 0 && position < list.size()) {
                 if (list.get(position) != null) {
                     if (list.get(position).getName() != null && !TextUtils.isEmpty(list.get(position).getName())) {
@@ -173,6 +152,11 @@ public class ActivityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         txt_list_desc.setText(list.get(position).getPost_desc());
                     } else {
                         txt_list_desc.setText("");
+                    }
+                    if (list.get(position).getCreatedAt() != null && !TextUtils.isEmpty(list.get(position).getCreatedAt())) {
+                        txt_time.setText(getTimeFormatted(list.get(position).getCreatedAt()));
+                    } else {
+                        txt_time.setText("");
                     }
                     if (list.get(position).getCreatedAt() != null && !TextUtils.isEmpty(list.get(position).getCreatedAt())) {
                         txt_date.setText(getDateFormatted(list.get(position).getCreatedAt()));
@@ -191,16 +175,6 @@ public class ActivityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     }
 
 
-
-                    itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                        @Override
-                        public boolean onLongClick(View view) {
-                            if (listener != null)
-                                listener.onClick(50002, list.get(position));
-                            return false;
-                        }
-                    });
-
                     itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -210,12 +184,22 @@ public class ActivityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     });
                 }
 
-
-
-
             }
-        }
 
+            swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
+
+            swipeLayout.addDrag(SwipeLayout.DragEdge.Left, swipeLayout.findViewById(R.id.bottom_wrapper));
+            swipeLayout.addDrag(SwipeLayout.DragEdge.Right, swipeLayout.findViewById(R.id.bottom_wrapper1));
+
+            txt_delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    swipeLayout.close();
+                    if (listener != null)
+                        listener.onDeletClick(list.get(position).getId().toString(), list.get(position));
+                }
+            });
+        }
     }
 
     // Filter Class
@@ -244,6 +228,21 @@ public class ActivityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public interface ActivitiesListner {
         void onClick(int id, CreatePostBean bean);
+        void onDeletClick(String id, CreatePostBean bean);
+    }
+
+    public String getTimeFormatted(String dateNew){
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            Date date = null;
+            date = format.parse(dateNew);
+            String finalDate = (String) DateFormat.format("hh:mm aa",   date);
+            return finalDate;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "";
+        }
+
     }
 
     public String getDateFormatted(String dateNew){
@@ -251,7 +250,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             Date date = null;
             date = format.parse(dateNew);
-            String finalDate = (String) DateFormat.format("hh:mm aa",   date);
+            String finalDate = (String) DateFormat.format("MM/dd/yy",   date);
             return finalDate;
         } catch (ParseException e) {
             e.printStackTrace();

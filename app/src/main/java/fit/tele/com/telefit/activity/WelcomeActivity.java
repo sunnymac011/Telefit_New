@@ -10,6 +10,8 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 
+import com.facebook.AccessToken;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -225,6 +227,9 @@ public class WelcomeActivity extends BaseActivity implements GoogleApiClient.OnC
         Intent intent;
         switch (v.getId()) {
             case R.id.rl_fb:
+                if (AccessToken.getCurrentAccessToken() != null) {
+                    LoginManager.getInstance().logOut();
+                }
                 setEnableView(false);
                 clickFb();
                 break;

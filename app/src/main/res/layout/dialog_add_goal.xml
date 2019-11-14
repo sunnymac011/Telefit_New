@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Set Values"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:fontFamily="@font/rubik"
+        android:background="@color/main_color"
+        android:padding="@dimen/_10sdp"/>
+
+    <EditText
+        android:id="@+id/input_goal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Goal"
+        android:inputType="number"
+        android:textColor="@color/main_color"
+        android:singleLine="true"
+        android:fontFamily="@font/rubik"
+        android:layout_marginRight="@dimen/_10sdp"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"/>
+
+    <EditText
+        android:id="@+id/input_consume"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Consumed"
+        android:inputType="number"
+        android:textColor="@color/main_color"
+        android:singleLine="true"
+        android:fontFamily="@font/rubik"
+        android:layout_marginRight="@dimen/_10sdp"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"/>
+
+    <Button
+        android:id="@+id/btn_set"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/main_color"
+        android:text="Set"
+        android:textAllCaps="false"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:fontFamily="@font/rubik"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_5sdp"/>
+
+</LinearLayout>

@@ -187,10 +187,21 @@
 
         </RelativeLayout>
 
+        <TextView
+            android:id="@+id/txt_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create your own goal and
+take control of your health."
+            android:layout_below="@+id/rl_header"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_5sdp"/>
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/rl_header"
+            android:layout_below="@+id/txt_details"
             android:layout_above="@+id/ll_bottom_tab">
 
             <LinearLayout
@@ -205,7 +216,7 @@
                     android:paddingLeft="@dimen/_20sdp"
                     android:paddingRight="@dimen/_20sdp"
                     android:paddingBottom="@dimen/_10sdp"
-                    android:paddingTop="@dimen/_20sdp">
+                    android:paddingTop="@dimen/_10sdp">
 
                     <TextView
                         android:id="@+id/txt_protein"
@@ -344,55 +355,6 @@
 
                 <View
                     android:id="@+id/view3"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/light_gray"/>
-
-                <RelativeLayout
-                    android:id="@+id/rl_bmi"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/_20sdp"
-                    android:paddingRight="@dimen/_20sdp"
-                    android:paddingBottom="@dimen/_10sdp"
-                    android:paddingTop="@dimen/_10sdp">
-
-                    <TextView
-                        android:id="@+id/txt_bmi"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="BMI"
-                        android:textColor="@color/main_color"
-                        android:textSize="@dimen/_14sdp"
-                        android:fontFamily="@font/rubik"
-                        android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/txt_bmi_count"
-                        android:layout_marginRight="@dimen/_10sdp"/>
-
-                    <TextView
-                        android:id="@+id/txt_bmi_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Set Goal"
-                        android:textStyle="bold"
-                        android:textColor="@color/light_blue_text"
-                        android:textSize="@dimen/_14sdp"
-                        android:fontFamily="@font/rubik"
-                        android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/img_bmi_right_icon"
-                        android:layout_marginRight="@dimen/_10sdp"/>
-
-                    <ImageView
-                        android:id="@+id/img_bmi_right_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/up_down"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"/>
-
-                </RelativeLayout>
-
-                <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@color/light_gray"/>
@@ -618,14 +580,14 @@
                         android:id="@+id/txt_weight_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_toLeftOf="@+id/img_weight_right_icon"
+                        android:fontFamily="@font/rubik"
                         android:text="Set Goal"
-                        android:textStyle="bold"
                         android:textColor="@color/light_blue_text"
                         android:textSize="@dimen/_14sdp"
-                        android:fontFamily="@font/rubik"
-                        android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/img_weight_right_icon"
-                        android:layout_marginRight="@dimen/_10sdp"/>
+                        android:textStyle="bold" />
 
                     <ImageView
                         android:id="@+id/img_weight_right_icon"
@@ -645,6 +607,19 @@
             </LinearLayout>
 
         </ScrollView>
+
+        <RelativeLayout
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_centerInParent="true">
+
+            <ProgressBar
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
 
     </RelativeLayout>
 

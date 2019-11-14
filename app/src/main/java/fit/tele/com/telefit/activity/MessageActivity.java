@@ -347,44 +347,20 @@ public class MessageActivity extends BaseActivity implements ClickListenerChatFi
         Log.w("firebasemessage","Go in sendMessageFirebase: ");
         final String text = binding.edtChatBottomMessage.getText().toString().trim();
 
-        Matcher m = Pattern.compile("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+").matcher(text);
-        Matcher m1 = Pattern.compile("[1-9][0-9]{9,10}").matcher(text);
-
-        if (m.find())
-        {
-            CommonUtils.toast(context,"Not allowed to enter Email ID or Phone number.");
-            return;
+        if (mFirebaseDatabaseReference != null && userModel != null && !TextUtils.isEmpty(CHAT_REFERENCE) && text.length() > 0) {
+            ChatModel model = new ChatModel(userModel,text, Calendar.getInstance().getTime().getTime()+"");
+            mFirebaseDatabaseReference.child(CHAT_REFERENCE1).child(CHAT_REFERENCE).push().setValue(model);
+            //    mFirebaseDatabaseReference.child(CHAT_REFERENCE1).child("chatModel").push().setValue(userModel);
+            sendNotification(userModel.getFriend_id());
+            binding.edtChatBottomMessage.setText("");
         }
-        else
-        {
-            if (m1.find())
-            {
-                CommonUtils.toast(context,"Not allowed to enter Email ID or Phone number.");
-                return;
-            }
-            else
-            {
-                if (mFirebaseDatabaseReference != null && userModel != null && !TextUtils.isEmpty(CHAT_REFERENCE) && text.length() > 0) {
-                    ChatModel model = new ChatModel(userModel,text, Calendar.getInstance().getTime().getTime()+"");
-                    mFirebaseDatabaseReference.child(CHAT_REFERENCE1).child(CHAT_REFERENCE).push().setValue(model);
-                //    mFirebaseDatabaseReference.child(CHAT_REFERENCE1).child("chatModel").push().setValue(userModel);
-                    sendNotification(userModel.getFriend_id());
-                    binding.edtChatBottomMessage.setText("");
-                }
-                if (mFirebaseDatabaseReference != null && userModel != null && !TextUtils.isEmpty(CHAT_REFERENCE1) && text.length() > 0) {
-                    ChatModel model = new ChatModel(userModel,text, Calendar.getInstance().getTime().getTime()+"");
-                    mFirebaseDatabaseReference.child(CHAT_REFERENCE).child(CHAT_REFERENCE1).push().setValue(model);
-                 //   mFirebaseDatabaseReference.child(CHAT_REFERENCE).child("chatModel").push().setValue(userModel);
-                    sendNotification(userModel.getFriend_id());
-                    binding.edtChatBottomMessage.setText("");
-                }
-            }
+        if (mFirebaseDatabaseReference != null && userModel != null && !TextUtils.isEmpty(CHAT_REFERENCE1) && text.length() > 0) {
+            ChatModel model = new ChatModel(userModel,text, Calendar.getInstance().getTime().getTime()+"");
+            mFirebaseDatabaseReference.child(CHAT_REFERENCE).child(CHAT_REFERENCE1).push().setValue(model);
+            //   mFirebaseDatabaseReference.child(CHAT_REFERENCE).child("chatModel").push().setValue(userModel);
+            sendNotification(userModel.getFriend_id());
+            binding.edtChatBottomMessage.setText("");
         }
-
-
-
-
-
     }
 
     private void lerMessagensFirebase(){

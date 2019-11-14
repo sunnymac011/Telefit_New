@@ -42,6 +42,9 @@ public class SubOptionsBean implements Parcelable {
     @SerializedName("sub_cat_image_url")
     @Expose
     private String subCatImageUrl;
+    @SerializedName("opt_image_url")
+    @Expose
+    private String optImageUrl;
 
     protected SubOptionsBean(Parcel in) {
         id = in.readString();
@@ -55,6 +58,7 @@ public class SubOptionsBean implements Parcelable {
         updatedAt = in.readString();
         isCheck = in.readByte() != 0;
         subCatImageUrl = in.readString();
+        optImageUrl = in.readString();
     }
 
     public static final Creator<SubOptionsBean> CREATOR = new Creator<SubOptionsBean>() {
@@ -157,6 +161,14 @@ public class SubOptionsBean implements Parcelable {
         this.subCatImageUrl = subCatImageUrl;
     }
 
+    public String getOptImageUrl() {
+        return optImageUrl;
+    }
+
+    public void setOptImageUrl(String optImageUrl) {
+        this.optImageUrl = optImageUrl;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -175,5 +187,24 @@ public class SubOptionsBean implements Parcelable {
         dest.writeString(updatedAt);
         dest.writeByte((byte) (isCheck ? 1 : 0));
         dest.writeString(subCatImageUrl);
+        dest.writeString(optImageUrl);
+    }
+
+    @Override
+    public String toString() {
+        return "SubOptionsBean{" +
+                "id='" + id + '\'' +
+                ", catId='" + catId + '\'' +
+                ", subCatId='" + subCatId + '\'' +
+                ", subCatOption='" + subCatOption + '\'' +
+                ", subCatDetail='" + subCatDetail + '\'' +
+                ", isActive='" + isActive + '\'' +
+                ", isDelete='" + isDelete + '\'' +
+                ", createdAt='" + createdAt + '\'' +
+                ", updatedAt='" + updatedAt + '\'' +
+                ", isCheck=" + isCheck +
+                ", subCatImageUrl='" + subCatImageUrl + '\'' +
+                ", optImageUrl='" + optImageUrl + '\'' +
+                '}';
     }
 }

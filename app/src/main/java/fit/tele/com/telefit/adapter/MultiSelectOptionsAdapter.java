@@ -168,6 +168,15 @@ public class MultiSelectOptionsAdapter extends RecyclerView.Adapter<RecyclerView
                             .into(img_exercise);
                 }
 
+                if(list.get(pos).getOptImageUrl() != null && !TextUtils.isEmpty(list.get(pos).getOptImageUrl())) {
+                    Picasso.with(context)
+                            .load(list.get(pos).getOptImageUrl())
+                            .transform(new CircleTransform())
+                            .resize(100, 100)
+                            .onlyScaleDown()
+                            .into(img_exercise);
+                }
+
                 if(list.get(pos).getSubCatOption() != null && !TextUtils.isEmpty(list.get(pos).getSubCatOption()))
                     txt_name.setText(list.get(pos).getSubCatOption());
 

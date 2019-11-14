@@ -71,6 +71,9 @@ public class ChangePasswordActivity extends BaseActivity {
                 } else if (binding.inputPassword.getText().toString().isEmpty()) {
                     binding.inputEmail.setError("Please enter New Password!");
                     return false;
+                } else if (binding.inputPassword.length() < 6) {
+                    binding.inputEmail.setError("Passwords must be at least 6 characters in length!");
+                    return false;
                 } else if (binding.inputConfPassword.getText().toString().isEmpty()) {
                     binding.inputEmail.setError("Please enter Confirm Password!");
                     return false;

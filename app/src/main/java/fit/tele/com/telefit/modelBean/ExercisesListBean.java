@@ -7,6 +7,8 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 public class ExercisesListBean implements Parcelable {
 
     @SerializedName("id")
@@ -63,15 +65,27 @@ public class ExercisesListBean implements Parcelable {
     @SerializedName("exe_video_url")
     @Expose
     private String exeVideoUrl;
-    @SerializedName("sets")
+    @SerializedName("exe_hours")
     @Expose
-    private String sets;
-    @SerializedName("reps")
+    private String exeHours;
+    @SerializedName("exe_min")
     @Expose
-    private String reps;
-    @SerializedName("time_between_sets")
+    private String exeMin;
+    @SerializedName("exe_sec")
     @Expose
-    private String time_between_sets;
+    private String exeSec;
+    @SerializedName("setsReps")
+    @Expose
+    private ArrayList<SetsRepsBean> setsRepsBeans;
+    @SerializedName("exe_image_url_array")
+    @Expose
+    private ArrayList<ImageURLBean> imageURLBeans;
+    @SerializedName("exe_video_url_array")
+    @Expose
+    private ArrayList<VideoURLBean> videoURLBeans;
+
+    public ExercisesListBean() {
+    }
 
     protected ExercisesListBean(Parcel in) {
         id = in.readString();
@@ -92,9 +106,12 @@ public class ExercisesListBean implements Parcelable {
         isVideoDeactive = in.readString();
         exeImageUrl = in.readString();
         exeVideoUrl = in.readString();
-        sets = in.readString();
-        reps = in.readString();
-        time_between_sets = in.readString();
+        exeHours = in.readString();
+        exeMin = in.readString();
+        exeSec = in.readString();
+        setsRepsBeans = in.createTypedArrayList(SetsRepsBean.CREATOR);
+        imageURLBeans = in.createTypedArrayList(ImageURLBean.CREATOR);
+        videoURLBeans = in.createTypedArrayList(VideoURLBean.CREATOR);
     }
 
     public static final Creator<ExercisesListBean> CREATOR = new Creator<ExercisesListBean>() {
@@ -253,28 +270,52 @@ public class ExercisesListBean implements Parcelable {
         this.exeVideoUrl = exeVideoUrl;
     }
 
-    public String getSets() {
-        return sets;
+    public String getExeHours() {
+        return exeHours;
     }
 
-    public void setSets(String sets) {
-        this.sets = sets;
+    public void setExeHours(String exeHours) {
+        this.exeHours = exeHours;
     }
 
-    public String getReps() {
-        return reps;
+    public String getExeMin() {
+        return exeMin;
     }
 
-    public void setReps(String reps) {
-        this.reps = reps;
+    public void setExeMin(String exeMin) {
+        this.exeMin = exeMin;
     }
 
-    public String getTime_between_sets() {
-        return time_between_sets;
+    public String getExeSec() {
+        return exeSec;
     }
 
-    public void setTime_between_sets(String time_between_sets) {
-        this.time_between_sets = time_between_sets;
+    public void setExeSec(String exeSec) {
+        this.exeSec = exeSec;
+    }
+
+    public ArrayList<SetsRepsBean> getSetsRepsBeans() {
+        return setsRepsBeans;
+    }
+
+    public void setSetsRepsBeans(ArrayList<SetsRepsBean> setsRepsBeans) {
+        this.setsRepsBeans = setsRepsBeans;
+    }
+
+    public ArrayList<ImageURLBean> getImageURLBeans() {
+        return imageURLBeans;
+    }
+
+    public void setImageURLBeans(ArrayList<ImageURLBean> imageURLBeans) {
+        this.imageURLBeans = imageURLBeans;
+    }
+
+    public ArrayList<VideoURLBean> getVideoURLBeans() {
+        return videoURLBeans;
+    }
+
+    public void setVideoURLBeans(ArrayList<VideoURLBean> videoURLBeans) {
+        this.videoURLBeans = videoURLBeans;
     }
 
     @Override
@@ -302,8 +343,41 @@ public class ExercisesListBean implements Parcelable {
         dest.writeString(isVideoDeactive);
         dest.writeString(exeImageUrl);
         dest.writeString(exeVideoUrl);
-        dest.writeString(sets);
-        dest.writeString(reps);
-        dest.writeString(time_between_sets);
+        dest.writeString(exeHours);
+        dest.writeString(exeMin);
+        dest.writeString(exeSec);
+        dest.writeTypedList(setsRepsBeans);
+        dest.writeTypedList(imageURLBeans);
+        dest.writeTypedList(videoURLBeans);
+    }
+
+    @Override
+    public String toString() {
+        return "ExercisesListBean{" +
+                "id='" + id + '\'' +
+                ", catId='" + catId + '\'' +
+                ", exeTitle='" + exeTitle + '\'' +
+                ", exeDesc='" + exeDesc + '\'' +
+                ", exeVideo='" + exeVideo + '\'' +
+                ", exeVideoCoverImg='" + exeVideoCoverImg + '\'' +
+                ", isActive='" + isActive + '\'' +
+                ", isDelete='" + isDelete + '\'' +
+                ", createdAt='" + createdAt + '\'' +
+                ", updatedAt='" + updatedAt + '\'' +
+                ", exeInstructions='" + exeInstructions + '\'' +
+                ", isImport='" + isImport + '\'' +
+                ", impotFileName='" + impotFileName + '\'' +
+                ", exeMultivideoCoverimg='" + exeMultivideoCoverimg + '\'' +
+                ", deactiveDate='" + deactiveDate + '\'' +
+                ", isVideoDeactive='" + isVideoDeactive + '\'' +
+                ", exeImageUrl='" + exeImageUrl + '\'' +
+                ", exeVideoUrl='" + exeVideoUrl + '\'' +
+                ", exeHours='" + exeHours + '\'' +
+                ", exeMin='" + exeMin + '\'' +
+                ", exeSec='" + exeSec + '\'' +
+                ", setsRepsBeans=" + setsRepsBeans +
+                ", imageURLBeans=" + imageURLBeans +
+                ", videoURLBeans=" + videoURLBeans +
+                '}';
     }
 }

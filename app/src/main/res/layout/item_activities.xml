@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
@@ -62,6 +63,7 @@
         android:layout_below="@+id/txt_total_exercises"
         android:layout_marginTop="@dimen/_3sdp"
         android:paddingTop="@dimen/_10sdp"
-        tools:listitem="@layout/item_rv_activity"/>
+        tools:listitem="@layout/item_rv_activity"
+        android:background="@color/white"/>
 
 </RelativeLayout>

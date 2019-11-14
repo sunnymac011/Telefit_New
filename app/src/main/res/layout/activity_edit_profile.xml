@@ -228,20 +228,67 @@
                         android:textColor="@color/main_color"
                         android:fontFamily="@font/rubik"/>
 
-                    <TextView
-                        android:id="@+id/txt_dob"
+                    <LinearLayout
+                        android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        tools:text="14/07/1992"
-                        android:textColor="@color/main_color"
-                        android:fontFamily="@font/rubik"
-                        android:layout_marginTop="@dimen/_5sdp"/>
+                        android:layout_marginTop="@dimen/_5sdp">
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/main_color"
-                        android:layout_marginTop="@dimen/_2sdp"/>
+                        <EditText
+                            android:id="@+id/edt_mm"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/_14sdp"
+                            android:textStyle="bold"
+                            android:textColor="@color/main_color"
+                            android:inputType="date"
+                            android:maxLength="2"
+                            android:fontFamily="@font/rubik"
+                            android:hint="MM"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="/"
+                            android:textSize="@dimen/_14sdp"
+                            android:textStyle="bold"
+                            android:textColor="@color/main_color"
+                            android:fontFamily="@font/rubik"/>
+
+                        <EditText
+                            android:id="@+id/edt_dd"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/_14sdp"
+                            android:textStyle="bold"
+                            android:textColor="@color/main_color"
+                            android:inputType="date"
+                            android:maxLength="2"
+                            android:fontFamily="@font/rubik"
+                            android:hint="DD"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="/"
+                            android:textSize="@dimen/_14sdp"
+                            android:textStyle="bold"
+                            android:textColor="@color/main_color"
+                            android:fontFamily="@font/rubik"/>
+
+                        <EditText
+                            android:id="@+id/edt_yyyy"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/_14sdp"
+                            android:textStyle="bold"
+                            android:textColor="@color/main_color"
+                            android:inputType="date"
+                            android:maxLength="4"
+                            android:fontFamily="@font/rubik"
+                            android:hint="YYYY"/>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -312,11 +359,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
 
-                            <EditText
-                                android:id="@+id/edt_height"
+                            <TextView
+                                android:id="@+id/txt_height"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:backgroundTint="@android:color/transparent"
                                 android:hint="5'8"
                                 android:inputType="numberDecimal"
                                 android:textSize="@dimen/_19sdp"
@@ -333,7 +379,6 @@
                                 android:text="ft"
                                 android:textColor="@color/main_color"
                                 android:layout_marginLeft="@dimen/_10sdp"
-                                android:layout_marginBottom="@dimen/_6sdp"
                                 android:fontFamily="@font/rubik"/>
 
                         </LinearLayout>
@@ -366,11 +411,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
 
-                            <EditText
-                                android:id="@+id/edt_weight"
+                            <TextView
+                                android:id="@+id/txt_weight"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:backgroundTint="@android:color/transparent"
                                 android:hint="65"
                                 android:inputType="number"
                                 android:textSize="@dimen/_19sdp"
@@ -387,7 +431,6 @@
                                 android:text="kg"
                                 android:textColor="@color/main_color"
                                 android:layout_marginLeft="@dimen/_10sdp"
-                                android:layout_marginBottom="@dimen/_6sdp"
                                 android:fontFamily="@font/rubik"/>
 
                         </LinearLayout>
@@ -401,11 +444,83 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/ll_activity_level"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ll_hw"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginRight="@dimen/_30sdp"
+                    android:layout_marginLeft="@dimen/_30sdp">
+
+                    <TextView
+                        android:id="@+id/txt_activity_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Activity"
+                        android:textColor="@color/main_color"
+                        android:fontFamily="@font/rubik"/>
+
+                    <Spinner
+                        android:id="@+id/spi_activity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/_15sdp"
+                        android:textStyle="bold"
+                        android:textColor="@color/main_color"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:fontFamily="@font/rubik"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_1sdp"
+                        android:background="@color/main_color"
+                        android:layout_marginTop="@dimen/_5sdp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_maintain_weight"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ll_activity_level"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginRight="@dimen/_30sdp"
+                    android:layout_marginLeft="@dimen/_30sdp">
+
+                    <TextView
+                        android:id="@+id/txt_maintain_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Goal"
+                        android:textColor="@color/main_color"
+                        android:fontFamily="@font/rubik"/>
+
+                    <Spinner
+                        android:id="@+id/spi_maintain"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/_15sdp"
+                        android:textStyle="bold"
+                        android:textColor="@color/main_color"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:fontFamily="@font/rubik"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_1sdp"
+                        android:background="@color/main_color"
+                        android:layout_marginTop="@dimen/_5sdp"/>
+
+                </LinearLayout>
+
                 <Button
                     android:id="@+id/btn_submit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/ll_hw"
+                    android:layout_below="@+id/ll_maintain_weight"
                     android:layout_marginTop="@dimen/_30sdp"
                     android:layout_marginLeft="@dimen/_30sdp"
                     android:layout_marginRight="@dimen/_30sdp"

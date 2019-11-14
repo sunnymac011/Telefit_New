@@ -311,7 +311,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:layout_marginLeft="@dimen/_10sdp"
-                    android:layout_marginRight="@dimen/_10sdp">
+                    android:layout_marginRight="@dimen/_10sdp"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -355,6 +356,16 @@
                         android:textColor="@color/light_gray"
                         android:fontFamily="@font/rubik"/>
 
+                    <Spinner
+                        android:id="@+id/spi_day"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/_15sdp"
+                        android:textStyle="bold"
+                        android:textColor="@color/main_color"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:fontFamily="@font/rubik"/>
+
                     <TextView
                         android:id="@+id/txt_week_day"
                         android:layout_width="match_parent"
@@ -364,7 +375,8 @@
                         android:textStyle="bold"
                         android:textColor="@color/main_color"
                         android:layout_marginTop="@dimen/_5sdp"
-                        android:fontFamily="@font/rubik" />
+                        android:fontFamily="@font/rubik"
+                        android:visibility="gone"/>
 
                     <View
                         android:layout_width="match_parent"

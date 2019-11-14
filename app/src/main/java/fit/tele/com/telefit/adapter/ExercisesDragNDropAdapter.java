@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -32,16 +33,18 @@ public class ExercisesDragNDropAdapter extends RecyclerView.Adapter<ExercisesDra
     private Context context;
     private ArrayList<ExercisesListBean> list;
     private final OnStartDragListener mDragStartListener;
+    private ClickListener clickListener;
 
-    public ExercisesDragNDropAdapter(Context context, OnStartDragListener dragStartListener) {
+    public ExercisesDragNDropAdapter(Context context, OnStartDragListener dragStartListener, ClickListener clickListener) {
         this.context = context;
         mDragStartListener = dragStartListener;
+        this.clickListener = clickListener;
         list = new ArrayList<>();
     }
 
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_exercises, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_routine_exercises, parent, false);
         ItemViewHolder itemViewHolder = new ItemViewHolder(view);
         return itemViewHolder;
     }
@@ -62,6 +65,15 @@ public class ExercisesDragNDropAdapter extends RecyclerView.Adapter<ExercisesDra
             if(list.get(position).getExeTitle() != null && !TextUtils.isEmpty(list.get(position).getExeTitle()))
                 holder.txt_exercise.setText(list.get(position).getExeTitle());
         }
+
+        holder.btn_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(clickListener != null && list != null && position >= 0 && position < list.size() && list.get(position) != null) {
+                    clickListener.onClick(list.get(position).getId(),list.get(position));
+                }
+            }
+        });
 
         // Start a drag whenever the handle view it touched
         holder.txt_exercise.setOnTouchListener(new View.OnTouchListener() {
@@ -129,11 +141,13 @@ public class ExercisesDragNDropAdapter extends RecyclerView.Adapter<ExercisesDra
 
         private TextView txt_exercise;
         private ImageView img_exercise;
+        private Button btn_edit;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
             txt_exercise = (TextView) itemView.findViewById(R.id.txt_exercise);
             img_exercise = (ImageView) itemView.findViewById(R.id.img_exercise);
+            btn_edit = (Button) itemView.findViewById(R.id.btn_edit);
         }
 
         @Override
@@ -149,5 +163,9 @@ public class ExercisesDragNDropAdapter extends RecyclerView.Adapter<ExercisesDra
 
     public ArrayList<ExercisesListBean> getAllData() {
         return list;
+    }
+
+    public interface ClickListener {
+        void onClick(String exe_id, ExercisesListBean exercisesListBean);
     }
 }

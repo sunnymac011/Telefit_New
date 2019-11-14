@@ -1,95 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout                                               xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:swipe="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginBottom="@dimen/_15sdp">
+    android:background="?android:selectableItemBackground">
 
-    <ImageView
-        android:id="@+id/img_user"
-        android:layout_width="@dimen/_40sdp"
-        android:layout_height="@dimen/_40sdp"
-        android:layout_marginLeft="@dimen/_10sdp"
-        android:src="@drawable/user_placeholder"/>
-
-    <LinearLayout
+    <com.daimajia.swipe.SwipeLayout
+        android:id="@+id/swipe"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_toRightOf="@+id/img_user"
-        android:paddingLeft="@dimen/_10sdp"
-        android:paddingRight="@dimen/_10sdp"
+        swipe:leftEdgeSwipeOffset="0dp"
+        swipe:rightEdgeSwipeOffset="0dp">
 
-        android:layout_marginLeft="@dimen/_5sdp"
-        android:background="@drawable/chat_1_bg"
-        android:layout_marginRight="@dimen/_10sdp">
+        <!--Bottom View For Right to Left-->
+        <LinearLayout
+            android:id="@+id/bottom_wrapper"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="3">
 
-        <!--android:layout_marginRight="@dimen/_60sdp"-->
+        </LinearLayout>
 
+        <!-- Another Bottom View For Left to Right -->
+        <LinearLayout
+            android:id="@+id/bottom_wrapper1"
+            android:layout_width="@dimen/_90sdp"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/txt_delete"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/red"
+                android:paddingRight="@dimen/_5sdp"
+                android:paddingLeft="@dimen/_5sdp"
+                android:gravity="center"
+                android:text="Delete"
+                android:textColor="#fff"
+                android:fontFamily="@font/rubik"/>
+        </LinearLayout>
+
+        <!-- Top View,  Row itemView of RecyclerView -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/txt_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="Sep 15"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:textColor="@color/black"
-                android:fontFamily="@font/rubik"
-                android:gravity="bottom"
-                android:layout_alignParentRight="true"/>
+            <ImageView
+                android:id="@+id/img_user"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:src="@drawable/user_placeholder"/>
 
             <LinearLayout
-                android:id="@+id/ll_details"
-                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/txt_date"
+                android:orientation="vertical"
+                android:layout_toRightOf="@+id/img_user"
+                android:paddingLeft="@dimen/_10sdp"
+                android:paddingRight="@dimen/_10sdp"
+
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:background="@drawable/chat_1_bg"
                 android:layout_marginRight="@dimen/_10sdp">
 
+                <!--android:layout_marginRight="@dimen/_60sdp"-->
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/txt_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="4:00 pm"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/rubik"
+                        android:gravity="bottom"
+                        android:layout_alignParentRight="true"/>
+
+                    <TextView
+                        android:id="@+id/txt_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="Sep 15"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/rubik"
+                        android:gravity="bottom"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@+id/txt_time"/>
+
+                    <LinearLayout
+                        android:id="@+id/ll_details"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/txt_date"
+                        android:layout_marginRight="@dimen/_10sdp">
+
+                        <TextView
+                            android:id="@+id/txt_list_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="Coffee, Brewed"
+                            android:layout_marginTop="@dimen/_5sdp"
+                            android:maxLines="1"
+                            android:textStyle="bold"
+                            android:textColor="@color/main_color"
+                            android:fontFamily="@font/rubik"/>
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
                 <TextView
-                    android:id="@+id/txt_list_title"
+                    android:id="@+id/txt_list_desc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="Coffee, Brewed"
+                    tools:text="2 cals per cup"
                     android:layout_marginTop="@dimen/_5sdp"
-                    android:maxLines="1"
-                    android:textStyle="bold"
-                    android:textColor="@color/main_color"
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:maxLines="2"
+                    android:textStyle="normal"
+                    android:textColor="#0d5676"
                     android:fontFamily="@font/rubik"/>
 
 
             </LinearLayout>
 
-
-
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/txt_list_desc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="2 cals per cup"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:layout_marginBottom="@dimen/_5sdp"
-            android:maxLines="2"
-            android:textStyle="normal"
-            android:textColor="#0d5676"
-            android:fontFamily="@font/rubik"/>
+    </com.daimajia.swipe.SwipeLayout>
 
-
-    </LinearLayout>
-
-
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/light_gray"
-        android:layout_alignParentBottom="true"
-        android:visibility="gone"/>
-
-</RelativeLayout>
+</android.support.v7.widget.CardView>

@@ -58,6 +58,7 @@ public class CrossFitActivity extends BaseActivity implements View.OnClickListen
         binding.llProfile.setOnClickListener(this);
         binding.llNutrition.setOnClickListener(this);
         binding.llGoals.setOnClickListener(this);
+        binding.llSocial.setOnClickListener(this);
         binding.llFitness.setOnClickListener(this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
@@ -122,7 +123,11 @@ public class CrossFitActivity extends BaseActivity implements View.OnClickListen
                 startActivity(intent);
                 this.overridePendingTransition(0, 0);
                 break;
-
+            case R.id.ll_social:
+                intent = new Intent(context, SocialActivity.class);
+                startActivity(intent);
+                this.overridePendingTransition(0, 0);
+                break;
             case R.id.ll_fitness:
                 intent = new Intent(context, FitnessActivity.class);
                 startActivity(intent);

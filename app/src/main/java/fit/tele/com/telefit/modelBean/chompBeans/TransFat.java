@@ -22,6 +22,9 @@ public class TransFat implements Parcelable {
     @Expose
     private String perServing;
 
+    public TransFat() {
+    }
+
     protected TransFat(Parcel in) {
         name = in.readString();
         measurement = in.readString();

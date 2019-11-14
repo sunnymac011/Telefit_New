@@ -22,6 +22,9 @@ public class Iron implements Parcelable {
     @Expose
     private String perServing;
 
+    public Iron() {
+    }
+
     protected Iron(Parcel in) {
         name = in.readString();
         measurement = in.readString();

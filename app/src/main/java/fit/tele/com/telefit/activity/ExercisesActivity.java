@@ -3,11 +3,16 @@ package fit.tele.com.telefit.activity;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import fit.tele.com.telefit.R;
 import fit.tele.com.telefit.adapter.ExercisesAdapter;
@@ -15,8 +20,12 @@ import fit.tele.com.telefit.adapter.ExercisesTestAdapter;
 import fit.tele.com.telefit.apiBase.FetchServiceBase;
 import fit.tele.com.telefit.base.BaseActivity;
 import fit.tele.com.telefit.databinding.ActivityExercisesBinding;
+import fit.tele.com.telefit.dialog.CustomDialog;
 import fit.tele.com.telefit.modelBean.ExercisesListBean;
+import fit.tele.com.telefit.modelBean.ExxDetial;
 import fit.tele.com.telefit.modelBean.ModelBean;
+import fit.tele.com.telefit.modelBean.PaymentInfoBean;
+import fit.tele.com.telefit.modelBean.RoutinePlanDetailsBean;
 import fit.tele.com.telefit.modelBean.SelectedItemsBean;
 import fit.tele.com.telefit.modelBean.YogaApiBean;
 import fit.tele.com.telefit.utils.CommonUtils;
@@ -34,6 +43,10 @@ public class ExercisesActivity extends BaseActivity implements View.OnClickListe
     private SelectedItemsBean selectedItemsBean;
     private YogaApiBean yogaApiBean;
     private String strFrom="",strFromSub="";
+    private ArrayList<ExercisesListBean> exercisesListBeans;
+    private RoutinePlanDetailsBean routinePlanDetailsBean;
+    ExxDetial exxDetial = new ExxDetial();
+    private CustomDialog customDialog;
 
     @Override
     public int getLayoutResId() {
@@ -60,12 +73,51 @@ public class ExercisesActivity extends BaseActivity implements View.OnClickListe
         if (exercisesAdapter == null) {
             exercisesAdapter = new ExercisesAdapter(context, binding.rvExercises, new ExercisesAdapter.ClickListener() {
                 @Override
-                public void onClick(String exe_id, ExercisesListBean exercisesListBean) {
-                    Intent intent = new Intent(context, ExerciseDetailsActivity.class);
-                    intent.putExtra("ExerciseDetails", exe_id);
-                    intent.putExtra("ExercisesListBean", exercisesListBean);
-                    intent.putExtra("from", strFrom);
-                    context.startActivity(intent);
+                public void onClick(String exe_id, ExercisesListBean exercisesListBean, boolean isLongClick) {
+                    if (preferences.getIsUpdatePlan() != null && !TextUtils.isEmpty(preferences.getIsUpdatePlan()))
+                    {
+                        if (!isLongClick) {
+                            if (preferences.getUpdateRoutineDataPref() != null) {
+                                Gson gson = new Gson();
+                                routinePlanDetailsBean = gson.fromJson(preferences.getUpdateRoutineDataPref(), new TypeToken<RoutinePlanDetailsBean>(){}.getType());
+                            }
+                            else
+                                routinePlanDetailsBean = new RoutinePlanDetailsBean();
+
+                            exxDetial.setUserId(preferences.getUserDataPref().getId().toString().trim());
+                            exxDetial.setId(preferences.getIsUpdatePlan().trim());
+                            exxDetial.setExes(exercisesListBean);
+                            routinePlanDetailsBean.getExxDetial().add(exxDetial);
+                            preferences.saveUpdateRoutineData(routinePlanDetailsBean);
+                            CommonUtils.toast(context,"Exercise added to routine." );
+
+                            Intent intent = new Intent(context, UpdateRoutineActivity.class);
+                            startActivity(intent);
+                        }
+                        else {
+                            Intent intent = new Intent(context, ExerciseDetailsActivity.class);
+                            intent.putExtra("From", "ExercisesActivity");
+                            intent.putExtra("ExerciseDetails", exe_id);
+                            intent.putExtra("ExercisesListBean", exercisesListBean);
+                            startActivity(intent);
+                        }
+                    }
+                    else {
+                        if (!isLongClick) {
+                            if (preferences.getRoutineDataPref() != null) {
+                                Gson gson = new Gson();
+                                exercisesListBeans = gson.fromJson(preferences.getRoutineDataPref(), new TypeToken<List<ExercisesListBean>>(){}.getType());
+                            }
+                            else
+                                exercisesListBeans = new ArrayList<>();
+
+                            exercisesListBeans.add(exercisesListBean);
+                            preferences.saveRoutineData(exercisesListBeans);
+                            CommonUtils.toast(context,"Exercise added to routine." );
+                        }
+
+                        callCheckPaymentApi(isLongClick, exe_id, exercisesListBean);
+                    }
                 }
             });
 
@@ -299,6 +351,56 @@ public class ExercisesActivity extends BaseActivity implements View.OnClickListe
                             }
                             else
                                 CommonUtils.toast(context, exercisesBean.getMessage());
+                        }
+                    });
+
+        } else {
+            CommonUtils.toast(context, context.getString(R.string.snack_bar_no_internet));
+        }
+    }
+
+    private void callCheckPaymentApi(boolean isLongClick, String exe_id,ExercisesListBean exercisesListBean) {
+        if (CommonUtils.isInternetOn(context)) {
+            binding.progress.setVisibility(View.VISIBLE);
+
+            Observable<ModelBean<PaymentInfoBean>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).getCheckPaymentAPI();
+            subscription = signupusers.subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<ModelBean<PaymentInfoBean>>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            CommonUtils.toast(context, e.getMessage());
+                            Log.e("callCheckPaymentApi"," "+e);
+                            binding.progress.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onNext(ModelBean<PaymentInfoBean> apiPaymentInfo) {
+                            binding.progress.setVisibility(View.GONE);
+                            if (apiPaymentInfo.getStatus().toString().equalsIgnoreCase("1"))
+                            {
+                                if (apiPaymentInfo.getResult().getIsPackage().equalsIgnoreCase("no")){
+                                    Intent intent = new Intent(ExercisesActivity.this,PaymentDescActivity.class);
+                                    intent.putExtra("paymentInfo",apiPaymentInfo.getResult());
+                                    startActivity(intent);
+                                }
+                                else {
+                                    if (isLongClick) {
+                                        Intent intent = new Intent(context, ExerciseDetailsActivity.class);
+                                        intent.putExtra("From", "ExercisesActivity");
+                                        intent.putExtra("ExerciseDetails", exe_id);
+                                        intent.putExtra("ExercisesListBean", exercisesListBean);
+                                        startActivity(intent);
+                                    }
+                                }
+                            }
+                            else
+                                CommonUtils.toast(context, ""+apiPaymentInfo.getMessage());
                         }
                     });
 

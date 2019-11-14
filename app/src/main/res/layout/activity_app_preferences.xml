@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/rl_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_15sdp"
+            android:background="@color/main_color">
+
+            <ImageView
+                android:id="@+id/img_side_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/vect_back"/>
+
+            <TextView
+                android:id="@+id/txt_header_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="App Preferences"
+                android:textSize="@dimen/_14sdp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:fontFamily="@font/rubik"
+                android:layout_centerHorizontal="true"/>
+
+            <TextView
+                android:id="@+id/txt_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save"
+                android:textStyle="bold"
+                android:textColor="@color/light_blue"
+                android:fontFamily="@font/rubik"
+                android:layout_alignParentRight="true"
+                android:drawableLeft="@drawable/save_icon"
+                android:drawablePadding="@dimen/_5sdp"
+                android:layout_centerVertical="true"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/rl_header">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:id="@+id/view1"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/light_gray"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Other Options"
+                    android:textColor="@color/light_gray"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="@dimen/_5sdp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/light_gray"/>
+
+                <RelativeLayout
+                    android:id="@+id/rl_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_10sdp">
+
+                    <TextView
+                        android:id="@+id/txt_list_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Length of My Food List"
+                        android:textColor="@color/main_color"
+                        android:textSize="@dimen/_14sdp"
+                        android:fontFamily="@font/rubik"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/txt_list"
+                        android:layout_marginRight="@dimen/_10sdp"/>
+
+                    <TextView
+                        android:id="@+id/txt_list"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="50"
+                        android:textStyle="bold"
+                        android:textColor="@color/light_blue_text"
+                        android:textSize="@dimen/_14sdp"
+                        android:fontFamily="@font/rubik"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/img_list"
+                        android:layout_marginRight="@dimen/_10sdp"/>
+
+                    <ImageView
+                        android:id="@+id/img_list"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/up_down"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/light_gray"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rest Timer"
+                    android:textColor="@color/light_gray"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginBottom="@dimen/_5sdp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/light_gray"/>
+
+                <RelativeLayout
+                    android:id="@+id/rl_screen_on"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_10sdp">
+
+                    <TextView
+                        android:id="@+id/txt_screen_on"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Keep Screen on"
+                        android:textColor="@color/main_color"
+                        android:textSize="@dimen/_14sdp"
+                        android:fontFamily="@font/rubik"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/switch_screen_on"
+                        android:layout_marginRight="@dimen/_10sdp"/>
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/switch_screen_on"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        app:thumbTint="@color/white"
+                        app:track="@drawable/switch_selector"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/light_gray"
+                    android:layout_marginLeft="@dimen/_20sdp"/>
+
+                <RelativeLayout
+                    android:id="@+id/rl_look_screen"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_10sdp">
+
+                    <TextView
+                        android:id="@+id/txt_look_screen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Lock Screen"
+                        android:textColor="@color/main_color"
+                        android:textSize="@dimen/_14sdp"
+                        android:fontFamily="@font/rubik"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/switch_look_screen"
+                        android:layout_marginRight="@dimen/_10sdp"/>
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/switch_look_screen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        app:thumbTint="@color/white"
+                        app:track="@drawable/switch_selector"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/light_gray"
+                    android:layout_marginLeft="@dimen/_20sdp"/>
+
+                <RelativeLayout
+                    android:id="@+id/rl_sound"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_10sdp">
+
+                    <TextView
+                        android:id="@+id/txt_sound"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Sound"
+                        android:textColor="@color/main_color"
+                        android:textSize="@dimen/_14sdp"
+                        android:fontFamily="@font/rubik"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/switch_sound"
+                        android:layout_marginRight="@dimen/_10sdp"/>
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/switch_sound"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        app:thumbTint="@color/white"
+                        app:track="@drawable/switch_selector"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/light_gray"
+                    android:layout_marginLeft="@dimen/_20sdp"/>
+
+                <RelativeLayout
+                    android:id="@+id/rl_vibrate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_10sdp">
+
+                    <TextView
+                        android:id="@+id/txt_vibrate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Vibrate"
+                        android:textColor="@color/main_color"
+                        android:textSize="@dimen/_14sdp"
+                        android:fontFamily="@font/rubik"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/switch_vibrate"
+                        android:layout_marginRight="@dimen/_10sdp"/>
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/switch_vibrate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        app:thumbTint="@color/white"
+                        app:track="@drawable/switch_selector"/>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/light_gray"
+                    android:layout_marginLeft="@dimen/_20sdp"/>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <RelativeLayout
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_centerInParent="true">
+
+            <ProgressBar
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</layout>

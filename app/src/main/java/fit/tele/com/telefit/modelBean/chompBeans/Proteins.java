@@ -22,6 +22,9 @@ public class Proteins implements Parcelable {
     @Expose
     private String perServing;
 
+    public Proteins() {
+    }
+
     protected Proteins(Parcel in) {
         name = in.readString();
         measurement = in.readString();

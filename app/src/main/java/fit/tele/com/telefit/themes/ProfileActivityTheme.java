@@ -11,7 +11,7 @@ import fit.tele.com.telefit.utils.Preferences;
 public class ProfileActivityTheme {
 
     Preferences preferences;
-    TextView txt_food,txt_meals,txt_recipes,txt_exercises,txt_trainer,txt_app_preferences,txt_themes,txt_units,txt_food_more
+    TextView txt_food,txt_meals,txt_recipes,txt_exercises,txt_trainer,txt_app_preferences,txt_themes,txt_units,txt_country
             ,txt_device,txt_privacy,txt_notifications,txt_about,txt_help;
 
     public void setTheme(ActivityProfileBinding binding, Activity activity) {
@@ -24,7 +24,7 @@ public class ProfileActivityTheme {
         txt_app_preferences = (TextView) activity.findViewById(R.id.txt_app_preferences);
         txt_themes = (TextView) activity.findViewById(R.id.txt_themes);
         txt_units = (TextView) activity.findViewById(R.id.txt_units);
-        txt_food_more = (TextView) activity.findViewById(R.id.txt_food_more);
+        txt_country = (TextView) activity.findViewById(R.id.txt_country);
         txt_device = (TextView) activity.findViewById(R.id.txt_device);
         txt_privacy = (TextView) activity.findViewById(R.id.txt_privacy);
         txt_notifications = (TextView) activity.findViewById(R.id.txt_notifications);
@@ -41,7 +41,7 @@ public class ProfileActivityTheme {
             txt_app_preferences.setTextColor(activity.getResources().getColor(R.color.main_color));
             txt_themes.setTextColor(activity.getResources().getColor(R.color.main_color));
             txt_units.setTextColor(activity.getResources().getColor(R.color.main_color));
-            txt_food_more.setTextColor(activity.getResources().getColor(R.color.main_color));
+            txt_country.setTextColor(activity.getResources().getColor(R.color.main_color));
             txt_device.setTextColor(activity.getResources().getColor(R.color.main_color));
             txt_privacy.setTextColor(activity.getResources().getColor(R.color.main_color));
             txt_notifications.setTextColor(activity.getResources().getColor(R.color.main_color));
@@ -58,7 +58,7 @@ public class ProfileActivityTheme {
             txt_app_preferences.setTextColor(activity.getResources().getColor(R.color.light_blue_text));
             txt_themes.setTextColor(activity.getResources().getColor(R.color.light_blue_text));
             txt_units.setTextColor(activity.getResources().getColor(R.color.light_blue_text));
-            txt_food_more.setTextColor(activity.getResources().getColor(R.color.light_blue_text));
+            txt_country.setTextColor(activity.getResources().getColor(R.color.light_blue_text));
             txt_device.setTextColor(activity.getResources().getColor(R.color.light_blue_text));
             txt_privacy.setTextColor(activity.getResources().getColor(R.color.light_blue_text));
             txt_notifications.setTextColor(activity.getResources().getColor(R.color.light_blue_text));
@@ -75,7 +75,7 @@ public class ProfileActivityTheme {
             txt_app_preferences.setTextColor(activity.getResources().getColor(R.color.yellow));
             txt_themes.setTextColor(activity.getResources().getColor(R.color.yellow));
             txt_units.setTextColor(activity.getResources().getColor(R.color.yellow));
-            txt_food_more.setTextColor(activity.getResources().getColor(R.color.yellow));
+            txt_country.setTextColor(activity.getResources().getColor(R.color.yellow));
             txt_device.setTextColor(activity.getResources().getColor(R.color.yellow));
             txt_privacy.setTextColor(activity.getResources().getColor(R.color.yellow));
             txt_notifications.setTextColor(activity.getResources().getColor(R.color.yellow));
@@ -92,7 +92,7 @@ public class ProfileActivityTheme {
             txt_app_preferences.setTextColor(activity.getResources().getColor(R.color.purple));
             txt_themes.setTextColor(activity.getResources().getColor(R.color.purple));
             txt_units.setTextColor(activity.getResources().getColor(R.color.purple));
-            txt_food_more.setTextColor(activity.getResources().getColor(R.color.purple));
+            txt_country.setTextColor(activity.getResources().getColor(R.color.purple));
             txt_device.setTextColor(activity.getResources().getColor(R.color.purple));
             txt_privacy.setTextColor(activity.getResources().getColor(R.color.purple));
             txt_notifications.setTextColor(activity.getResources().getColor(R.color.purple));
@@ -109,7 +109,7 @@ public class ProfileActivityTheme {
             txt_app_preferences.setTextColor(activity.getResources().getColor(R.color.red));
             txt_themes.setTextColor(activity.getResources().getColor(R.color.red));
             txt_units.setTextColor(activity.getResources().getColor(R.color.red));
-            txt_food_more.setTextColor(activity.getResources().getColor(R.color.red));
+            txt_country.setTextColor(activity.getResources().getColor(R.color.red));
             txt_device.setTextColor(activity.getResources().getColor(R.color.red));
             txt_privacy.setTextColor(activity.getResources().getColor(R.color.red));
             txt_notifications.setTextColor(activity.getResources().getColor(R.color.red));
@@ -126,7 +126,7 @@ public class ProfileActivityTheme {
             txt_app_preferences.setTextColor(activity.getResources().getColor(R.color.blue));
             txt_themes.setTextColor(activity.getResources().getColor(R.color.blue));
             txt_units.setTextColor(activity.getResources().getColor(R.color.blue));
-            txt_food_more.setTextColor(activity.getResources().getColor(R.color.blue));
+            txt_country.setTextColor(activity.getResources().getColor(R.color.blue));
             txt_device.setTextColor(activity.getResources().getColor(R.color.blue));
             txt_privacy.setTextColor(activity.getResources().getColor(R.color.blue));
             txt_notifications.setTextColor(activity.getResources().getColor(R.color.blue));

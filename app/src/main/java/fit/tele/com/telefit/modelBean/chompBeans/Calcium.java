@@ -22,6 +22,9 @@ public class Calcium implements Parcelable {
     @Expose
     private String perServing;
 
+    public Calcium() {
+    }
+
     protected Calcium(Parcel in) {
         name = in.readString();
         measurement = in.readString();

@@ -180,7 +180,7 @@ public class GymActivity extends BaseActivity implements View.OnClickListener {
                         startActivity(intent);
                     }
                     else
-                        CommonUtils.toast(context,"Please selecte category!");
+                        CommonUtils.toast(context,"Please select category!");
                 }
                 break;
         }

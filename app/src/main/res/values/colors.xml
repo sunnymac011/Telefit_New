@@ -15,4 +15,5 @@
     <color name="empty_chart">#f0fcfb</color>
     <color name="yellow">#e9b448</color>
     <color name="red">#76260d</color>
+    <color name="graph_red">#ff0000</color>
 </resources>

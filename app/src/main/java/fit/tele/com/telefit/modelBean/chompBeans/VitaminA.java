@@ -22,6 +22,9 @@ public class VitaminA implements Parcelable {
     @Expose
     private String perServing;
 
+    public VitaminA() {
+    }
+
     protected VitaminA(Parcel in) {
         name = in.readString();
         measurement = in.readString();

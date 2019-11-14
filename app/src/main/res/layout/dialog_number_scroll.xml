@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/rl_trip_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_10sdp"
+        android:background="@color/main_color">
+
+        <TextView
+            android:id="@+id/txt_header_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Set Details"
+            android:textColor="@color/white"
+            android:fontFamily="@font/rubik"
+            android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_numbers"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_trip_detail"
+        android:gravity="center_horizontal">
+
+        <EditText
+            android:id="@+id/edt_numbers"
+            android:layout_width="@dimen/_55sdp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:maxLength="3"
+            android:inputType="number"/>
+
+        <EditText
+            android:id="@+id/edt_numbers_two"
+            android:layout_width="@dimen/_55sdp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/_5sdp"
+            android:maxLength="3"
+            android:inputType="number"
+            android:visibility="gone" />
+
+        <NumberPicker
+            android:id="@+id/np_weight_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_submit"
+        android:layout_width="@dimen/_80sdp"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:fontFamily="@font/rubik"
+        android:background="@drawable/rectangle_bg"
+        android:backgroundTint="@color/main_color"
+        android:layout_below="@+id/ll_numbers"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_10sdp"/>
+
+</RelativeLayout>

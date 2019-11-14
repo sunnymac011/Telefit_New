@@ -22,6 +22,9 @@ public class Calories implements Parcelable {
     @Expose
     private String perServing;
 
+    public Calories() {
+    }
+
     protected Calories(Parcel in) {
         name = in.readString();
         measurement = in.readString();

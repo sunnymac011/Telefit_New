@@ -2,13 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
         android:id="@+id/rl_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:layout_above="@+id/ll_add_meal">
 
         <RelativeLayout
             android:id="@+id/rl_meals"
@@ -62,7 +63,7 @@
             android:layout_marginLeft="@dimen/_80sdp"/>
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_food"
+            android:id="@+id/rv_meals"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/rl_meals"
@@ -74,7 +75,8 @@
     <RelativeLayout
         android:id="@+id/rl_no_data"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/txt_no_data"
@@ -102,5 +104,33 @@ previous days available."
             android:layout_marginLeft="@dimen/_20sdp"/>
 
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_add_meal"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:layout_marginLeft="@dimen/_25sdp"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:src="@drawable/add_exercises"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Snack >"
+            android:textStyle="bold"
+            android:textColor="@color/light_blue_text"
+            android:textSize="@dimen/_16sdp"
+            android:fontFamily="@font/rubik"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/_10sdp"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

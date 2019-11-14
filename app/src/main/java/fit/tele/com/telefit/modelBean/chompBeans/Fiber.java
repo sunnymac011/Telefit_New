@@ -22,6 +22,9 @@ public class Fiber implements Parcelable {
     @Expose
     private String perServing;
 
+    public Fiber() {
+    }
+
     protected Fiber(Parcel in) {
         name = in.readString();
         measurement = in.readString();

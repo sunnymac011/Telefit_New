@@ -10,6 +10,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import fit.tele.com.telefit.R;
 import fit.tele.com.telefit.adapter.RoutinePlanAdapter;
@@ -17,6 +18,7 @@ import fit.tele.com.telefit.apiBase.FetchServiceBase;
 import fit.tele.com.telefit.base.BaseActivity;
 import fit.tele.com.telefit.databinding.ActivityFitnessBinding;
 import fit.tele.com.telefit.modelBean.CategoryBean;
+import fit.tele.com.telefit.modelBean.CustomerDetailBean;
 import fit.tele.com.telefit.modelBean.ExerciseDetailsBean;
 import fit.tele.com.telefit.modelBean.ModelBean;
 import fit.tele.com.telefit.modelBean.PaymentInfoBean;
@@ -35,7 +37,6 @@ public class FitnessActivity extends BaseActivity implements View.OnClickListene
 
     ActivityFitnessBinding binding;
     private RoutinePlanAdapter routinePlanAdapter;
-    private RoutinePlanAdapter pastRoutinePlanAdapter;
 
     @Override
     public int getLayoutResId() {
@@ -45,13 +46,13 @@ public class FitnessActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void init() {
         binding = (ActivityFitnessBinding) getBindingObj();
-        setListner();
     }
 
     private void setListner() {
         binding.llProfile.setOnClickListener(this);
         binding.llNutrition.setOnClickListener(this);
         binding.llGoals.setOnClickListener(this);
+        binding.llSocial.setOnClickListener(this);
 
         binding.llAddPlan.setOnClickListener(this);
         binding.txtExplore.setOnClickListener(this);
@@ -60,11 +61,10 @@ public class FitnessActivity extends BaseActivity implements View.OnClickListene
         binding.imgGym.setOnClickListener(this);
         binding.imgHiit.setOnClickListener(this);
         binding.imgYoga.setOnClickListener(this);
+        binding.txtTrainers.setOnClickListener(this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-        LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         binding.rvFuturePlans.setLayoutManager(linearLayoutManager);
-        binding.rvPastPlans.setLayoutManager(linearLayoutManager1);
 
         if (routinePlanAdapter == null) {
             routinePlanAdapter = new RoutinePlanAdapter(context, binding.rvFuturePlans, new RoutinePlanAdapter.ClickListener() {
@@ -74,23 +74,22 @@ public class FitnessActivity extends BaseActivity implements View.OnClickListene
                     intent.putExtra("plan_id",plan_id);
                     startActivity(intent);
                 }
+
+                @Override
+                public void onLongClick(String plan_id) {
+                    preferences.setIsUpdatePlan(plan_id);
+                    Intent intent = new Intent(FitnessActivity.this,UpdateRoutineActivity.class);
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onDelete(String plan_id) {
+                    deleteRoutine(plan_id);
+                }
             });
         }
         binding.rvFuturePlans.setAdapter(routinePlanAdapter);
         routinePlanAdapter.clearAll();
-
-        if (pastRoutinePlanAdapter == null) {
-            pastRoutinePlanAdapter = new RoutinePlanAdapter(context, binding.rvPastPlans, new RoutinePlanAdapter.ClickListener() {
-                @Override
-                public void onClick(String plan_id) {
-                    Intent intent = new Intent(FitnessActivity.this,PlayVideoActivity.class);
-                    intent.putExtra("plan_id",plan_id);
-                    startActivity(intent);
-                }
-            });
-        }
-        binding.rvPastPlans.setAdapter(pastRoutinePlanAdapter);
-        pastRoutinePlanAdapter.clearAll();
 
         callRoutinePlanApi();
         callCategoryApi();
@@ -117,10 +116,13 @@ public class FitnessActivity extends BaseActivity implements View.OnClickListene
                 startActivity(intent);
                 this.overridePendingTransition(0, 0);
                 break;
-
+            case R.id.ll_social:
+                intent = new Intent(context, SocialActivity.class);
+                startActivity(intent);
+                this.overridePendingTransition(0, 0);
+                break;
             case R.id.ll_add_plan:
-//                intent = new Intent(context, CreateRoutineActivity.class);
-//                startActivity(intent);
+                preferences.cleanUpdatePlan();
                 callCheckPaymentApi();
                 break;
 
@@ -155,6 +157,12 @@ public class FitnessActivity extends BaseActivity implements View.OnClickListene
                 startActivity(intent);
                 this.overridePendingTransition(0, 0);
                 break;
+
+            case R.id.txt_trainers:
+                intent = new Intent(context, TrainersActivity.class);
+                startActivity(intent);
+                this.overridePendingTransition(0, 0);
+                break;
         }
     }
 
@@ -162,10 +170,10 @@ public class FitnessActivity extends BaseActivity implements View.OnClickListene
         if (CommonUtils.isInternetOn(context)) {
             binding.progress.setVisibility(View.VISIBLE);
 
-            Observable<ModelBean<RoutinePlanListBean>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).getRoutinePlansApi();
+            Observable<ModelBean<ArrayList<RoutinePlanBean>>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).getRoutinePlansApi();
             subscription = signupusers.subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Subscriber<ModelBean<RoutinePlanListBean>>() {
+                    .subscribe(new Subscriber<ModelBean<ArrayList<RoutinePlanBean>>>() {
                         @Override
                         public void onCompleted() {
                         }
@@ -179,33 +187,57 @@ public class FitnessActivity extends BaseActivity implements View.OnClickListene
                         }
 
                         @Override
-                        public void onNext(ModelBean<RoutinePlanListBean> apiExercisesBean) {
+                        public void onNext(ModelBean<ArrayList<RoutinePlanBean>> apiExercisesBean) {
                             binding.progress.setVisibility(View.GONE);
                             if (apiExercisesBean.getStatus().toString().equalsIgnoreCase("1") )
                             {
                                 if (apiExercisesBean.getResult() != null) {
-                                    if (apiExercisesBean.getResult().getFuture().size() > 0)
-                                    {
-                                        routinePlanAdapter.addAllList(apiExercisesBean.getResult().getFuture());
-                                        binding.llFuture.setVisibility(View.VISIBLE);
-                                    }
-                                    else {
-                                        binding.rvFuturePlans.setVisibility(View.GONE);
-                                        binding.llFuture.setVisibility(View.GONE);
-                                    }
-                                    if (apiExercisesBean.getResult().getPast().size() > 0)
-                                    {
-                                        pastRoutinePlanAdapter.addAllList(apiExercisesBean.getResult().getFuture());
-                                        binding.llPast.setVisibility(View.VISIBLE);
-                                    }
-                                    else {
-                                        binding.rvPastPlans.setVisibility(View.GONE);
-                                        binding.llPast.setVisibility(View.GONE);
-                                    }
+                                    if (apiExercisesBean.getResult().size() > 0)
+                                        routinePlanAdapter.addAllList(apiExercisesBean.getResult());
                                 }
                             }
                             else
                                 CommonUtils.toast(context, ""+apiExercisesBean.getMessage());
+                        }
+                    });
+
+        } else {
+            CommonUtils.toast(context, context.getString(R.string.snack_bar_no_internet));
+        }
+    }
+
+    private void deleteRoutine(String plan_id) {
+        if (CommonUtils.isInternetOn(context)) {
+            binding.progress.setVisibility(View.VISIBLE);
+            HashMap<String, String> map = new HashMap<>();
+            map.put("routine_p_id",plan_id);
+
+            Observable<ModelBean<ArrayList<RoutinePlanBean>>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).deleteRoutine(map);
+            subscription = signupusers.subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<ModelBean<ArrayList<RoutinePlanBean>>>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            Log.e("deleteRoutine"," "+e);
+                            binding.progress.setVisibility(View.GONE);
+                        }
+                        @Override
+                        public void onNext(ModelBean<ArrayList<RoutinePlanBean>> arrayListModelBean) {
+                            binding.progress.setVisibility(View.GONE);
+                            if (arrayListModelBean.getStatus().toString().equalsIgnoreCase("1") )
+                            {
+                                routinePlanAdapter.clearAll();
+                                if (arrayListModelBean.getResult() != null) {
+                                    if (arrayListModelBean.getResult().size() > 0)
+                                        routinePlanAdapter.addAllList(arrayListModelBean.getResult());
+                                }
+                            }
+                            else
+                                CommonUtils.toast(context, ""+arrayListModelBean.getMessage());
                         }
                     });
 
@@ -332,5 +364,11 @@ public class FitnessActivity extends BaseActivity implements View.OnClickListene
         } else {
             CommonUtils.toast(context, context.getString(R.string.snack_bar_no_internet));
         }
+    }
+
+    @Override
+    protected void onResume() {
+        setListner();
+        super.onResume();
     }
 }

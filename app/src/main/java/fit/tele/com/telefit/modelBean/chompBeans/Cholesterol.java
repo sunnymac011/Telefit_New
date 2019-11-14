@@ -22,6 +22,9 @@ public class Cholesterol implements Parcelable {
     @Expose
     private String perServing;
 
+    public Cholesterol() {
+    }
+
     protected Cholesterol(Parcel in) {
         name = in.readString();
         measurement = in.readString();

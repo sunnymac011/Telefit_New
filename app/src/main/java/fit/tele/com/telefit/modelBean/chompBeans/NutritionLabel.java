@@ -30,6 +30,9 @@ public class NutritionLabel implements Parcelable {
     @SerializedName("iron")
     @Expose
     private Iron iron;
+    @SerializedName("nova-group")
+    @Expose
+    private NovaGroup novaGroup;
     @SerializedName("proteins")
     @Expose
     private Proteins proteins;
@@ -55,6 +58,9 @@ public class NutritionLabel implements Parcelable {
     @Expose
     private VitaminC vitaminC;
 
+    public NutritionLabel() {
+    }
+
     protected NutritionLabel(Parcel in) {
         calcium = in.readParcelable(Calcium.class.getClassLoader());
         carbohydrates = in.readParcelable(Carbohydrates.class.getClassLoader());
@@ -63,6 +69,7 @@ public class NutritionLabel implements Parcelable {
         fat = in.readParcelable(Fat.class.getClassLoader());
         fiber = in.readParcelable(Fiber.class.getClassLoader());
         iron = in.readParcelable(Iron.class.getClassLoader());
+        novaGroup = in.readParcelable(NovaGroup.class.getClassLoader());
         proteins = in.readParcelable(Proteins.class.getClassLoader());
         salt = in.readParcelable(Salt.class.getClassLoader());
         saturatedFat = in.readParcelable(SaturatedFat.class.getClassLoader());
@@ -139,6 +146,14 @@ public class NutritionLabel implements Parcelable {
 
     public void setIron(Iron iron) {
         this.iron = iron;
+    }
+
+    public NovaGroup getNovaGroup() {
+        return novaGroup;
+    }
+
+    public void setNovaGroup(NovaGroup novaGroup) {
+        this.novaGroup = novaGroup;
     }
 
     public Proteins getProteins() {
@@ -219,6 +234,7 @@ public class NutritionLabel implements Parcelable {
         dest.writeParcelable(fat, flags);
         dest.writeParcelable(fiber, flags);
         dest.writeParcelable(iron, flags);
+        dest.writeParcelable(novaGroup, flags);
         dest.writeParcelable(proteins, flags);
         dest.writeParcelable(salt, flags);
         dest.writeParcelable(saturatedFat, flags);
@@ -239,6 +255,7 @@ public class NutritionLabel implements Parcelable {
                 ", fat=" + fat +
                 ", fiber=" + fiber +
                 ", iron=" + iron +
+                ", novaGroup=" + novaGroup +
                 ", proteins=" + proteins +
                 ", salt=" + salt +
                 ", saturatedFat=" + saturatedFat +

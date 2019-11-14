@@ -204,9 +204,10 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
+                        android:id="@+id/img_food"
                         android:layout_width="@dimen/_50sdp"
                         android:layout_height="@dimen/_50sdp"
-                        android:background="@drawable/light_blue_circle"
+                        android:background="@drawable/empty_food"
                         android:layout_marginLeft="@dimen/_20sdp"/>
 
                     <TextView
@@ -227,31 +228,55 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_15sdp">
 
-                    <TextView
-                        android:id="@+id/txt_cal"
+                    <LinearLayout
+                        android:id="@+id/ll_left"
+                        android:orientation="vertical"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="133"
-                        android:textColor="@color/light_blue"
-                        android:textSize="@dimen/_22sdp"
-                        android:textStyle="bold"
-                        android:fontFamily="@font/rubik"
-                        android:layout_marginLeft="@dimen/_20sdp"/>
+                        android:layout_marginLeft="@dimen/_20sdp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Calories"
-                        android:textColor="@color/white"
-                        android:fontFamily="@font/rubik"
-                        android:layout_below="@+id/txt_cal"
-                        android:layout_marginLeft="@dimen/_20sdp"/>
+                        <TextView
+                            android:id="@+id/txt_cal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="133"
+                            android:textColor="@color/light_blue"
+                            android:textSize="@dimen/_22sdp"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/rubik"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Calories"
+                            android:textColor="@color/white"
+                            android:fontFamily="@font/rubik"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Serving Size"
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/rubik"
+                            android:layout_marginTop="@dimen/_5sdp"/>
+
+                        <TextView
+                            android:id="@+id/txt_serving_size"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxWidth="@dimen/_100sdp"
+                            tools:text="Calories"
+                            android:textColor="@color/light_blue"
+                            android:fontFamily="@font/rubik"/>
+
+                    </LinearLayout>
 
                     <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@+id/txt_cal"
+                        android:layout_toRightOf="@+id/ll_left"
                         android:layout_marginLeft="@dimen/_30sdp"
                         android:layout_marginRight="@dimen/_30sdp"
                         android:layout_marginTop="@dimen/_5sdp">
@@ -385,7 +410,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Fibre"
+                                android:text="Fiber"
                                 android:textColor="@color/light_gray"
                                 android:textStyle="bold"
                                 android:fontFamily="@font/rubik"/>

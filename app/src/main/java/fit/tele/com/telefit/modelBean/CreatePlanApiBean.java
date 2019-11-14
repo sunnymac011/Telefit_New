@@ -29,9 +29,6 @@ public class CreatePlanApiBean implements Parcelable {
     @SerializedName("day_flag")
     @Expose
     private String dayFlag;
-    @SerializedName("plane_date")
-    @Expose
-    private String routineDate;
 
     public CreatePlanApiBean() {
     }
@@ -43,7 +40,6 @@ public class CreatePlanApiBean implements Parcelable {
         routineType = in.readString();
         difficultyLevel = in.readString();
         dayFlag = in.readString();
-        routineDate = in.readString();
     }
 
     public static final Creator<CreatePlanApiBean> CREATOR = new Creator<CreatePlanApiBean>() {
@@ -106,14 +102,6 @@ public class CreatePlanApiBean implements Parcelable {
         this.dayFlag = dayFlag;
     }
 
-    public String getRoutineDate() {
-        return routineDate;
-    }
-
-    public void setRoutineDate(String routineDate) {
-        this.routineDate = routineDate;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -127,7 +115,6 @@ public class CreatePlanApiBean implements Parcelable {
         dest.writeString(routineType);
         dest.writeString(difficultyLevel);
         dest.writeString(dayFlag);
-        dest.writeString(routineDate);
     }
 
     @Override
@@ -139,7 +126,6 @@ public class CreatePlanApiBean implements Parcelable {
                 ", routineType='" + routineType + '\'' +
                 ", difficultyLevel='" + difficultyLevel + '\'' +
                 ", dayFlag='" + dayFlag + '\'' +
-                ", routineDate='" + routineDate + '\'' +
                 '}';
     }
 }

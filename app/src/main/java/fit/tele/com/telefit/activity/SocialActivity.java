@@ -109,6 +109,7 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
         binding.llNutrition.setOnClickListener(this);
         binding.llFitness.setOnClickListener(this);
         binding.llGoals.setOnClickListener(this);
+        binding.llSocial.setOnClickListener(this);
 
         binding.llActivityTab.setOnClickListener(this);
         binding.llMessagesTab.setOnClickListener(this);
@@ -188,7 +189,6 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
                 break;
         }
     }
-
 
     private void getAllRequests() {
         if (CommonUtils.isInternetOn(context)) {
@@ -339,6 +339,42 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
+    private void deletePost(String post_id) {
+        if (CommonUtils.isInternetOn(context)) {
+            binding.progress.setVisibility(View.VISIBLE);
+            Map<String, String> map = new HashMap<>();
+            map.put("post_id",post_id);
+
+            Observable<ModelBean<ArrayList<CreatePostBean>>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).deletePost(map);
+            subscription = signupusers.subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<ModelBean<ArrayList<CreatePostBean>>>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            CommonUtils.toast(context, e.getMessage());
+                            Log.e("deletePost"," "+e);
+                            binding.progress.setVisibility(View.GONE);
+                        }
+                        @Override
+                        public void onNext(ModelBean<ArrayList<CreatePostBean>> loginBean) {
+                            binding.progress.setVisibility(View.GONE);
+                            CommonUtils.toast(context, loginBean.getMessage());
+                            if(loginBean.getStatus()==1){
+                                activityAdapter.clearAll();
+                                getAllActivities();
+                            }
+                        }
+                    });
+
+        } else {
+            CommonUtils.toast(context, context.getString(R.string.snack_bar_no_internet));
+        }
+    }
+
     public void showComfirmDialog(String friendId,String message,String is_accept){
 
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -358,7 +394,6 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
             });
 
             builder.create().show();
-
     }
 
     @Override
@@ -405,9 +440,7 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
 
         if(mFirebaseDatabaseReference != null && !TextUtils.isEmpty(CHAT_REFERENCE)) {
 
-            Log.w("Document_check",""+mFirebaseDatabaseReference.child(CHAT_REFERENCE));
-
-            final MessageFirebaseAdapter firebaseAdapter = new MessageFirebaseAdapter(context, mFirebaseDatabaseReference.child(CHAT_REFERENCE));
+            final MessageFirebaseAdapter firebaseAdapter = new MessageFirebaseAdapter(context, saveLogiBean.getId().toString(), mFirebaseDatabaseReference.child(CHAT_REFERENCE));
             firebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
                 @Override
                 public void onItemRangeInserted(int positionStart, int itemCount) {
@@ -417,24 +450,24 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
 
             rv_messages.setLayoutManager(mLinearLayoutManager);
             rv_messages.setAdapter(firebaseAdapter);
-
         }
-
-
     }
 
     public void setActivity(){
         strSelectedTab = 1;
         binding.vf.setDisplayedChild(0);
         if(activityAdapter==null){
-            activityAdapter = new ActivityAdapter(context,preferences.getUserDataPref().getId(),rv_activities, new ActivityAdapter.ActivitiesListner() {
+            activityAdapter = new ActivityAdapter(context, preferences.getUserDataPref().getId(), rv_activities, new ActivityAdapter.ActivitiesListner() {
                 @Override
                 public void onClick(int id, CreatePostBean bean) {
-                    if(id==50001) {
-                        Intent in = new Intent(context, PostDetailActivity.class);
-                        in.putExtra("postDetail",bean);
-                        startActivity(in);
-                    }
+                    Intent in = new Intent(context, PostDetailActivity.class);
+                    in.putExtra("postDetail",bean);
+                    startActivity(in);
+                }
+
+                @Override
+                public void onDeletClick(String id, CreatePostBean bean) {
+                    deletePost(id);
                 }
             });
             rv_activities.setAdapter(activityAdapter);
@@ -464,9 +497,7 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
         binding.viewFriends.setVisibility(View.GONE);
         binding.txtRequestsTab.setTextColor(getResources().getColor(R.color.light_gray));
         binding.viewRequests.setVisibility(View.GONE);
-
         getMesagesDetail();
-
     }
     public void setFriends(){
         strSelectedTab = 3;
@@ -509,7 +540,6 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
 
         rv_customers.setAdapter(allFriendsAdapter);
         getAllFriends();
-
     }
     public void setRequests(){
         strSelectedTab = 4;
@@ -545,8 +575,5 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
 
         rv_req_customers.setAdapter(friendRequestAdapter);
         getAllRequests();
-
     }
-
-
 }

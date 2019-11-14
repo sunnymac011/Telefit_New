@@ -46,7 +46,7 @@
         <RelativeLayout
             android:id="@+id/rl_epv"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_200sdp"
+            android:layout_height="@dimen/_250sdp"
             android:layout_below="@+id/rl_header"
             android:layout_marginTop="@dimen/_10sdp">
 
@@ -65,7 +65,6 @@
                 android:visibility="gone"/>
 
         </RelativeLayout>
-
 
         <TextView
             android:id="@+id/txt_set"
@@ -153,8 +152,8 @@
 
             <ImageView
                 android:id="@+id/img_play"
-                android:layout_width="@dimen/_50sdp"
-                android:layout_height="@dimen/_50sdp"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
                 android:background="@drawable/play_video_button"
                 android:padding="@dimen/_15sdp"
                 android:layout_toLeftOf="@+id/img_forward"
@@ -170,6 +169,33 @@
                 android:layout_centerVertical="true"/>
 
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/txt_exe_weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="60 kg"
+            android:textSize="@dimen/_18sdp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:fontFamily="@font/rubik"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_below="@+id/rl_epv"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/txt_exe_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="60 sec"
+            android:textSize="@dimen/_18sdp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:fontFamily="@font/rubik"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:layout_below="@+id/rl_epv"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/txt_counts"

@@ -199,139 +199,13 @@
 
                 </RelativeLayout>
 
-                <HorizontalScrollView
-                    android:id="@+id/hsv_tab"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_exercises"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/txt_que"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:layout_marginBottom="@dimen/_20sdp"
-                    android:layout_marginLeft="@dimen/_20sdp"
-                    android:scrollbars="none">
-
-                    <LinearLayout
-                        android:id="@+id/ll_tab"
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <LinearLayout
-                            android:orientation="vertical"
-                            android:id="@+id/ll_weight_tab"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:layout_marginRight="@dimen/_15sdp">
-
-                            <TextView
-                                android:id="@+id/txt_weight_tab"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Weight"
-                                android:textSize="@dimen/_13sdp"
-                                android:textStyle="bold"
-                                android:textColor="@color/white"
-                                android:fontFamily="@font/rubik"/>
-
-                            <View
-                                android:id="@+id/view_weight"
-                                android:layout_width="@dimen/_25sdp"
-                                android:layout_height="1dp"
-                                android:layout_marginTop="@dimen/_2sdp"
-                                android:background="@color/white"/>
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:orientation="vertical"
-                            android:id="@+id/ll_protein_tab"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginRight="@dimen/_15sdp">
-
-                            <TextView
-                                android:id="@+id/txt_protein_tab"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Protein"
-                                android:textSize="@dimen/_13sdp"
-                                android:textStyle="bold"
-                                android:textColor="@color/light_gray"
-                                android:fontFamily="@font/rubik"/>
-
-                            <View
-                                android:id="@+id/view_protein"
-                                android:layout_width="@dimen/_25sdp"
-                                android:layout_height="1dp"
-                                android:layout_marginTop="@dimen/_2sdp"
-                                android:background="@color/white"
-                                android:visibility="gone"/>
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:orientation="vertical"
-                            android:id="@+id/ll_cholesterol_tab"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginRight="@dimen/_15sdp">
-
-                            <TextView
-                                android:id="@+id/txt_cholesterol_tab"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Cholesterol"
-                                android:textSize="@dimen/_13sdp"
-                                android:textStyle="bold"
-                                android:textColor="@color/light_gray"
-                                android:fontFamily="@font/rubik"/>
-
-                            <View
-                                android:id="@+id/view_cholesterol"
-                                android:layout_width="@dimen/_25sdp"
-                                android:layout_height="1dp"
-                                android:layout_marginTop="@dimen/_2sdp"
-                                android:background="@color/white"
-                                android:visibility="gone"/>
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:orientation="vertical"
-                            android:id="@+id/ll_waist_tab"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginRight="@dimen/_15sdp">
-
-                            <TextView
-                                android:id="@+id/txt_waist_tab"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Waist"
-                                android:textSize="@dimen/_13sdp"
-                                android:textStyle="bold"
-                                android:textColor="@color/light_gray"
-                                android:fontFamily="@font/rubik"/>
-
-                            <View
-                                android:id="@+id/view_waist"
-                                android:layout_width="@dimen/_25sdp"
-                                android:layout_height="1dp"
-                                android:layout_marginTop="@dimen/_2sdp"
-                                android:background="@color/white"
-                                android:visibility="gone"/>
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </HorizontalScrollView>
+                    android:layout_below="@+id/rl_header"
+                    tools:listitem="@layout/item_exercise_type"
+                    android:padding="@dimen/_10sdp"/>
 
             </LinearLayout>
 
@@ -351,7 +225,8 @@
                 android:textStyle="bold"
                 android:fontFamily="@font/rubik"
                 android:layout_above="@+id/txt_last_update"
-                android:layout_marginLeft="@dimen/_20sdp"/>
+                android:layout_marginLeft="@dimen/_20sdp"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/txt_end_date"
@@ -363,7 +238,8 @@
                 android:fontFamily="@font/rubik"
                 android:layout_alignParentRight="true"
                 android:layout_above="@+id/txt_last_update"
-                android:layout_marginRight="@dimen/_20sdp"/>
+                android:layout_marginRight="@dimen/_20sdp"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/txt_last_update"
@@ -375,8 +251,22 @@
                 android:fontFamily="@font/rubik"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="@dimen/_10sdp"
-                android:layout_marginLeft="@dimen/_20sdp"/>
+                android:layout_marginLeft="@dimen/_20sdp"
+                android:visibility="gone"/>
 
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_centerInParent="true">
+
+            <ProgressBar
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </RelativeLayout>
 
     </RelativeLayout>

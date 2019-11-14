@@ -22,6 +22,9 @@ public class Fat implements Parcelable {
     @Expose
     private String perServing;
 
+    public Fat() {
+    }
+
     protected Fat(Parcel in) {
         name = in.readString();
         measurement = in.readString();

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import fit.tele.com.telefit.R;
+import fit.tele.com.telefit.modelBean.ExxDetial;
 import fit.tele.com.telefit.modelBean.RoutinePlanDetailsBean;
 import fit.tele.com.telefit.modelBean.SubExerciseBean;
 import fit.tele.com.telefit.utils.OnLoadMoreListener;
@@ -22,7 +23,7 @@ public class RoutineExercisesAdapter extends RecyclerView.Adapter<RecyclerView.V
     private final int VIEW_TYPE_LOADING = 1;
     private int checkedPosition = 0;
     private Context context;
-    private ArrayList<RoutinePlanDetailsBean> list;
+    private ArrayList<ExxDetial> list;
     private ExerciseListener exerciseListener;
 
     public RoutineExercisesAdapter(Context context, ExerciseListener exerciseListener) {
@@ -68,7 +69,7 @@ public class RoutineExercisesAdapter extends RecyclerView.Adapter<RecyclerView.V
         notifyDataSetChanged();
     }
 
-    public void addAllList(ArrayList<RoutinePlanDetailsBean> data) {
+    public void addAllList(ArrayList<ExxDetial> data) {
         list.addAll(data);
         notifyDataSetChanged();
     }
@@ -83,6 +84,11 @@ public class RoutineExercisesAdapter extends RecyclerView.Adapter<RecyclerView.V
             list.remove(list.size() - 1);
             notifyItemRemoved(list.size());
         }
+    }
+
+    public void changeSelection(int pos) {
+        checkedPosition = pos;
+        notifyDataSetChanged();
     }
 
     private class LoadingViewHolder extends RecyclerView.ViewHolder {
@@ -111,7 +117,7 @@ public class RoutineExercisesAdapter extends RecyclerView.Adapter<RecyclerView.V
                         checkedPosition = pos;
                         notifyDataSetChanged();
                         if(exerciseListener != null && list != null && pos >= 0 && pos < list.size() && list.get(pos) != null)
-                            exerciseListener.onClick(list.get(pos));
+                            exerciseListener.onClick(pos,list.get(pos));
                     }
                 }
             });
@@ -130,13 +136,13 @@ public class RoutineExercisesAdapter extends RecyclerView.Adapter<RecyclerView.V
                     view_mechanics.setVisibility(View.GONE);
                 }
 
-                if(list.get(pos).getExe().getExeTitle() != null && !TextUtils.isEmpty(list.get(pos).getExe().getExeTitle()))
-                    txt_mechanics_tab.setText(list.get(pos).getExe().getExeTitle());
+                if(list.get(pos).getExes().getExeTitle() != null && !TextUtils.isEmpty(list.get(pos).getExes().getExeTitle()))
+                    txt_mechanics_tab.setText(list.get(pos).getExes().getExeTitle());
             }
         }
     }
 
     public interface ExerciseListener {
-        void onClick(RoutinePlanDetailsBean routinePlanDetailsBean);
+        void onClick(int pos, ExxDetial routinePlanDetailsBean);
     }
 }

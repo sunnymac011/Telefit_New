@@ -31,33 +31,12 @@ public class Details implements Parcelable {
     @SerializedName("serving_size")
     @Expose
     private String servingSize;
-    @SerializedName("brands")
-    @Expose
-    private Brands brands;
-    @SerializedName("countries")
-    @Expose
-    private Countries countries;
-    @SerializedName("has_english_ingredients")
-    @Expose
-    private String hasEnglishIngredients;
-    @SerializedName("country_details")
-    @Expose
-    private CountryDetails countryDetails;
-    @SerializedName("images")
-    @Expose
-    private Images images;
-    @SerializedName("ingredient_tags")
-    @Expose
-    private IngredientTags ingredientTags;
-    @SerializedName("keywords")
-    @Expose
-    private Keywords keywords;
-    @SerializedName("lifestyle")
-    @Expose
-    private Lifestyle lifestyle;
     @SerializedName("nutrition_label")
     @Expose
     private NutritionLabel nutritionLabel;
+    @SerializedName("images")
+    @Expose
+    private Images images;
 
     protected Details(Parcel in) {
         name = in.readString();
@@ -67,15 +46,8 @@ public class Details implements Parcelable {
         ingredients = in.readString();
         packageSize = in.readString();
         servingSize = in.readString();
-        brands = in.readParcelable(Brands.class.getClassLoader());
-        countries = in.readParcelable(Countries.class.getClassLoader());
-        hasEnglishIngredients = in.readString();
-        countryDetails = in.readParcelable(CountryDetails.class.getClassLoader());
-        images = in.readParcelable(Images.class.getClassLoader());
-        ingredientTags = in.readParcelable(IngredientTags.class.getClassLoader());
-        keywords = in.readParcelable(Keywords.class.getClassLoader());
-        lifestyle = in.readParcelable(Lifestyle.class.getClassLoader());
         nutritionLabel = in.readParcelable(NutritionLabel.class.getClassLoader());
+        images = in.readParcelable(Images.class.getClassLoader());
     }
 
     public static final Creator<Details> CREATOR = new Creator<Details>() {
@@ -146,36 +118,12 @@ public class Details implements Parcelable {
         this.servingSize = servingSize;
     }
 
-    public Brands getBrands() {
-        return brands;
+    public NutritionLabel getNutritionLabel() {
+        return nutritionLabel;
     }
 
-    public void setBrands(Brands brands) {
-        this.brands = brands;
-    }
-
-    public Countries getCountries() {
-        return countries;
-    }
-
-    public void setCountries(Countries countries) {
-        this.countries = countries;
-    }
-
-    public String getHasEnglishIngredients() {
-        return hasEnglishIngredients;
-    }
-
-    public void setHasEnglishIngredients(String hasEnglishIngredients) {
-        this.hasEnglishIngredients = hasEnglishIngredients;
-    }
-
-    public CountryDetails getCountryDetails() {
-        return countryDetails;
-    }
-
-    public void setCountryDetails(CountryDetails countryDetails) {
-        this.countryDetails = countryDetails;
+    public void setNutritionLabel(NutritionLabel nutritionLabel) {
+        this.nutritionLabel = nutritionLabel;
     }
 
     public Images getImages() {
@@ -184,38 +132,6 @@ public class Details implements Parcelable {
 
     public void setImages(Images images) {
         this.images = images;
-    }
-
-    public IngredientTags getIngredientTags() {
-        return ingredientTags;
-    }
-
-    public void setIngredientTags(IngredientTags ingredientTags) {
-        this.ingredientTags = ingredientTags;
-    }
-
-    public Keywords getKeywords() {
-        return keywords;
-    }
-
-    public void setKeywords(Keywords keywords) {
-        this.keywords = keywords;
-    }
-
-    public Lifestyle getLifestyle() {
-        return lifestyle;
-    }
-
-    public void setLifestyle(Lifestyle lifestyle) {
-        this.lifestyle = lifestyle;
-    }
-
-    public NutritionLabel getNutritionLabel() {
-        return nutritionLabel;
-    }
-
-    public void setNutritionLabel(NutritionLabel nutritionLabel) {
-        this.nutritionLabel = nutritionLabel;
     }
 
     @Override
@@ -232,15 +148,8 @@ public class Details implements Parcelable {
         dest.writeString(ingredients);
         dest.writeString(packageSize);
         dest.writeString(servingSize);
-        dest.writeParcelable(brands, flags);
-        dest.writeParcelable(countries, flags);
-        dest.writeString(hasEnglishIngredients);
-        dest.writeParcelable(countryDetails, flags);
-        dest.writeParcelable(images, flags);
-        dest.writeParcelable(ingredientTags, flags);
-        dest.writeParcelable(keywords, flags);
-        dest.writeParcelable(lifestyle, flags);
         dest.writeParcelable(nutritionLabel, flags);
+        dest.writeParcelable(images, flags);
     }
 
     @Override
@@ -253,15 +162,8 @@ public class Details implements Parcelable {
                 ", ingredients='" + ingredients + '\'' +
                 ", packageSize='" + packageSize + '\'' +
                 ", servingSize='" + servingSize + '\'' +
-                ", brands=" + brands +
-                ", countries=" + countries +
-                ", hasEnglishIngredients='" + hasEnglishIngredients + '\'' +
-                ", countryDetails=" + countryDetails +
-                ", images=" + images +
-                ", ingredientTags=" + ingredientTags +
-                ", keywords=" + keywords +
-                ", lifestyle=" + lifestyle +
                 ", nutritionLabel=" + nutritionLabel +
+                ", images=" + images +
                 '}';
     }
 }

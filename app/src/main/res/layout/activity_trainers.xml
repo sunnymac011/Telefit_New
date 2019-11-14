@@ -229,8 +229,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/txt_total_trainers"
-                android:layout_marginTop="@dimen/_3sdp"
-                tools:listitem="@layout/item_trainers"/>
+                android:layout_marginTop="@dimen/_5sdp"
+                tools:listitem="@layout/item_trainer_list"/>
 
         </RelativeLayout>
 

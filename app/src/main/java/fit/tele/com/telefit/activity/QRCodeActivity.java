@@ -11,6 +11,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 
+import com.google.gson.Gson;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.ChecksumException;
 import com.google.zxing.FormatException;
@@ -28,15 +29,25 @@ import com.journeyapps.barcodescanner.BarcodeResult;
 import com.tbruyelle.rxpermissions.Permission;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import fit.tele.com.telefit.R;
+import fit.tele.com.telefit.apiBase.FetchServiceBase;
 import fit.tele.com.telefit.base.BaseActivity;
 import fit.tele.com.telefit.databinding.ActivityQrCodeBinding;
+import fit.tele.com.telefit.modelBean.chompBeans.ChompProductBean;
 import fit.tele.com.telefit.utils.CommonUtils;
 import fit.tele.com.telefit.utils.FileUtils;
+import okhttp3.ResponseBody;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 public class QRCodeActivity extends BaseActivity implements View.OnClickListener {
 
@@ -50,6 +61,12 @@ public class QRCodeActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void setListner() {
+        binding.imgSideBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         binding.llProfile.setOnClickListener(this);
         binding.llNutrition.setOnClickListener(this);
         binding.llFitness.setOnClickListener(this);
@@ -59,6 +76,7 @@ public class QRCodeActivity extends BaseActivity implements View.OnClickListener
         binding.barcodeScanner.decodeContinuous(callback);
         binding.barcodeScanner.setStatusText("");
         beepManager = new BeepManager(QRCodeActivity.this);
+        binding.barcodeScanner.resume();
 
         binding.txtBarcode.setOnClickListener(this);
         binding.txtGallery.setOnClickListener(this);
@@ -196,6 +214,7 @@ public class QRCodeActivity extends BaseActivity implements View.OnClickListener
                 try {
                     beepManager.playBeepSoundAndVibrate();
                     Log.e("Barcode Result: " , result.getText());
+                    callBarCodeChompApi(result.getText());
 
                 }catch (Exception e)
                 {
@@ -226,12 +245,60 @@ public class QRCodeActivity extends BaseActivity implements View.OnClickListener
         Reader reader = new MultiFormatReader();// use this otherwise ChecksumException
         try {
             Result result = reader.decode(bitmap);
-            Log.e("Barcode Result: " , result.getText());
+            Log.e("Barcode Result11: " , result.getText());
         } catch (NotFoundException e) {
 
         }
         catch (ChecksumException e) { Log.e("ChecksumException: " , e.getMessage().toString()); }
         catch (FormatException e) { Log.e("FormatException: " , e.getMessage().toString()); }
 
+    }
+
+    private void callBarCodeChompApi(String strCode) {
+        if (CommonUtils.isInternetOn(context)) {
+            binding.progress.setVisibility(View.VISIBLE);
+
+            Observable<ResponseBody> signupusers = FetchServiceBase.getChompFetcherService(context).getBarCodeChomp("2smoc98kRRQNtsihq8",strCode);
+            subscription = signupusers.subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<ResponseBody>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            CommonUtils.toast(context, e.getMessage());
+                            Log.e("callBarCodeChompApi "," "+e);
+                            binding.progress.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onNext(ResponseBody chompJSON) {
+                            binding.progress.setVisibility(View.GONE);
+                            try {
+                                JSONObject jsonObject = new JSONObject(chompJSON.string());
+                                JSONObject productObject = jsonObject.getJSONObject("products");
+                                Iterator<String> iter = productObject.keys();
+                                while (iter.hasNext()) {
+                                    String key = iter.next();
+                                    String value = productObject.getString(key);
+                                    ChompProductBean productBean = new Gson().fromJson(value.toString(), ChompProductBean.class);
+                                    Intent intent = new Intent(context, AddFoodActivity.class);
+                                    intent.putExtra("from","FoodAdapter");
+                                    intent.putExtra("SelectedItems",productBean);
+                                    startActivity(intent);
+                                }
+                            } catch (Exception e) {
+                                Log.e("Exception ",""+e.getMessage()+"\n msg "+e.getCause());
+                                CommonUtils.toast(context,"No Data Found!");
+                            }
+                        }
+                    });
+
+        } else {
+            CommonUtils.toast(context, context.getString(R.string.snack_bar_no_internet));
+        }
     }
 }

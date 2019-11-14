@@ -173,7 +173,7 @@ public class CustomerDetailAdapterr extends RecyclerView.Adapter<RecyclerView.Vi
                                 .into(img_customer);
                     }
 
-                    if(preferences.getUserDataPref().getId()==list.get(pos).getId() || list.get(pos).getIs_request()) {
+                    if(preferences.getUserDataPref().getId().equalsIgnoreCase(list.get(pos).getId().toString()) || list.get(pos).getIs_request()) {
                         txt_add.setVisibility(View.INVISIBLE);
                     } else {
                         txt_add.setVisibility(View.VISIBLE);

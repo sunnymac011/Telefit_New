@@ -15,6 +15,8 @@ import com.github.marlonlom.utilities.timeago.TimeAgoMessages;
 import com.google.firebase.database.DatabaseReference;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 
 import fit.tele.com.telefit.R;
@@ -71,7 +73,7 @@ public class ChatFirebaseAdapter extends FirebaseRecyclerAdapter<ChatModel,ChatF
     protected void populateViewHolder(MyChatViewHolder viewHolder, ChatModel model, int position) {
         viewHolder.setIvUser(model.getUserModel().getPhoto_profile());
 
-        Log.w("firebasemessage","model.getMessage(): "+model.getMessage());
+        Log.w("firebasemessage","model.getTimeStamp(): "+model.getTimeStamp());
 
         viewHolder.setTxtMessage(model.getMessage());
         viewHolder.setTvTimestamp(model.getTimeStamp());
@@ -118,7 +120,6 @@ public class ChatFirebaseAdapter extends FirebaseRecyclerAdapter<ChatModel,ChatF
         public void setIvUser(String urlPhotoUser){
             if (ivUser == null)
                 return;
-
             if (urlPhotoUser != null && !TextUtils.isEmpty(urlPhotoUser)) {
                 Picasso.with(ivUser.getContext())
                         .load(urlPhotoUser)
@@ -127,18 +128,18 @@ public class ChatFirebaseAdapter extends FirebaseRecyclerAdapter<ChatModel,ChatF
                         .transform(new CircleTransform())
                         .into(ivUser);
             }
+
         }
 
         public void setTvTimestamp(String timestamp){
             if (tvTimestamp == null)return;
-            tvTimestamp.setText(converteTimestamp(timestamp));
+            tvTimestamp.setText(getDate(Long.parseLong(timestamp)));
         }
 
         public void setIvChatPhoto(String url){
             if (ivChatPhoto == null)
                 return;
-
-                if(url != null && !TextUtils.isEmpty(url))
+            if(url != null && !TextUtils.isEmpty(url))
                 Picasso.with(ivChatPhoto.getContext())
                     .load(url)
                     .into(ivChatPhoto);
@@ -154,5 +155,16 @@ public class ChatFirebaseAdapter extends FirebaseRecyclerAdapter<ChatModel,ChatF
     private CharSequence converteTimestamp(String mileSegundos){
         TimeAgoMessages messages = new TimeAgoMessages.Builder().withLocale(Locale.ENGLISH).build();
         return TimeAgo.using(Long.parseLong(mileSegundos), messages);
+    }
+
+    public static String getDate(long milliSeconds)
+    {
+        // Create a DateFormatter object for displaying date in specified format.
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yy hh:mm a");
+
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milliSeconds);
+        return formatter.format(calendar.getTime());
     }
 }

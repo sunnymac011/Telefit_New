@@ -11,7 +11,10 @@ import java.util.List;
 
 import fit.tele.com.telefit.R;
 import fit.tele.com.telefit.modelBean.ExercisesListBean;
+import fit.tele.com.telefit.modelBean.ExxDetial;
 import fit.tele.com.telefit.modelBean.LoginBean;
+import fit.tele.com.telefit.modelBean.RoutinePlanDetailsBean;
+import fit.tele.com.telefit.modelBean.RoutinePrefBean;
 import fit.tele.com.telefit.modelBean.SubOptionsBean;
 import fit.tele.com.telefit.modelBean.chompBeans.ChompProductBean;
 
@@ -172,6 +175,30 @@ public class Preferences {
         editor.apply();
     }
 
+    public String getUpdateRoutineDataPref() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        String json = preferences.getString("UpdateRoutineData", null);
+        return json;
+    }
+
+    public void saveUpdateRoutineData(RoutinePlanDetailsBean subOptionsBeans) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        Gson gson = new Gson();
+        String json = gson.toJson(subOptionsBeans);
+        editor.putString("UpdateRoutineData", json);
+        editor.apply();
+        editor.commit();
+    }
+
+    public void cleanUpdateRoutinedata() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("UpdateRoutineData", null);
+        editor.apply();
+    }
+
     public String getRecipeDataPref() {
         SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
         Gson gson = new Gson();
@@ -201,10 +228,7 @@ public class Preferences {
 
     public String getMealDataPref() {
         SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
-        Gson gson = new Gson();
         String json = preferences.getString("MealData", null);
-        Type type = new TypeToken<ArrayList<ChompProductBean>>() {
-        }.getType();
         return json;
     }
 
@@ -223,6 +247,247 @@ public class Preferences {
         SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("MealData", null);
+        editor.apply();
+    }
+
+    public String getIsUpdatePlan() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        return preferences.getString("updatePlanId", "");
+    }
+
+    public void setIsUpdatePlan(String planId) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("updatePlanId", planId);
+        editor.apply();
+    }
+
+    public void cleanUpdatePlan() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("updatePlanId", null);
+        editor.apply();
+    }
+
+    public String getRoutineHeaderDataPref() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        String json = preferences.getString("routinePrefBean", null);
+        return json;
+    }
+
+    public void saveRoutinHeadereData(RoutinePrefBean routinePrefBean) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        Gson gson = new Gson();
+        String json = gson.toJson(routinePrefBean);
+        editor.putString("routinePrefBean", json);
+        editor.apply();
+        editor.commit();
+    }
+
+    public void cleanRoutineHeaderedata() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("routinePrefBean", null);
+        editor.apply();
+    }
+
+    public String getMealNameDataPref() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        String json = preferences.getString("mealPrefBean", null);
+        return json;
+    }
+
+    public void saveMealNameData(String recipeName) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("mealPrefBean", recipeName);
+        editor.apply();
+    }
+
+    public void cleanMealNamedata() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("mealPrefBean", null);
+        editor.apply();
+    }
+
+    public String getMealDateDataPref() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        String json = preferences.getString("mealDatePrefBean", null);
+        return json;
+    }
+
+    public void saveMealDateData(String recipeName) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("mealDatePrefBean", recipeName);
+        editor.apply();
+    }
+
+    public void cleanMealDatedata() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("mealDatePrefBean", null);
+        editor.apply();
+    }
+
+    public String getMealIDDataPref() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        String json = preferences.getString("mealPrefId", null);
+        return json;
+    }
+
+    public void saveMealIDData(String recipeId) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("mealPrefId", recipeId);
+        editor.apply();
+    }
+
+    public void cleanMealIDdata() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("mealPrefId", null);
+        editor.apply();
+    }
+
+    public String isUpdateMeal() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        String json = preferences.getString("updateMeal", null);
+        return json;
+    }
+
+    public void saveUpdateMeal(String recipeId) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("updateMeal", recipeId);
+        editor.apply();
+    }
+
+    public void cleanUpdateMeal() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("updateMeal", null);
+        editor.apply();
+    }
+
+    public String getCountyPref() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        String json = preferences.getString("countryPref", null);
+        return json;
+    }
+
+    public void saveCountyData(String countryName) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("countryPref", countryName);
+        editor.apply();
+    }
+
+    public void cleanCountydata() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("countryPref", null);
+        editor.apply();
+    }
+
+    public String getPrivacyPref() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        String json = preferences.getString("privacyPref", "0");
+        return json;
+    }
+
+    public void savePrivacyData(String countryName) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("privacyPref", countryName);
+        editor.apply();
+    }
+
+    public void cleanPrivacydata() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("privacyPref", null);
+        editor.apply();
+    }
+
+    public String getMyFoodListPref() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        String json = preferences.getString("myFoodPref", "50");
+        return json;
+    }
+
+    public void saveMyFoodListData(String countryName) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("myFoodPref", countryName);
+        editor.apply();
+    }
+
+    public String getScreenOnPref() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        String json = preferences.getString("screenOnPref", "1");
+        return json;
+    }
+
+    public void saveScreenOnData(String countryName) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("screenOnPref", countryName);
+        editor.apply();
+    }
+
+    public String getLookScreenPref() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        String json = preferences.getString("lookScreenPref", "1");
+        return json;
+    }
+
+    public void saveLookScreenData(String countryName) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("lookScreenPref", countryName);
+        editor.apply();
+    }
+
+    public String getSoundPref() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        String json = preferences.getString("soundPref", "1");
+        return json;
+    }
+
+    public void saveSoundData(String countryName) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("soundPref", countryName);
+        editor.apply();
+    }
+
+    public String getVibratePref() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        String json = preferences.getString("vibratePref", "1");
+        return json;
+    }
+
+    public void saveVibrateData(String countryName) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("vibratePref", countryName);
+        editor.apply();
+    }
+
+    public String getBurnedCaloriesPref() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        String json = preferences.getString("burnedCalories", "0");
+        return json;
+    }
+
+    public void saveBurnedCaloriesData(String burnedCalories) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("burnedCalories", burnedCalories);
         editor.apply();
     }
 }

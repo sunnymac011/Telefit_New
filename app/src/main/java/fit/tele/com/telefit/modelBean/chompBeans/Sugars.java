@@ -22,6 +22,9 @@ public class Sugars implements Parcelable {
     @Expose
     private String perServing;
 
+    public Sugars() {
+    }
+
     protected Sugars(Parcel in) {
         name = in.readString();
         measurement = in.readString();

@@ -6,8 +6,11 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -101,10 +104,12 @@ public class GirlAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private class Header extends RecyclerView.ViewHolder {
         private int pos;
         private TextView txt_name;
+        private ImageView img_exercise;
 
         Header(View v) {
             super(v);
             txt_name = (TextView) v.findViewById(R.id.txt_name);
+            img_exercise = (ImageView) v.findViewById(R.id.img_exercise);
 
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -119,6 +124,15 @@ public class GirlAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public void bindData(int position) {
             this.pos = position;
             if (list != null && pos >= 0 && pos < list.size() && list.get(pos) != null) {
+
+                if(list.get(pos).getOptImageUrl() != null && !TextUtils.isEmpty(list.get(pos).getOptImageUrl())) {
+                    Picasso.with(context)
+                            .load(list.get(pos).getOptImageUrl())
+                            .resize(700, 700)
+                            .onlyScaleDown()
+                            .into(img_exercise);
+                }
+
                 if(list.get(pos).getSubCatOption() != null && !TextUtils.isEmpty(list.get(pos).getSubCatOption()))
                     txt_name.setText(list.get(pos).getSubCatOption());
             }

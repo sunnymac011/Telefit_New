@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
@@ -56,11 +57,40 @@
         android:layout_marginLeft="@dimen/_80sdp"/>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_food"
+        android:id="@+id/rv_recipe"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/rl_recipes"
         android:layout_marginTop="@dimen/_3sdp"
-        tools:listitem="@layout/item_rv_general"/>
+        tools:listitem="@layout/item_rv_general"
+        android:layout_above="@+id/ll_add_recipe"/>
+
+    <LinearLayout
+        android:id="@+id/ll_add_recipe"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:layout_marginLeft="@dimen/_25sdp"
+        android:visibility="gone"
+        android:layout_alignParentBottom="true">
+
+        <ImageView
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:src="@drawable/add_exercises"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Snack >"
+            android:textStyle="bold"
+            android:textColor="@color/light_blue_text"
+            android:textSize="@dimen/_16sdp"
+            android:fontFamily="@font/rubik"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/_10sdp"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

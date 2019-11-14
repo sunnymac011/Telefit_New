@@ -9,6 +9,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class ChompProductBean implements Parcelable {
 
+    @SerializedName("id")
+    @Expose
+    private String id;
     @SerializedName("product_id")
     @Expose
     private String productId;
@@ -27,14 +30,21 @@ public class ChompProductBean implements Parcelable {
     @SerializedName("api_endpoint")
     @Expose
     private String apiEndpoint;
-    @SerializedName("serving_qty")
+    @SerializedName("food_qty")
     @Expose
     private int servingQty;
-    @SerializedName("serving_qty_second")
+    @SerializedName("food_half_qty")
     @Expose
     private double servingQtySecond;
+    @SerializedName("total_calories")
+    @Expose
+    private String totalCalories;
+
+    public ChompProductBean() {
+    }
 
     protected ChompProductBean(Parcel in) {
+        id = in.readString();
         productId = in.readString();
         name = in.readString();
         manufacturer = in.readString();
@@ -43,6 +53,7 @@ public class ChompProductBean implements Parcelable {
         apiEndpoint = in.readString();
         servingQty = in.readInt();
         servingQtySecond = in.readDouble();
+        totalCalories = in.readString();
     }
 
     public static final Creator<ChompProductBean> CREATOR = new Creator<ChompProductBean>() {
@@ -56,6 +67,14 @@ public class ChompProductBean implements Parcelable {
             return new ChompProductBean[size];
         }
     };
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getProductId() {
         return productId;
@@ -121,6 +140,14 @@ public class ChompProductBean implements Parcelable {
         this.servingQtySecond = servingQtySecond;
     }
 
+    public String getTotalCalories() {
+        return totalCalories;
+    }
+
+    public void setTotalCalories(String totalCalories) {
+        this.totalCalories = totalCalories;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -128,6 +155,7 @@ public class ChompProductBean implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
         dest.writeString(productId);
         dest.writeString(name);
         dest.writeString(manufacturer);
@@ -136,12 +164,14 @@ public class ChompProductBean implements Parcelable {
         dest.writeString(apiEndpoint);
         dest.writeInt(servingQty);
         dest.writeDouble(servingQtySecond);
+        dest.writeString(totalCalories);
     }
 
     @Override
     public String toString() {
         return "ChompProductBean{" +
-                "productId='" + productId + '\'' +
+                "id='" + id + '\'' +
+                ", productId='" + productId + '\'' +
                 ", name='" + name + '\'' +
                 ", manufacturer='" + manufacturer + '\'' +
                 ", upc='" + upc + '\'' +
@@ -149,6 +179,7 @@ public class ChompProductBean implements Parcelable {
                 ", apiEndpoint='" + apiEndpoint + '\'' +
                 ", servingQty=" + servingQty +
                 ", servingQtySecond=" + servingQtySecond +
+                ", totalCalories='" + totalCalories + '\'' +
                 '}';
     }
 }

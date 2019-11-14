@@ -22,6 +22,9 @@ public class SaturatedFat implements Parcelable {
     @Expose
     private String perServing;
 
+    public SaturatedFat() {
+    }
+
     protected SaturatedFat(Parcel in) {
         name = in.readString();
         measurement = in.readString();

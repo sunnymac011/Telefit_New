@@ -349,11 +349,11 @@ public class CreatePost extends BaseActivity {
                             if (loginBean.getStatus() == 1) {
                                 CommonUtils.toast(context, "Your post is successfully created.");
 
-                                shareOnFacebook();
-                                
-//                                Intent in = new Intent(CreatePost.this,SocialActivity.class);
-//                                setResult(RESULT_OK,in);
-//                                finish();
+//                                shareOnFacebook();
+
+                                Intent in = new Intent(CreatePost.this,SocialActivity.class);
+                                setResult(RESULT_OK,in);
+                                finish();
                             } else {
                                 CommonUtils.toast(context, loginBean.getMessage());
                             }

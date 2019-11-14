@@ -12,7 +12,7 @@ public class LoginBean extends BaseObservable implements Parcelable {
 
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private String id;
     @SerializedName("name")
     @Expose
     private String name;
@@ -27,7 +27,7 @@ public class LoginBean extends BaseObservable implements Parcelable {
     private String email;
     @SerializedName("social_id")
     @Expose
-    private Object socialId;
+    private String socialId;
     @SerializedName("session_token")
     @Expose
     private String sessionToken;
@@ -43,9 +43,15 @@ public class LoginBean extends BaseObservable implements Parcelable {
     @SerializedName("height")
     @Expose
     private String height;
+    @SerializedName("height_type")
+    @Expose
+    private String heightType;
     @SerializedName("weight")
     @Expose
     private String weight;
+    @SerializedName("weight_type")
+    @Expose
+    private String weightType;
     @SerializedName("device_token")
     @Expose
     private String deviceToken;
@@ -66,17 +72,16 @@ public class LoginBean extends BaseObservable implements Parcelable {
     private String updatedAt;
     @SerializedName("register_status")
     @Expose
-    private Integer registerStatus;
+    private String registerStatus;
     @SerializedName("is_email_verify")
     @Expose
     private String isEmailVerify;
     @SerializedName("is_delete")
     @Expose
-    private Integer isDelete;
+    private String isDelete;
     @SerializedName("forgot_otp")
     @Expose
-    private Object forgotOtp;
-
+    private String forgotOtp;
     @SerializedName("Is_friend_share")
     @Expose
     private String Is_friend_share;
@@ -95,47 +100,62 @@ public class LoginBean extends BaseObservable implements Parcelable {
     @SerializedName("Is_snapchat_share")
     @Expose
     private String Is_snapchat_share;
-
+    @SerializedName("notification_alert")
+    @Expose
+    private String notificationAlert;
+    @SerializedName("request_email")
+    @Expose
+    private String requestEmail;
+    @SerializedName("request_approved")
+    @Expose
+    private String requestApproved;
+    @SerializedName("encourage_notification")
+    @Expose
+    private String encourageNotification;
+    @SerializedName("activity")
+    @Expose
+    private String activity;
+    @SerializedName("maintain_weight")
+    @Expose
+    private String maintainWeight;
 
     protected LoginBean(Parcel in) {
-        if (in.readByte() == 0) {
-            id = null;
-        } else {
-            id = in.readInt();
-        }
+        id = in.readString();
         name = in.readString();
         lName = in.readString();
         profilePic = in.readString();
         email = in.readString();
+        socialId = in.readString();
         sessionToken = in.readString();
         gender = in.readString();
         address = in.readString();
         dob = in.readString();
         height = in.readString();
+        heightType = in.readString();
         weight = in.readString();
+        weightType = in.readString();
         deviceToken = in.readString();
         deviceType = in.readString();
         loginBy = in.readString();
         isSocial = in.readString();
         createdAt = in.readString();
         updatedAt = in.readString();
-        if (in.readByte() == 0) {
-            registerStatus = null;
-        } else {
-            registerStatus = in.readInt();
-        }
+        registerStatus = in.readString();
         isEmailVerify = in.readString();
-        if (in.readByte() == 0) {
-            isDelete = null;
-        } else {
-            isDelete = in.readInt();
-        }
+        isDelete = in.readString();
+        forgotOtp = in.readString();
         Is_friend_share = in.readString();
         Is_trainer_share = in.readString();
         Is_facebook_share = in.readString();
         Is_twiter_share = in.readString();
         Is_instagram_share = in.readString();
         Is_snapchat_share = in.readString();
+        notificationAlert = in.readString();
+        requestEmail = in.readString();
+        requestApproved = in.readString();
+        encourageNotification = in.readString();
+        activity = in.readString();
+        maintainWeight = in.readString();
     }
 
     public static final Creator<LoginBean> CREATOR = new Creator<LoginBean>() {
@@ -150,11 +170,11 @@ public class LoginBean extends BaseObservable implements Parcelable {
         }
     };
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -190,11 +210,11 @@ public class LoginBean extends BaseObservable implements Parcelable {
         this.email = email;
     }
 
-    public Object getSocialId() {
+    public String getSocialId() {
         return socialId;
     }
 
-    public void setSocialId(Object socialId) {
+    public void setSocialId(String socialId) {
         this.socialId = socialId;
     }
 
@@ -238,12 +258,28 @@ public class LoginBean extends BaseObservable implements Parcelable {
         this.height = height;
     }
 
+    public String getHeightType() {
+        return heightType;
+    }
+
+    public void setHeightType(String heightType) {
+        this.heightType = heightType;
+    }
+
     public String getWeight() {
         return weight;
     }
 
     public void setWeight(String weight) {
         this.weight = weight;
+    }
+
+    public String getWeightType() {
+        return weightType;
+    }
+
+    public void setWeightType(String weightType) {
+        this.weightType = weightType;
     }
 
     public String getDeviceToken() {
@@ -294,11 +330,11 @@ public class LoginBean extends BaseObservable implements Parcelable {
         this.updatedAt = updatedAt;
     }
 
-    public Integer getRegisterStatus() {
+    public String getRegisterStatus() {
         return registerStatus;
     }
 
-    public void setRegisterStatus(Integer registerStatus) {
+    public void setRegisterStatus(String registerStatus) {
         this.registerStatus = registerStatus;
     }
 
@@ -310,19 +346,19 @@ public class LoginBean extends BaseObservable implements Parcelable {
         this.isEmailVerify = isEmailVerify;
     }
 
-    public Integer getIsDelete() {
+    public String getIsDelete() {
         return isDelete;
     }
 
-    public void setIsDelete(Integer isDelete) {
+    public void setIsDelete(String isDelete) {
         this.isDelete = isDelete;
     }
 
-    public Object getForgotOtp() {
+    public String getForgotOtp() {
         return forgotOtp;
     }
 
-    public void setForgotOtp(Object forgotOtp) {
+    public void setForgotOtp(String forgotOtp) {
         this.forgotOtp = forgotOtp;
     }
 
@@ -374,6 +410,54 @@ public class LoginBean extends BaseObservable implements Parcelable {
         Is_snapchat_share = is_snapchat_share;
     }
 
+    public String getNotificationAlert() {
+        return notificationAlert;
+    }
+
+    public void setNotificationAlert(String notificationAlert) {
+        this.notificationAlert = notificationAlert;
+    }
+
+    public String getRequestEmail() {
+        return requestEmail;
+    }
+
+    public void setRequestEmail(String requestEmail) {
+        this.requestEmail = requestEmail;
+    }
+
+    public String getRequestApproved() {
+        return requestApproved;
+    }
+
+    public void setRequestApproved(String requestApproved) {
+        this.requestApproved = requestApproved;
+    }
+
+    public String getEncourageNotification() {
+        return encourageNotification;
+    }
+
+    public void setEncourageNotification(String encourageNotification) {
+        this.encourageNotification = encourageNotification;
+    }
+
+    public String getActivity() {
+        return activity;
+    }
+
+    public void setActivity(String activity) {
+        this.activity = activity;
+    }
+
+    public String getMaintainWeight() {
+        return maintainWeight;
+    }
+
+    public void setMaintainWeight(String maintainWeight) {
+        this.maintainWeight = maintainWeight;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -381,46 +465,83 @@ public class LoginBean extends BaseObservable implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        if (id == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeInt(id);
-        }
+        dest.writeString(id);
         dest.writeString(name);
         dest.writeString(lName);
         dest.writeString(profilePic);
         dest.writeString(email);
+        dest.writeString(socialId);
         dest.writeString(sessionToken);
         dest.writeString(gender);
         dest.writeString(address);
         dest.writeString(dob);
         dest.writeString(height);
+        dest.writeString(heightType);
         dest.writeString(weight);
+        dest.writeString(weightType);
         dest.writeString(deviceToken);
         dest.writeString(deviceType);
         dest.writeString(loginBy);
         dest.writeString(isSocial);
         dest.writeString(createdAt);
         dest.writeString(updatedAt);
-        if (registerStatus == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeInt(registerStatus);
-        }
+        dest.writeString(registerStatus);
         dest.writeString(isEmailVerify);
-        if (isDelete == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeInt(isDelete);
-        }
+        dest.writeString(isDelete);
+        dest.writeString(forgotOtp);
         dest.writeString(Is_friend_share);
         dest.writeString(Is_trainer_share);
         dest.writeString(Is_facebook_share);
         dest.writeString(Is_twiter_share);
         dest.writeString(Is_instagram_share);
         dest.writeString(Is_snapchat_share);
+        dest.writeString(notificationAlert);
+        dest.writeString(requestEmail);
+        dest.writeString(requestApproved);
+        dest.writeString(encourageNotification);
+        dest.writeString(activity);
+        dest.writeString(maintainWeight);
+    }
+
+    @Override
+    public String toString() {
+        return "LoginBean{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", lName='" + lName + '\'' +
+                ", profilePic='" + profilePic + '\'' +
+                ", email='" + email + '\'' +
+                ", socialId='" + socialId + '\'' +
+                ", sessionToken='" + sessionToken + '\'' +
+                ", gender='" + gender + '\'' +
+                ", address='" + address + '\'' +
+                ", dob='" + dob + '\'' +
+                ", height='" + height + '\'' +
+                ", heightType='" + heightType + '\'' +
+                ", weight='" + weight + '\'' +
+                ", weightType='" + weightType + '\'' +
+                ", deviceToken='" + deviceToken + '\'' +
+                ", deviceType='" + deviceType + '\'' +
+                ", loginBy='" + loginBy + '\'' +
+                ", isSocial='" + isSocial + '\'' +
+                ", createdAt='" + createdAt + '\'' +
+                ", updatedAt='" + updatedAt + '\'' +
+                ", registerStatus='" + registerStatus + '\'' +
+                ", isEmailVerify='" + isEmailVerify + '\'' +
+                ", isDelete='" + isDelete + '\'' +
+                ", forgotOtp='" + forgotOtp + '\'' +
+                ", Is_friend_share='" + Is_friend_share + '\'' +
+                ", Is_trainer_share='" + Is_trainer_share + '\'' +
+                ", Is_facebook_share='" + Is_facebook_share + '\'' +
+                ", Is_twiter_share='" + Is_twiter_share + '\'' +
+                ", Is_instagram_share='" + Is_instagram_share + '\'' +
+                ", Is_snapchat_share='" + Is_snapchat_share + '\'' +
+                ", notificationAlert='" + notificationAlert + '\'' +
+                ", requestEmail='" + requestEmail + '\'' +
+                ", requestApproved='" + requestApproved + '\'' +
+                ", encourageNotification='" + encourageNotification + '\'' +
+                ", activity='" + activity + '\'' +
+                ", maintainWeight='" + maintainWeight + '\'' +
+                '}';
     }
 }

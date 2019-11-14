@@ -23,7 +23,7 @@
                     android:id="@+id/txt_exercises"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="My Exercises Program"
+                    android:text="My Exercise Program"
                     android:textColor="@color/main_color"
                     android:textSize="@dimen/_14sdp"
                     android:fontFamily="@font/rubik"

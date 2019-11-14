@@ -31,6 +31,7 @@ import fit.tele.com.telefit.modelBean.CreatePlanApiBean;
 import fit.tele.com.telefit.modelBean.ExeDetl;
 import fit.tele.com.telefit.modelBean.ExercisesListBean;
 import fit.tele.com.telefit.modelBean.ModelBean;
+import fit.tele.com.telefit.modelBean.RoutinePrefBean;
 import fit.tele.com.telefit.utils.CommonUtils;
 import rx.Observable;
 import rx.Subscriber;
@@ -46,6 +47,7 @@ public class CreateRoutineActivity extends BaseActivity implements View.OnClickL
     private CreatePlanApiBean createPlanApiBean;
     private DatePickerDialog dpd;
     private String dayFlag = "1";
+    private RoutinePrefBean routinePrefBean;
 
     @Override
     public int getLayoutResId() {
@@ -56,7 +58,6 @@ public class CreateRoutineActivity extends BaseActivity implements View.OnClickL
     public void init() {
         binding = (ActivityCreateRoutineBinding) getBindingObj();
         createPlanApiBean = new CreatePlanApiBean();
-        setListner();
     }
 
     private void setListner() {
@@ -69,6 +70,7 @@ public class CreateRoutineActivity extends BaseActivity implements View.OnClickL
         binding.llProfile.setOnClickListener(this);
         binding.llNutrition.setOnClickListener(this);
         binding.llGoals.setOnClickListener(this);
+        binding.llSocial.setOnClickListener(this);
         binding.llFitness.setOnClickListener(this);
         binding.llAddPlan.setOnClickListener(this);
         binding.txtAdd.setOnClickListener(this);
@@ -82,14 +84,85 @@ public class CreateRoutineActivity extends BaseActivity implements View.OnClickL
         spinnerDifficultyLevelArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.spiLevel.setAdapter(spinnerDifficultyLevelArrayAdapter);
 
+        ArrayAdapter<String> spinnerDayArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.days));
+        spinnerDayArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.spiDay.setAdapter(spinnerDayArrayAdapter);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         binding.rvExercises.setLayoutManager(linearLayoutManager);
         binding.rvExercises.setHasFixedSize(true);
         if (exercisesDragNDropAdapter == null) {
-            exercisesDragNDropAdapter = new ExercisesDragNDropAdapter(context, this);
+            exercisesDragNDropAdapter = new ExercisesDragNDropAdapter(context, this, new ExercisesDragNDropAdapter.ClickListener() {
+                @Override
+                public void onClick(String exe_id, ExercisesListBean exercisesListBean) {
+
+                    routinePrefBean = new RoutinePrefBean();
+
+                    routinePrefBean.setRoutineName(binding.inputRoutineName.getText().toString());
+                    routinePrefBean.setDayOfTheWeek(binding.spiDay.getSelectedItem().toString());
+                    routinePrefBean.setRoutineType(binding.spiType.getSelectedItem().toString());
+                    routinePrefBean.setDifficultyLevel(binding.spiLevel.getSelectedItem().toString());
+                    routinePrefBean.setDayFlag(getDayFlag());
+
+                    preferences.saveRoutinHeadereData(routinePrefBean);
+
+                    Intent intent = new Intent(context, ExerciseDetailsActivity.class);
+                    intent.putExtra("ExerciseDetails", exe_id);
+                    intent.putExtra("ExercisesListBean", exercisesListBean);
+                    startActivity(intent);
+                }
+            });
         }
         binding.rvExercises.setAdapter(exercisesDragNDropAdapter);
         exercisesDragNDropAdapter.clearAll();
+
+        if (preferences.getRoutineHeaderDataPref() != null) {
+            Gson gson = new Gson();
+            routinePrefBean = gson.fromJson(preferences.getRoutineHeaderDataPref(), new TypeToken<RoutinePrefBean>(){}.getType());
+
+            if (routinePrefBean != null) {
+                if (routinePrefBean.getRoutineName() != null && !TextUtils.isEmpty(routinePrefBean.getRoutineName()))
+                    binding.inputRoutineName.setText(routinePrefBean.getRoutineName());
+                if (routinePrefBean.getDifficultyLevel() != null && !TextUtils.isEmpty(routinePrefBean.getDifficultyLevel()))
+                {
+                    if (routinePrefBean.getDifficultyLevel().equalsIgnoreCase("Beginner"))
+                        binding.spiLevel.setSelection(0);
+                    if (routinePrefBean.getDifficultyLevel().equalsIgnoreCase("Intermediate"))
+                        binding.spiLevel.setSelection(1);
+                    if (routinePrefBean.getDifficultyLevel().equalsIgnoreCase("Advanced"))
+                        binding.spiLevel.setSelection(2);
+                }
+                if (routinePrefBean.getRoutineType() != null && !TextUtils.isEmpty(routinePrefBean.getRoutineType()))
+                {
+                    if (routinePrefBean.getRoutineType().equalsIgnoreCase("General Health"))
+                        binding.spiType.setSelection(0);
+                    if (routinePrefBean.getRoutineType().equalsIgnoreCase("Cutting"))
+                        binding.spiType.setSelection(1);
+                    if (routinePrefBean.getRoutineType().equalsIgnoreCase("Bulking"))
+                        binding.spiType.setSelection(2);
+                    if (routinePrefBean.getRoutineType().equalsIgnoreCase("Sport Specific"))
+                        binding.spiType.setSelection(3);
+                }
+                if (routinePrefBean.getDayFlag() != null && !TextUtils.isEmpty(routinePrefBean.getDayFlag()))
+                {
+                    if (routinePrefBean.getDayFlag().equalsIgnoreCase("1"))
+                        binding.spiDay.setSelection(0);
+                    if (routinePrefBean.getDayFlag().equalsIgnoreCase("2"))
+                        binding.spiDay.setSelection(1);
+                    if (routinePrefBean.getDayFlag().equalsIgnoreCase("3"))
+                        binding.spiDay.setSelection(2);
+                    if (routinePrefBean.getDayFlag().equalsIgnoreCase("4"))
+                        binding.spiDay.setSelection(3);
+                    if (routinePrefBean.getDayFlag().equalsIgnoreCase("5"))
+                        binding.spiDay.setSelection(4);
+                    if (routinePrefBean.getDayFlag().equalsIgnoreCase("6"))
+                        binding.spiDay.setSelection(5);
+                    if (routinePrefBean.getDayFlag().equalsIgnoreCase("7"))
+                        binding.spiDay.setSelection(6);
+                }
+            }
+        }
+
         if (preferences.getRoutineDataPref() != null) {
             Gson gson = new Gson();
             exercisesListBeans = gson.fromJson(preferences.getRoutineDataPref(), new TypeToken<ArrayList<ExercisesListBean>>(){}.getType());
@@ -123,7 +196,11 @@ public class CreateRoutineActivity extends BaseActivity implements View.OnClickL
                 startActivity(intent);
                 this.overridePendingTransition(0, 0);
                 break;
-
+            case R.id.ll_social:
+                intent = new Intent(context, SocialActivity.class);
+                startActivity(intent);
+                this.overridePendingTransition(0, 0);
+                break;
             case R.id.ll_fitness:
                 intent = new Intent(context, FitnessActivity.class);
                 startActivity(intent);
@@ -131,6 +208,22 @@ public class CreateRoutineActivity extends BaseActivity implements View.OnClickL
                 break;
 
             case R.id.ll_add_plan:
+//                if (exercisesDragNDropAdapter != null && exercisesDragNDropAdapter.getAllData().size() > 0) {
+//                    preferences.cleanRoutinedata();
+//                    preferences.saveRoutineData(exercisesDragNDropAdapter.getAllData());
+//                }
+
+                routinePrefBean = new RoutinePrefBean();
+
+                routinePrefBean.setRoutineName(binding.inputRoutineName.getText().toString());
+                routinePrefBean.setDayOfTheWeek(binding.spiDay.getSelectedItem().toString());
+                routinePrefBean.setRoutineType(binding.spiType.getSelectedItem().toString());
+                routinePrefBean.setDifficultyLevel(binding.spiLevel.getSelectedItem().toString());
+                routinePrefBean.setDayFlag(getDayFlag());
+
+                preferences.saveRoutinHeadereData(routinePrefBean);
+                preferences.saveRoutineData(exercisesDragNDropAdapter.getAllData());
+
                 intent = new Intent(context, MainExercisesActivity.class);
                 startActivity(intent);
                 this.overridePendingTransition(0, 0);
@@ -143,37 +236,45 @@ public class CreateRoutineActivity extends BaseActivity implements View.OnClickL
             case R.id.txt_add:
                     if (TextUtils.isEmpty(binding.inputRoutineName.getText().toString()))
                         CommonUtils.toast(context, "Please enter Routine Name");
-                    else if (TextUtils.isEmpty(binding.txtRoutineDate.getText().toString()))
-                        CommonUtils.toast(context, "Please enter Routine Date");
                     else {
                         createPlanApiBean.setRoutineName(binding.inputRoutineName.getText().toString().trim());
-                        createPlanApiBean.setDayOfTheWeek(binding.txtWeekDay.getText().toString());
+                        createPlanApiBean.setDayOfTheWeek(binding.spiDay.getSelectedItem().toString());
                         createPlanApiBean.setRoutineType(binding.spiType.getSelectedItem().toString());
                         createPlanApiBean.setDifficultyLevel(binding.spiLevel.getSelectedItem().toString());
-                        createPlanApiBean.setDayFlag(dayFlag);
-                        createPlanApiBean.setRoutineDate(binding.txtRoutineDate.getText().toString().trim());
+                        createPlanApiBean.setDayFlag(getDayFlag());
                         ExeDetl exeDetl;
                         ArrayList<ExeDetl> exeDetls;
+                        boolean isAllGood = true;
                         if (exercisesDragNDropAdapter != null) {
                             if (exercisesDragNDropAdapter.getAllData().size() > 0) {
                                 exeDetls = new ArrayList<>();
                                 for (int i=0;i<exercisesDragNDropAdapter.getAllData().size();i++)
                                 {
-                                    exeDetl = new ExeDetl();
-                                    exeDetl.setExeid(exercisesDragNDropAdapter.getAllData().get(i).getId());
-                                    exeDetl.setSets(exercisesDragNDropAdapter.getAllData().get(i).getSets());
-                                    exeDetl.setReps(exercisesDragNDropAdapter.getAllData().get(i).getReps());
-                                    exeDetl.setTimebetweenreps(exercisesDragNDropAdapter.getAllData().get(i).getTime_between_sets());
-                                    exeDetls.add(exeDetl);
+                                    if ((exercisesDragNDropAdapter.getAllData().get(i).getSetsRepsBeans() == null || exercisesDragNDropAdapter.getAllData().get(i).getSetsRepsBeans().size() < 1) &&
+                                            (exercisesDragNDropAdapter.getAllData().get(i).getExeHours() == null || exercisesDragNDropAdapter.getAllData().get(i).getExeHours() == ""))
+                                    {
+                                        CommonUtils.toast(context, "Please set exercise detail for "+exercisesDragNDropAdapter.getAllData().get(i).getExeTitle());
+                                        isAllGood = false;
+                                        return;
+                                    }
+                                    else {
+                                        exeDetl = new ExeDetl();
+                                        exeDetl.setExeid(exercisesDragNDropAdapter.getAllData().get(i).getId());
+                                        exeDetl.setExeHours(exercisesDragNDropAdapter.getAllData().get(i).getExeHours());
+                                        exeDetl.setExeMin(exercisesDragNDropAdapter.getAllData().get(i).getExeMin());
+                                        exeDetl.setExeSec(exercisesDragNDropAdapter.getAllData().get(i).getExeSec());
+                                        exeDetl.setSetsRepsBeans(exercisesDragNDropAdapter.getAllData().get(i).getSetsRepsBeans());
+                                        exeDetl.setCatid(exercisesDragNDropAdapter.getAllData().get(i).getCatId());
+                                        exeDetl.setRoutineExeOrder(""+(i+1));
+                                        exeDetls.add(exeDetl);
+                                    }
                                 }
 
-                                if (exeDetls.size() > 0)
+                                if (isAllGood && exeDetls.size() > 0)
                                 {
                                     createPlanApiBean.setExeId(exeDetls);
                                     callCreateApiApi();
                                 }
-                                else
-                                    CommonUtils.toast(context, "Please add exercise!");
                             }
                             else
                                 CommonUtils.toast(context, "Please add exercise!");
@@ -214,9 +315,10 @@ public class CreateRoutineActivity extends BaseActivity implements View.OnClickL
                             binding.progress.setVisibility(View.GONE);
                             if (exercisesBean.getStatus() == 1) {
                                 preferences.cleanRoutinedata();
+                                preferences.cleanRoutineHeaderedata();
                                 Intent intent = new Intent(context, FitnessActivity.class);
                                 startActivity(intent);
-                                CreateRoutineActivity.this.overridePendingTransition(0, 0);
+                                overridePendingTransition(0, 0);
                             }
                             else
                                 CommonUtils.toast(context, exercisesBean.getMessage());
@@ -257,6 +359,25 @@ public class CreateRoutineActivity extends BaseActivity implements View.OnClickL
 
             dpd.show(getFragmentManager(), "Datepickerdialog");
         }
+    }
+
+    private String getDayFlag() {
+        if (binding.spiDay.getSelectedItem().toString().equalsIgnoreCase("Day 1, Monday"))
+            return "1";
+        else if (binding.spiDay.getSelectedItem().toString().equalsIgnoreCase("Day 2, Tuesday"))
+            return "2";
+        else if (binding.spiDay.getSelectedItem().toString().equalsIgnoreCase("Day 3, Wednesday"))
+            return "3";
+        else if (binding.spiDay.getSelectedItem().toString().equalsIgnoreCase("Day 4, Thursday"))
+            return "4";
+        else if (binding.spiDay.getSelectedItem().toString().equalsIgnoreCase("Day 5, Friday"))
+            return "5";
+        else if (binding.spiDay.getSelectedItem().toString().equalsIgnoreCase("Day 6, Saturday"))
+            return "6";
+        else if (binding.spiDay.getSelectedItem().toString().equalsIgnoreCase("Day 7, Sunday"))
+            return "7";
+        else
+            return "1";
     }
 
     @Override
@@ -313,8 +434,17 @@ public class CreateRoutineActivity extends BaseActivity implements View.OnClickL
     @Override
     protected void onResume() {
         super.onResume();
+        setListner();
         DatePickerDialog dpd = (DatePickerDialog) getFragmentManager().findFragmentByTag("Datepickerdialog");
         if (dpd != null)
             dpd.setOnDateSetListener(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        preferences.cleanRoutinedata();
+        preferences.cleanRoutineHeaderedata();
+        Intent intent = new Intent(CreateRoutineActivity.this,FitnessActivity.class);
+        startActivity(intent);
     }
 }

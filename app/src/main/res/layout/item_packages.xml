@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_15sdp"
+        android:background="@drawable/rectangle_main_blue_bg"
+        android:layout_marginRight="@dimen/_20sdp">
+
+        <TextView
+            android:id="@+id/txt_validity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="3 months Program >"
+            android:textSize="@dimen/_12sdp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/rubik"/>
+
+        <TextView
+            android:id="@+id/txt_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="$ 240.00"
+            android:textSize="@dimen/_20sdp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/rubik"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

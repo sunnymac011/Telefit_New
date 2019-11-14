@@ -3,43 +3,66 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="@dimen/_5sdp">
 
     <ImageView
-        android:id="@+id/img_exercise"
+        android:id="@+id/img_trainer"
         android:layout_width="@dimen/_50sdp"
         android:layout_height="@dimen/_50sdp"
         android:layout_marginLeft="@dimen/_20sdp"
-        tools:src="@drawable/trans_blue"/>
+        android:src="@drawable/user_placeholder"/>
 
-    <TextView
-        android:id="@+id/txt_trainer"
+    <RelativeLayout
+        android:id="@+id/rl_trainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/img_exercise"
-        tools:text="Dip"
-        android:textStyle="bold"
-        android:textColor="@color/main_color"
-        android:fontFamily="@font/rubik"
-        android:layout_marginLeft="@dimen/_10sdp"
-        android:layout_toLeftOf="@+id/ratingbar_trainer"/>
+        android:layout_toRightOf="@+id/img_trainer">
+
+        <TextView
+            android:id="@+id/txt_trainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Dip"
+            android:textStyle="bold"
+            android:textColor="@color/main_color"
+            android:fontFamily="@font/rubik"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_toLeftOf="@+id/ratingbar_trainer"
+            android:layout_centerVertical="true"/>
+
+        <me.zhanghai.android.materialratingbar.MaterialRatingBar
+            android:id="@+id/ratingbar_trainer"
+            style="@style/Widget.MaterialRatingBar.RatingBar.Indicator.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:progressBackgroundTint="@color/main_color"
+            app:mrb_progressTint="@color/main_color"
+            app:mrb_secondaryProgressTint="@color/main_color"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/txt_company"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/img_exercise"
-        android:layout_below="@+id/txt_trainer"
+        android:layout_toRightOf="@+id/img_trainer"
+        android:layout_below="@+id/rl_trainer"
         tools:text="Company Name, Los Angeles, CA"
         android:textColor="@color/main_color"
         android:fontFamily="@font/rubik"
+        android:layout_marginTop="@dimen/_3sdp"
+        android:layout_marginBottom="@dimen/_3sdp"
         android:layout_marginLeft="@dimen/_10sdp"/>
 
     <TextView
         android:id="@+id/txt_bio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/img_exercise"
+        android:layout_toRightOf="@+id/img_trainer"
         android:layout_below="@+id/txt_company"
         tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam felis mauris, laoreet vitae libero ut, pretium vulputate massa.
  Fusce fringilla at orci placerat suscipit. Nunc non eros eros. Aliquam eget elit volutpat erat faucibus porttitor. Vivamus ex lectus, pretium sit amet dolor nec, laoreet accumsan lectus. Quisque quis lacus est."
@@ -49,19 +72,6 @@
         android:layout_marginTop="@dimen/_5sdp"
         android:layout_marginRight="@dimen/_10sdp"
         android:layout_marginLeft="@dimen/_10sdp"/>
-
-    <me.zhanghai.android.materialratingbar.MaterialRatingBar
-        android:id="@+id/ratingbar_trainer"
-        style="@style/Widget.MaterialRatingBar.RatingBar.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:rating="3"
-        android:progressBackgroundTint="@color/main_color"
-        app:mrb_progressTint="@color/main_color"
-        app:mrb_secondaryProgressTint="@color/main_color"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_5sdp"/>
 
     <View
         android:layout_width="match_parent"

@@ -1,36 +1,40 @@
 package fit.tele.com.telefit.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.SearchView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import fit.tele.com.telefit.R;
-import fit.tele.com.telefit.adapter.ExercisesDragNDropAdapter;
 import fit.tele.com.telefit.adapter.FoodAdapter;
-import fit.tele.com.telefit.adapter.RecipeListAdapter;
+import fit.tele.com.telefit.adapter.FoodCategoryAdapter;
+import fit.tele.com.telefit.adapter.RecipeFoodAdapter;
 import fit.tele.com.telefit.apiBase.FetchServiceBase;
 import fit.tele.com.telefit.base.BaseActivity;
 import fit.tele.com.telefit.databinding.ActivitySearchFoodBinding;
-import fit.tele.com.telefit.modelBean.ExercisesListBean;
+import fit.tele.com.telefit.modelBean.FoodCategoryBean;
+import fit.tele.com.telefit.modelBean.ModelBean;
 import fit.tele.com.telefit.modelBean.chompBeans.ChompProductBean;
 import fit.tele.com.telefit.utils.CommonUtils;
 import fit.tele.com.telefit.utils.OnLoadMoreListener;
@@ -44,11 +48,16 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
 
     private ActivitySearchFoodBinding binding;
     private FoodAdapter foodAdapter;
-    private RecyclerView FoodRv;
+    private RecipeFoodAdapter recipeFoodAdapter;
+    private RecyclerView FoodRv,rv_myfood,rv_meals, rv_recipe;
     private LinearLayoutManager linearLayoutManager;
-    private EditText foodSv;
+    private EditText foodSv, edt_recipes, edt_meals,edt_my_food;
     private ArrayList<ChompProductBean> chompProductBeans;
-    private int strSelectedTab = 1;
+    private int strSelectedTab = 1, strTab = 0;
+    private FoodCategoryAdapter foodCategoryAdapter;
+    private ImageView img_search_barcode,img_my_barcode,img_meals_barcode,img_recipes_barcode;
+    private LinearLayout ll_add_meal,ll_add_recipe;
+    private ImageView img_search;
 
     @Override
     public int getLayoutResId() {
@@ -74,6 +83,7 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
         binding.llNutrition.setOnClickListener(this);
         binding.llFitness.setOnClickListener(this);
         binding.llGoals.setOnClickListener(this);
+        binding.llSocial.setOnClickListener(this);
 
         binding.llSearchTab.setOnClickListener(this);
         binding.llFoodTab.setOnClickListener(this);
@@ -83,9 +93,34 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
 
         FoodRv = (RecyclerView) findViewById(R.id.rv_food);
         foodSv = (EditText) findViewById(R.id.edt_search_food);
+        edt_recipes = (EditText) findViewById(R.id.edt_recipes);
+        edt_meals = (EditText) findViewById(R.id.edt_meals);
+        edt_my_food = (EditText) findViewById(R.id.edt_my_food);
+        img_search_barcode = (ImageView) findViewById(R.id.img_search_barcode);
+        img_my_barcode = (ImageView) findViewById(R.id.img_my_barcode);
+        img_meals_barcode = (ImageView) findViewById(R.id.img_meals_barcode);
+        img_recipes_barcode = (ImageView) findViewById(R.id.img_recipes_barcode);
+        img_search = (ImageView) findViewById(R.id.img_search);
+        ll_add_meal = (LinearLayout) findViewById(R.id.ll_add_meal);
+        ll_add_recipe = (LinearLayout) findViewById(R.id.ll_add_recipe);
 
-        linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-        setSearchFoodData();
+        img_search_barcode.setOnClickListener(this);
+        img_my_barcode.setOnClickListener(this);
+        img_meals_barcode.setOnClickListener(this);
+        img_recipes_barcode.setOnClickListener(this);
+
+        if(getIntent() != null && getIntent().hasExtra("tab"))
+            strTab = getIntent().getIntExtra("tab", 0);
+
+        if (strTab == 2)
+            binding.llFoodTab.performClick();
+        else if (strTab == 3)
+            binding.llMealsTab.performClick();
+        else if (strTab == 4)
+            binding.llRecipesTab.performClick();
+        else
+            setSearchFoodData();
+
     }
 
     @Override
@@ -95,27 +130,51 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
             case R.id.ll_nutrition:
                 intent = new Intent(context, MainActivity.class);
                 startActivity(intent);
-                this.overridePendingTransition(0, 0);
+                overridePendingTransition(0, 0);
                 break;
 
             case R.id.ll_profile:
                 intent = new Intent(context, ProfileActivity.class);
                 startActivity(intent);
-                this.overridePendingTransition(0, 0);
+                overridePendingTransition(0, 0);
                 break;
 
             case R.id.ll_fitness:
                 intent = new Intent(context, FitnessActivity.class);
                 startActivity(intent);
-                this.overridePendingTransition(0, 0);
+                overridePendingTransition(0, 0);
                 break;
 
             case R.id.ll_goals:
                 intent = new Intent(context, GoalsActivity.class);
                 startActivity(intent);
-                this.overridePendingTransition(0, 0);
+                overridePendingTransition(0, 0);
                 break;
-
+            case R.id.ll_social:
+                intent = new Intent(context, SocialActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+                break;
+            case R.id.img_search_barcode:
+                intent = new Intent(context, QRCodeActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+                break;
+            case R.id.img_my_barcode:
+                intent = new Intent(context, QRCodeActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+                break;
+            case R.id.img_meals_barcode:
+                intent = new Intent(context, QRCodeActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+                break;
+            case R.id.img_recipes_barcode:
+                intent = new Intent(context, QRCodeActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+                break;
             case R.id.ll_search_tab:
                 strSelectedTab = 1;
                 binding.vf.setDisplayedChild(0);
@@ -140,6 +199,7 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
                 binding.viewMeals.setVisibility(View.GONE);
                 binding.txtRecipesTab.setTextColor(getResources().getColor(R.color.light_gray));
                 binding.viewRecipes.setVisibility(View.GONE);
+                setMyFoodData();
                 break;
             case R.id.ll_meals_tab:
                 strSelectedTab = 3;
@@ -152,6 +212,7 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
                 binding.viewMeals.setVisibility(View.VISIBLE);
                 binding.txtRecipesTab.setTextColor(getResources().getColor(R.color.light_gray));
                 binding.viewRecipes.setVisibility(View.GONE);
+                setMealData();
                 break;
             case R.id.ll_recipes_tab:
                 strSelectedTab = 4;
@@ -164,37 +225,55 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
                 binding.viewMeals.setVisibility(View.GONE);
                 binding.txtRecipesTab.setTextColor(getResources().getColor(R.color.white));
                 binding.viewRecipes.setVisibility(View.VISIBLE);
-                setRecipeData();
+//                setRecipeData();
                 break;
 
             case R.id.txt_new:
                 if (strSelectedTab == 3) {
-                    intent = new Intent(context, NewRecipeActivity.class);
+                    preferences.cleanMealNamedata();
+                    preferences.cleanMealDatedata();
+                    preferences.cleanMealdata();
+                    preferences.cleanMealIDdata();
+                    preferences.cleanUpdateMeal();
+                    intent = new Intent(context, NewMealActivity.class);
                 }
                 else {
-                    intent = new Intent(context, NewRecipeActivity.class);
+                    intent = new Intent(context, AddCustomFoodActivity.class);
                 }
                 startActivity(intent);
-                this.overridePendingTransition(0, 0);
+                overridePendingTransition(0, 0);
 
                 break;
         }
     }
 
     private void setSearchFoodData() {
+        binding.txtNew.setVisibility(View.VISIBLE);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         FoodRv.setLayoutManager(linearLayoutManager);
 
-        if (foodAdapter == null) {
-            foodAdapter = new FoodAdapter(context, FoodRv);
+//        if (foodAdapter == null) {
+            foodAdapter = new FoodAdapter(context, preferences, FoodRv);
             foodAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
                 @Override
                 public void onLoadMore() {
 
                 }
             });
-        }
+//        }
         FoodRv.setAdapter(foodAdapter);
         foodAdapter.clearAll();
+
+        img_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!TextUtils.isEmpty(foodSv.getText().toString().trim()))
+                    callChompApi(foodSv.getText().toString().trim());
+
+                InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+            }
+        });
 
         foodSv.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
@@ -211,17 +290,162 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
                 return false;
             }
         });
+
+        callMyFoodCatApi("1");
+    }
+
+    private void setMyFoodData() {
+        binding.txtNew.setVisibility(View.VISIBLE);
+        rv_myfood = (RecyclerView) findViewById(R.id.rv_myfood);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        rv_myfood.setLayoutManager(linearLayoutManager);
+        if (recipeFoodAdapter == null) {
+            recipeFoodAdapter = new RecipeFoodAdapter(context, preferences, rv_myfood, new RecipeFoodAdapter.ClickListner() {
+                @Override
+                public void onDeleteClick(String id) {
+                    callDeleteFoodApi(id);
+                }
+            });
+        }
+        rv_myfood.setAdapter(recipeFoodAdapter);
+        recipeFoodAdapter.clearAll();
+
+        edt_my_food.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                recipeFoodAdapter.filter(edt_my_food.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        callCustomFoodApi();
     }
 
     private void setRecipeData() {
+        binding.txtNew.setVisibility(View.VISIBLE);
+        rv_recipe = (RecyclerView) findViewById(R.id.rv_recipe);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        rv_recipe.setLayoutManager(linearLayoutManager);
+        if (recipeFoodAdapter == null) {
+            recipeFoodAdapter = new RecipeFoodAdapter(context, preferences, rv_recipe, new RecipeFoodAdapter.ClickListner() {
+                @Override
+                public void onDeleteClick(String id) {
+                    callDeleteFoodApi(id);
+                }
+            });
+        }
+        rv_recipe.setAdapter(recipeFoodAdapter);
+        recipeFoodAdapter.clearAll();
 
+        edt_my_food.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                recipeFoodAdapter.filter(edt_my_food.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        callCustomFoodApi();
+    }
+
+    private void setMealData() {
+        binding.txtNew.setVisibility(View.GONE);
+        rv_meals = (RecyclerView) findViewById(R.id.rv_meals);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        rv_meals.setLayoutManager(linearLayoutManager);
+        foodCategoryAdapter = null;
+        foodCategoryAdapter = new FoodCategoryAdapter(context, new FoodCategoryAdapter.ClickListener() {
+            @Override
+            public void onClick(FoodCategoryBean categoryBean, boolean isBarcode) {
+                if (isBarcode) {
+                    Intent intent = new Intent(SearchFoodActivity.this, QRCodeActivity.class);
+                    startActivity(intent);
+                }
+                else {
+                    preferences.cleanRecipedata();
+                    preferences.cleanMealNamedata();
+                    preferences.cleanMealdata();
+                    preferences.saveMealIDData(categoryBean.getId());
+                    Intent intent = new Intent(SearchFoodActivity.this, NewMealActivity.class);
+                    intent.putExtra("recipeName",categoryBean.getFoodType());
+                    intent.putExtra("foodCatID",categoryBean.getId());
+                    if (categoryBean.getRecipeBeans().get(0) != null)
+                        intent.putExtra("recipeID",categoryBean.getRecipeBeans().get(0).getId());
+                    else
+                        intent.putExtra("recipeID","0");
+                    startActivity(intent);
+                    overridePendingTransition(0, 0);
+                }
+            }
+
+            @Override
+            public void onDeletClick(String foodCatId, FoodCategoryBean categoryBean) {
+
+            }
+        });
+        rv_meals.setAdapter(foodCategoryAdapter);
+        foodCategoryAdapter.clearAll();
+
+        edt_meals.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                foodCategoryAdapter.filter(edt_meals.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        ll_add_meal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int newSnack = (foodCategoryAdapter.getItemCount()-5)+3;
+                Intent intent = new Intent(SearchFoodActivity.this, NewMealActivity.class);
+                intent.putExtra("recipeName","Snack"+newSnack);
+                intent.putExtra("foodCatID","0");
+                intent.putExtra("recipeID","0");
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+            }
+        });
+
+        callFoodCatApi("2");
     }
 
     private void callChompApi(String strName) {
         if (CommonUtils.isInternetOn(context)) {
             binding.progress.setVisibility(View.VISIBLE);
+            Observable<ResponseBody> signupusers;
 
-            Observable<ResponseBody> signupusers = FetchServiceBase.getChompFetcherService(context).getChomp("2smoc98kRRQNtsihq8",strName);
+            if (preferences.getCountyPref() != null && !TextUtils.isEmpty(preferences.getCountyPref()))
+                signupusers = FetchServiceBase.getChompFetcherService(context).getChompCountry("2smoc98kRRQNtsihq8",strName, preferences.getCountyPref());
+            else
+                signupusers = FetchServiceBase.getChompFetcherService(context).getChomp("2smoc98kRRQNtsihq8",strName);
             subscription = signupusers.subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<ResponseBody>() {
@@ -253,9 +477,163 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
                                 }
                                 foodAdapter.addAllList(chompProductBeans);
                             } catch (Exception e) {
-                                e.printStackTrace();
+                                Log.e("Exception ",""+e.getMessage()+"\n msg "+e.getCause());
                                 CommonUtils.toast(context,"No Data Found!");
                             }
+                        }
+                    });
+
+        } else {
+            CommonUtils.toast(context, context.getString(R.string.snack_bar_no_internet));
+        }
+    }
+
+    private void callFoodCatApi(String isRecipe) {
+        if (CommonUtils.isInternetOn(context)) {
+            binding.progress.setVisibility(View.VISIBLE);
+            HashMap<String, String> map = new HashMap<>();
+            map.put("is_racipe_meal", isRecipe);
+
+            Observable<ModelBean<ArrayList<FoodCategoryBean>>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).getFoodPlansApi(map);
+            subscription = signupusers.subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<ModelBean<ArrayList<FoodCategoryBean>>>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            CommonUtils.toast(context, e.getMessage());
+                            Log.e("callFoodCatApi"," "+e);
+                            binding.progress.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onNext(ModelBean<ArrayList<FoodCategoryBean>> apiFoodBean) {
+                            binding.progress.setVisibility(View.GONE);
+                            if (apiFoodBean.getStatus().toString().equalsIgnoreCase("1") )
+                            {
+                                foodCategoryAdapter.addAllList(apiFoodBean.getResult());
+                            }
+                            else
+                                CommonUtils.toast(context, ""+apiFoodBean.getMessage());
+                        }
+                    });
+
+        } else {
+            CommonUtils.toast(context, context.getString(R.string.snack_bar_no_internet));
+        }
+    }
+
+    private void callMyFoodCatApi(String isRecipe) {
+        if (CommonUtils.isInternetOn(context)) {
+            binding.progress.setVisibility(View.VISIBLE);
+            HashMap<String, String> map = new HashMap<>();
+            map.put("is_racipe_meal", isRecipe);
+
+            Observable<ModelBean<ArrayList<ChompProductBean>>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).getMyFoodApi(map);
+            subscription = signupusers.subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<ModelBean<ArrayList<ChompProductBean>>>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            CommonUtils.toast(context, e.getMessage());
+                            Log.e("callFoodCatApi"," "+e);
+                            binding.progress.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onNext(ModelBean<ArrayList<ChompProductBean>> apiFoodBean) {
+                            binding.progress.setVisibility(View.GONE);
+                            if (apiFoodBean.getStatus().toString().equalsIgnoreCase("1") && apiFoodBean.getResult() != null)
+                            {
+                                foodAdapter.addAllList(apiFoodBean.getResult());
+                            }
+                            else
+                                CommonUtils.toast(context, ""+apiFoodBean.getMessage());
+                        }
+                    });
+
+        } else {
+            CommonUtils.toast(context, context.getString(R.string.snack_bar_no_internet));
+        }
+    }
+
+    private void callCustomFoodApi() {
+        if (CommonUtils.isInternetOn(context)) {
+            binding.progress.setVisibility(View.VISIBLE);
+            HashMap<String, String> map = new HashMap<>();
+            map.put("food_count", preferences.getMyFoodListPref().trim());
+
+            Observable<ModelBean<ArrayList<ChompProductBean>>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).getCustomFoodApi(map);
+            subscription = signupusers.subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<ModelBean<ArrayList<ChompProductBean>>>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            CommonUtils.toast(context, e.getMessage());
+                            Log.e("callCustomFoodApi"," "+e);
+                            binding.progress.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onNext(ModelBean<ArrayList<ChompProductBean>> apiFoodBean) {
+                            binding.progress.setVisibility(View.GONE);
+                            if (apiFoodBean.getResult() != null && apiFoodBean.getResult().size() > 0) {
+                                recipeFoodAdapter.addAllList(apiFoodBean.getResult());
+                            }
+                            else
+                                CommonUtils.toast(context, apiFoodBean.getMessage());
+                        }
+                    });
+
+        } else {
+            CommonUtils.toast(context, context.getString(R.string.snack_bar_no_internet));
+        }
+    }
+
+    private void callDeleteFoodApi(String foodId) {
+        if (CommonUtils.isInternetOn(context)) {
+            binding.progress.setVisibility(View.VISIBLE);
+            HashMap<String, String> map = new HashMap<>();
+            map.put("food_id", foodId);
+
+            Observable<ModelBean<ArrayList<ChompProductBean>>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).deleteFood(map);
+            subscription = signupusers.subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<ModelBean<ArrayList<ChompProductBean>>>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            CommonUtils.toast(context, e.getMessage());
+                            Log.e("callDeleteFoodApi"," "+e);
+                            binding.progress.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onNext(ModelBean<ArrayList<ChompProductBean>> apiFoodBean) {
+                            binding.progress.setVisibility(View.GONE);
+                            recipeFoodAdapter.clearAll();
+                            if (apiFoodBean.getResult() != null && apiFoodBean.getResult().size() > 0)
+                                recipeFoodAdapter.addAllList(apiFoodBean.getResult());
+                            else
+                                CommonUtils.toast(context, apiFoodBean.getMessage());
                         }
                     });
 
