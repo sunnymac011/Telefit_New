@@ -201,6 +201,9 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
                 break;
 
             case R.id.txt_show_log_calories:
+
+
+
                 ll_calories_details.setVisibility(View.VISIBLE);
                 rl_calories_bar.setVisibility(View.GONE);
                 break;
@@ -669,6 +672,8 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
                 txt_exercise_count.setText(""+String.format("%.2f", burnCal));
                 txt_net_count.setText(""+String.format("%.2f", netCal));
             }
+
+
 
             @Override
             public void onNothingSelected() {
