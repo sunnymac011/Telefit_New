@@ -42,7 +42,6 @@ import fit.tele.com.telefit.apiBase.FetchServiceBase;
 import fit.tele.com.telefit.base.BaseActivity;
 import fit.tele.com.telefit.databinding.ActivityMainBinding;
 import fit.tele.com.telefit.modelBean.CaloriesBarBean;
-import fit.tele.com.telefit.modelBean.FoodCategoryBean;
 import fit.tele.com.telefit.modelBean.ModelBean;
 import fit.tele.com.telefit.modelBean.NutritionBarBean;
 import fit.tele.com.telefit.themes.MainActivityTheme;
@@ -271,7 +270,7 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
                     && !TextUtils.isEmpty(preferences.getUserDataPref().getMaintainWeight())) {
                 if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Lose 1 pound per week"))
                     dGoal = 1;
-                if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Lose 1.5 pounds per week"))
+                if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Lose 1.5 pound per week"))
                     dGoal = 1.5;
                 if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Lose 2 pounds per week"))
                     dGoal = 2;
@@ -293,10 +292,9 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
                 e.printStackTrace();
             }
             cal.setTime(newDate);
-            Log.e("datessss ",dWeeks+"  "+dWeight+"  "+dGoal+"    "+s.format(cal.getTime()));
+            Log.e("datessss ",dWeight+"  "+dgWeight+"  "+dGoal+"    "+s.format(cal.getTime()));
             cal.add(Calendar.WEEK_OF_YEAR, (int)Math.floor(dWeeks));
-            Log.e("Goal date",(int)Math.floor(dWeeks)+"     "+caloriesBarBean.getGoal().get(0).getGoalDate()+"    "+s.format(cal.getTime()));
-
+            txt_calories_remainder_date.setText(""+format1.format(cal.getTime()));
         }
 
         if (preferences.getUserDataPref().getWeightType().equalsIgnoreCase("kg"))
@@ -354,7 +352,7 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
                 && !TextUtils.isEmpty(preferences.getUserDataPref().getMaintainWeight())) {
             if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Lose 1 pound per week"))
                 budgetCal = (float)(tdee*0.20);
-            if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Lose 1.5 pounds per week"))
+            if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Lose 1.5 pound per week"))
                 budgetCal = (float)(tdee*0.30);
             if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Lose 2 pounds per week"))
                 budgetCal = (float)(tdee*0.35);

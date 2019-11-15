@@ -293,7 +293,7 @@ public class EditProfileActivity extends BaseActivity implements DatePickerDialo
                 && !TextUtils.isEmpty(saveLogiBean.getMaintainWeight())) {
             if (saveLogiBean.getMaintainWeight().equalsIgnoreCase("Lose 1 pound per week"))
                 binding.spiMaintain.setSelection(0);
-            if (saveLogiBean.getMaintainWeight().equalsIgnoreCase("Lose 1.5 pounds per week"))
+            if (saveLogiBean.getMaintainWeight().equalsIgnoreCase("Lose 1.5 pound per week"))
                 binding.spiMaintain.setSelection(1);
             if (saveLogiBean.getMaintainWeight().equalsIgnoreCase("Lose 2 pounds per week"))
                 binding.spiMaintain.setSelection(2);

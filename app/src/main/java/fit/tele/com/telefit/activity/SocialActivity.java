@@ -460,6 +460,7 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
             activityAdapter = new ActivityAdapter(context, preferences.getUserDataPref().getId(), rv_activities, new ActivityAdapter.ActivitiesListner() {
                 @Override
                 public void onClick(int id, CreatePostBean bean) {
+                    Log.w("Go","social adaper");
                     Intent in = new Intent(context, PostDetailActivity.class);
                     in.putExtra("postDetail",bean);
                     startActivity(in);

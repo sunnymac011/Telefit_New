@@ -19,16 +19,11 @@ import java.util.HashMap;
 
 import fit.tele.com.telefit.R;
 import fit.tele.com.telefit.adapter.FoodCategoryAdapter;
-import fit.tele.com.telefit.adapter.TrainerListAdapter;
 import fit.tele.com.telefit.apiBase.FetchServiceBase;
 import fit.tele.com.telefit.base.BaseActivity;
 import fit.tele.com.telefit.databinding.ActivityFoodCalNutBinding;
-import fit.tele.com.telefit.modelBean.ExerciseDetailsBean;
 import fit.tele.com.telefit.modelBean.FoodCategoryBean;
 import fit.tele.com.telefit.modelBean.ModelBean;
-import fit.tele.com.telefit.modelBean.NewRecipeBean;
-import fit.tele.com.telefit.modelBean.RoutinePlanBean;
-import fit.tele.com.telefit.modelBean.TrainerBean;
 import fit.tele.com.telefit.utils.CommonUtils;
 import rx.Observable;
 import rx.Subscriber;
@@ -575,7 +570,7 @@ public class FoodCalNutActivity extends BaseActivity implements View.OnClickList
                 && !TextUtils.isEmpty(preferences.getUserDataPref().getMaintainWeight())) {
             if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Lose 1 pound per week"))
                 budgetCal = (float)(tdee*0.20);
-            if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Lose 1.5 pounds per week"))
+            if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Lose 1.5 pound per week"))
                 budgetCal = (float)(tdee*0.30);
             if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Lose 2 pounds per week"))
                 budgetCal = (float)(tdee*0.35);

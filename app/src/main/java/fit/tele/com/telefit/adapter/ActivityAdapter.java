@@ -24,7 +24,6 @@ import java.util.Locale;
 
 import fit.tele.com.telefit.R;
 import fit.tele.com.telefit.modelBean.CreatePostBean;
-import fit.tele.com.telefit.modelBean.RoutinePlanBean;
 import fit.tele.com.telefit.utils.CircleTransform;
 import fit.tele.com.telefit.utils.OnLoadMoreListener;
 
@@ -126,6 +125,7 @@ public class ActivityAdapter extends RecyclerSwipeAdapter<ActivityAdapter.Simple
         private TextView txt_customer_name, txt_date,txt_list_desc,txt_time,txt_delete;
         private ImageView img_user;
         int position;
+        LinearLayout ll_main;
 
         public SimpleViewHolder(View v) {
             super(v);
@@ -136,6 +136,7 @@ public class ActivityAdapter extends RecyclerSwipeAdapter<ActivityAdapter.Simple
             txt_time = (TextView) v.findViewById(R.id.txt_time);
             txt_delete = (TextView) v.findViewById(R.id.txt_delete);
             img_user = (ImageView) v.findViewById(R.id.img_user);
+            ll_main = (LinearLayout) v.findViewById(R.id.ll_main);
         }
 
         public void toBinding(int pos, CreatePostBean item) {
@@ -176,6 +177,34 @@ public class ActivityAdapter extends RecyclerSwipeAdapter<ActivityAdapter.Simple
 
 
                     itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (listener != null)
+                                listener.onClick(50001, list.get(position));
+                        }
+                    });
+                    img_user.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (listener != null)
+                                listener.onClick(50001, list.get(position));
+                        }
+                    });
+                    txt_customer_name.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (listener != null)
+                                listener.onClick(50001, list.get(position));
+                        }
+                    });
+                    txt_list_desc.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (listener != null)
+                                listener.onClick(50001, list.get(position));
+                        }
+                    });
+                    ll_main.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             if (listener != null)
