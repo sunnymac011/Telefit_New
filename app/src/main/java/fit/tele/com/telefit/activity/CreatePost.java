@@ -14,6 +14,7 @@ import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -40,7 +41,9 @@ import fit.tele.com.telefit.R;
 import fit.tele.com.telefit.apiBase.FetchServiceBase;
 import fit.tele.com.telefit.base.BaseActivity;
 import fit.tele.com.telefit.databinding.ActivityCreatePostBinding;
+import fit.tele.com.telefit.dialog.AddGoalsDialog;
 import fit.tele.com.telefit.dialog.MediaOption;
+import fit.tele.com.telefit.dialog.SharePostDialog;
 import fit.tele.com.telefit.modelBean.LoginBean;
 import fit.tele.com.telefit.modelBean.ModelBean;
 import fit.tele.com.telefit.utils.CommonUtils;
@@ -63,6 +66,8 @@ public class CreatePost extends BaseActivity {
     private static final int SELECT_PICTURE = 1, SELECT_PICTURE_CAMARA = 2;
     private Uri outputFileUri;
     private File fileProfile;
+    SharePostDialog sharePostDialog;
+    AddGoalsDialog addGoalsDialog;
 
     @Override
     public int getLayoutResId() {
@@ -92,11 +97,19 @@ public class CreatePost extends BaseActivity {
             public void onClick(View view) {
                 if(validation()) {
 
-                //   shareOnInsta();
+                 //  shareOnInsta();
                     //   shareTwitter("This is my message for testing");
-                 //   shareOnSnapchat();
+                 //
+                    //   ();
+                 //   shareOnFacebookNew();
+                  //  callCreatePost();
+
+
+
 
                     callCreatePost();
+
+
                 }
 
             }
@@ -351,9 +364,39 @@ public class CreatePost extends BaseActivity {
 
 //                                shareOnFacebook();
 
-                                Intent in = new Intent(CreatePost.this,SocialActivity.class);
-                                setResult(RESULT_OK,in);
-                                finish();
+                                sharePostDialog = new SharePostDialog(context,false,null,  new SharePostDialog.SetDataListener() {
+
+                                    @Override
+                                    public void onContinueClick() {
+                                        Intent in = new Intent(CreatePost.this,SocialActivity.class);
+                                        setResult(RESULT_OK,in);
+                                        finish();
+                                    }
+
+                                    @Override
+                                    public void shareOnFacebook() {
+                                        shareOnFacebookNew();
+                                    }
+
+                                    @Override
+                                    public void shareOnInstagram() {
+                                        shareOnInsta();
+                                    }
+
+                                    @Override
+                                    public void shareOnSnapChat() {
+                                        shareSnapchat();
+                                    }
+
+                                    @Override
+                                    public void shareOnTwitter() {
+                                        CreatePost.this.shareOnTwitter(binding.inputPost.getText().toString(), Uri.fromFile(fileProfile));
+                                       // shareTwitter(binding.inputPost.getText().toString());
+                                    }
+                                });
+                                sharePostDialog.show();
+
+
                             } else {
                                 CommonUtils.toast(context, loginBean.getMessage());
                             }
@@ -364,7 +407,7 @@ public class CreatePost extends BaseActivity {
         }
     }
 
-    public void shareOnFacebook() {
+    public void shareOnFacebookNew() {
         Log.w("imagebitmap", "" + adjustedBitmap);
         if (adjustedBitmap != null) {
             if (validation()) {
@@ -391,7 +434,7 @@ public class CreatePost extends BaseActivity {
             shareIntent.setAction(Intent.ACTION_SEND);
             shareIntent.setPackage("com.instagram.android");
             try {
-                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(MediaStore.Images.Media.insertImage(getContentResolver(),adjustedBitmap , "I am Happy", "Share happy !")));
+                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(MediaStore.Images.Media.insertImage(getContentResolver(),adjustedBitmap , "Telefit", binding.inputPost.getText().toString())));
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -450,12 +493,37 @@ public class CreatePost extends BaseActivity {
         }
     }
 
-    public void shareOnSnapchat(){
+    public void shareSnapchat(){
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("*/*");
         intent.setPackage("com.snapchat.android");
-        intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(MediaStore.Images.Media.insertImage(getContentResolver(),adjustedBitmap , "I am Happy", "Share happy !")));
+        intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(MediaStore.Images.Media.insertImage(getContentResolver(),adjustedBitmap , "Telefit", binding.inputPost.getText().toString())));
         startActivity(Intent.createChooser(intent, "Open Snapchat"));
     }
+
+
+
+
+        public void shareOnTwitter(String textBody, Uri fileUri) {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.setPackage("com.twitter.android");
+            intent.putExtra(Intent.EXTRA_TEXT, !TextUtils.isEmpty(textBody) ? textBody : "");
+
+            if (fileUri != null) {
+                intent.putExtra(Intent.EXTRA_STREAM, fileUri);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                intent.setType("image/*");
+            }
+
+            try {
+                startActivity(intent);
+            } catch (android.content.ActivityNotFoundException ex) {
+                ex.printStackTrace();
+               // showWarningDialog(appCompatActivity, appCompatActivity.getString(R.string.error_activity_not_found));
+            }
+        }
+
+
 
 }

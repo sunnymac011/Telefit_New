@@ -173,6 +173,8 @@ public class ActivityAdapter extends RecyclerSwipeAdapter<ActivityAdapter.Simple
                                 .placeholder(R.drawable.user_placeholder)
                                 .transform(new CircleTransform())
                                 .into(img_user);
+                    }else {
+                        img_user.setImageResource(R.drawable.user_placeholder);
                     }
 
 
