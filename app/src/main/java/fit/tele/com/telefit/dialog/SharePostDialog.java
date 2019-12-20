@@ -20,6 +20,7 @@ public class SharePostDialog extends Dialog implements View.OnClickListener {
     private SetDataListener setDataListener;
     private Context context;
     private String strHint;
+    Boolean is_snapchat=true,is_facebook=true,is_instagram=true,is_twitter=true,is_fried=true,is_trainer=true;
 
     public SharePostDialog(@NonNull Context context, SetDataListener setDataListener) {
         super(context);
@@ -37,6 +38,17 @@ public class SharePostDialog extends Dialog implements View.OnClickListener {
         super(context, cancelable, cancelListener);
         this.setDataListener = setDataListener;
         this.context = context;
+    }
+
+    public SharePostDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener, SetDataListener setDataListener,
+                           Boolean is_facebook,Boolean is_instagram,Boolean is_twitter,Boolean is_snapchat) {
+        super(context, cancelable, cancelListener);
+        this.setDataListener = setDataListener;
+        this.context = context;
+        this.is_facebook = is_facebook;
+        this.is_instagram = is_instagram;
+        this.is_twitter = is_twitter;
+        this.is_snapchat = is_snapchat;
     }
 
     @Override
@@ -57,6 +69,23 @@ public class SharePostDialog extends Dialog implements View.OnClickListener {
         txt_share_instagram = (TextView) contentView.findViewById(R.id.txt_share_instagram);
         txt_share_twiter = (TextView) contentView.findViewById(R.id.txt_share_twiter);
         txt_share_snapchat = (TextView) contentView.findViewById(R.id.txt_share_snapchat);
+
+        if (is_facebook)
+            txt_share_fb.setVisibility(View.VISIBLE);
+        else
+            txt_share_fb.setVisibility(View.GONE);
+        if (is_instagram)
+            txt_share_instagram.setVisibility(View.VISIBLE);
+        else
+            txt_share_instagram.setVisibility(View.GONE);
+        if (is_twitter)
+            txt_share_twiter.setVisibility(View.VISIBLE);
+        else
+            txt_share_twiter.setVisibility(View.GONE);
+        if (is_snapchat)
+            txt_share_snapchat.setVisibility(View.VISIBLE);
+        else
+            txt_share_snapchat.setVisibility(View.GONE);
 
         btn_close = (Button) contentView.findViewById(R.id.btn_close);
         btn_close.setOnClickListener(this);

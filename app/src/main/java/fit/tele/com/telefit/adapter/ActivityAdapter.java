@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import fit.tele.com.telefit.R;
 import fit.tele.com.telefit.modelBean.CreatePostBean;
@@ -155,7 +156,9 @@ public class ActivityAdapter extends RecyclerSwipeAdapter<ActivityAdapter.Simple
                         txt_list_desc.setText("");
                     }
                     if (list.get(position).getCreatedAt() != null && !TextUtils.isEmpty(list.get(position).getCreatedAt())) {
-                        txt_time.setText(getTimeFormatted(list.get(position).getCreatedAt()));
+
+                       // txt_time.setText(getTimeFormatted(list.get(position).getCreatedAt()));
+                        txt_time.setText(changeTimeZOne(list.get(position).getCreatedAt()));
                     } else {
                         txt_time.setText("");
                     }
@@ -263,6 +266,8 @@ public class ActivityAdapter extends RecyclerSwipeAdapter<ActivityAdapter.Simple
     }
 
     public String getTimeFormatted(String dateNew){
+
+
         try {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             Date date = null;
@@ -274,6 +279,24 @@ public class ActivityAdapter extends RecyclerSwipeAdapter<ActivityAdapter.Simple
             return "";
         }
 
+    }
+
+    public String changeTimeZOne(String dateNew){
+        String timezone = TimeZone.getDefault().getID();
+        try {
+            SimpleDateFormat sourceFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            sourceFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date parsed = sourceFormat.parse(dateNew); // => Date is in UTC now
+
+            TimeZone tz = TimeZone.getTimeZone(timezone);
+            SimpleDateFormat destFormat = new SimpleDateFormat("hh:mm aa");
+            destFormat.setTimeZone(tz);
+
+            return destFormat.format(parsed);
+        } catch (ParseException e) {
+        e.printStackTrace();
+        return "";
+    }
     }
 
     public String getDateFormatted(String dateNew){

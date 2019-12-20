@@ -404,7 +404,6 @@ public class SocialActivity extends BaseActivity implements View.OnClickListener
             if(strSelectedTab==1) {
                 getAllActivities();
             }
-
         }
     }
 

@@ -3,6 +3,7 @@ package fit.tele.com.telefit.activity;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
@@ -48,6 +49,7 @@ import fit.tele.com.telefit.modelBean.LoginBean;
 import fit.tele.com.telefit.modelBean.ModelBean;
 import fit.tele.com.telefit.utils.CommonUtils;
 import fit.tele.com.telefit.utils.FileUtils;
+import fit.tele.com.telefit.utils.Preferences;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -68,6 +70,8 @@ public class CreatePost extends BaseActivity {
     private File fileProfile;
     SharePostDialog sharePostDialog;
     AddGoalsDialog addGoalsDialog;
+    Preferences preferences;
+    Boolean is_snapchat=true,is_facebook=true,is_instagram=true,is_twitter=true,is_fried=true,is_trainer=true;
 
     @Override
     public int getLayoutResId() {
@@ -96,24 +100,90 @@ public class CreatePost extends BaseActivity {
             @Override
             public void onClick(View view) {
                 if(validation()) {
+              //      callCreatePost();
 
-                 //  shareOnInsta();
-                    //   shareTwitter("This is my message for testing");
-                 //
-                    //   ();
-                 //   shareOnFacebookNew();
-                  //  callCreatePost();
+                    if (is_fried){
+                        callCreatePost();
+                    }else {
+                        sharePostDialog = new SharePostDialog(context, false, null, new SharePostDialog.SetDataListener() {
 
+                            @Override
+                            public void onContinueClick() {
+                                Intent in = new Intent(CreatePost.this, SocialActivity.class);
+                                setResult(RESULT_OK, in);
+                                finish();
+                            }
 
+                            @Override
+                            public void shareOnFacebook() {
+                                if (isFacebookAvailable())
+                                    shareOnFacebookNew();
+                                else
+                                    CommonUtils.toast(context, "Facebook is not installed on your phone");
+                            }
 
+                            @Override
+                            public void shareOnInstagram() {
+                                shareOnInsta();
+                            }
 
-                    callCreatePost();
+                            @Override
+                            public void shareOnSnapChat() {
+                                shareSnapchat();
+                            }
 
+                            @Override
+                            public void shareOnTwitter() {
 
+                                if (isTwitterAvailable()) {
+                                    CreatePost.this.shareOnTwitter(binding.inputPost.getText().toString(), Uri.fromFile(fileProfile));
+                                } else {
+                                    CommonUtils.toast(context, "Twitter is not installed on your phone");
+                                }
+
+                                //CreatePost.this.shareOnTwitter(binding.inputPost.getText().toString(), Uri.fromFile(fileProfile));
+                                // shareTwitter(binding.inputPost.getText().toString());
+                            }
+                        }, is_facebook, is_instagram, is_twitter, is_snapchat);
+                        sharePostDialog.show();
+                    }
                 }
-
             }
         });
+
+
+        preferences = new Preferences(this);
+        if(preferences.getUserDataPref().getIs_snapchat_share().equals("1")){
+            is_snapchat = true;
+        }else {
+            is_snapchat = false;
+        }
+        if(preferences.getUserDataPref().getIs_facebook_share().equals("1")){
+            is_facebook = true;
+        }else {
+            is_facebook = false;
+        }
+        if(preferences.getUserDataPref().getIs_instagram_share().equals("1")){
+            is_instagram = true;
+        }else {
+            is_instagram = false;
+        }
+        if(preferences.getUserDataPref().getIs_twiter_share().equals("1")){
+            is_twitter = true;
+        }else {
+            is_twitter = false;
+        }
+        if(preferences.getUserDataPref().getIs_friend_share().equals("1")){
+            is_fried = true;
+        }else {
+            is_fried = false;
+        }
+        if(preferences.getUserDataPref().getIs_trainer_share().equals("1")){
+            is_trainer = true;
+        }else {
+            is_trainer = false;
+        }
+
     }
 
     private boolean validation() {
@@ -362,7 +432,7 @@ public class CreatePost extends BaseActivity {
                             if (loginBean.getStatus() == 1) {
                                 CommonUtils.toast(context, "Your post is successfully created.");
 
-//                                shareOnFacebook();
+  //                              shareOnFacebook();
 
                                 sharePostDialog = new SharePostDialog(context,false,null,  new SharePostDialog.SetDataListener() {
 
@@ -375,7 +445,11 @@ public class CreatePost extends BaseActivity {
 
                                     @Override
                                     public void shareOnFacebook() {
-                                        shareOnFacebookNew();
+                                        if(isFacebookAvailable())
+                                            shareOnFacebookNew();
+                                        else
+                                            CommonUtils.toast(context,"Facebook not installed");
+
                                     }
 
                                     @Override
@@ -390,10 +464,16 @@ public class CreatePost extends BaseActivity {
 
                                     @Override
                                     public void shareOnTwitter() {
-                                        CreatePost.this.shareOnTwitter(binding.inputPost.getText().toString(), Uri.fromFile(fileProfile));
-                                       // shareTwitter(binding.inputPost.getText().toString());
+                                        if (isTwitterAvailable()) {
+                                            CreatePost.this.shareOnTwitter(binding.inputPost.getText().toString(), Uri.fromFile(fileProfile));
+                                        }else {
+
+                                        }
+//                                        shareTwitter(binding.inputPost.getText().toString());
+
+
                                     }
-                                });
+                                },is_facebook,is_instagram,is_twitter,is_snapchat);
                                 sharePostDialog.show();
 
 
@@ -424,7 +504,26 @@ public class CreatePost extends BaseActivity {
         }else {
             CommonUtils.toast(context,"Please select photo upload on social media");
         }
+
+
+
     }
+
+    public boolean isFacebookAvailable() {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_TEXT, "Test; please ignore");
+        intent.setType("text/plain");
+        final PackageManager pm = this.getApplicationContext().getPackageManager();
+        for(ResolveInfo resolveInfo: pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)){
+            ActivityInfo activity = resolveInfo.activityInfo;
+            if (activity.name.contains("com.facebook")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 
     public void shareOnInsta(){
         Intent intent = getPackageManager().getLaunchIntentForPackage("com.instagram.android");
@@ -453,6 +552,8 @@ public class CreatePost extends BaseActivity {
             startActivity(intent1);
         }
     }
+
+
 
     private void shareTwitter(String message) {
         Intent tweetIntent = new Intent(Intent.ACTION_SEND);
@@ -501,10 +602,22 @@ public class CreatePost extends BaseActivity {
         startActivity(Intent.createChooser(intent, "Open Snapchat"));
     }
 
+    public boolean isTwitterAvailable() {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_TEXT, "Test; please ignore");
+        intent.setType("text/plain");
+        final PackageManager pm = this.getApplicationContext().getPackageManager();
+        for(ResolveInfo resolveInfo: pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)){
+            ActivityInfo activity = resolveInfo.activityInfo;
+            // Log.i("actividad ->", activity.name);
+            if (activity.name.contains("com.twitter.android")) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-
-
-        public void shareOnTwitter(String textBody, Uri fileUri) {
+    public void shareOnTwitter(String textBody, Uri fileUri) {
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
             intent.setPackage("com.twitter.android");
