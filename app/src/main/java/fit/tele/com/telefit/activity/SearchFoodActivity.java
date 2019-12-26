@@ -29,12 +29,15 @@ import java.util.Iterator;
 import fit.tele.com.telefit.R;
 import fit.tele.com.telefit.adapter.FoodAdapter;
 import fit.tele.com.telefit.adapter.FoodCategoryAdapter;
+import fit.tele.com.telefit.adapter.NewRecipeAdapter;
 import fit.tele.com.telefit.adapter.RecipeFoodAdapter;
 import fit.tele.com.telefit.apiBase.FetchServiceBase;
 import fit.tele.com.telefit.base.BaseActivity;
 import fit.tele.com.telefit.databinding.ActivitySearchFoodBinding;
 import fit.tele.com.telefit.modelBean.FoodCategoryBean;
 import fit.tele.com.telefit.modelBean.ModelBean;
+import fit.tele.com.telefit.modelBean.NewRecipeBean;
+import fit.tele.com.telefit.modelBean.RecipeListBean;
 import fit.tele.com.telefit.modelBean.chompBeans.ChompProductBean;
 import fit.tele.com.telefit.utils.CommonUtils;
 import fit.tele.com.telefit.utils.OnLoadMoreListener;
@@ -49,6 +52,7 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
     private ActivitySearchFoodBinding binding;
     private FoodAdapter foodAdapter;
     private RecipeFoodAdapter recipeFoodAdapter;
+    private NewRecipeAdapter newRecipeAdapter;
     private RecyclerView FoodRv,rv_myfood,rv_meals, rv_recipe;
     private LinearLayoutManager linearLayoutManager;
     private EditText foodSv, edt_recipes, edt_meals,edt_my_food;
@@ -225,21 +229,25 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
                 binding.viewMeals.setVisibility(View.GONE);
                 binding.txtRecipesTab.setTextColor(getResources().getColor(R.color.white));
                 binding.viewRecipes.setVisibility(View.VISIBLE);
-//                setRecipeData();
+                setRecipeData();
                 break;
 
             case R.id.txt_new:
-                if (strSelectedTab == 3) {
-                    preferences.cleanMealNamedata();
-                    preferences.cleanMealDatedata();
-                    preferences.cleanMealdata();
-                    preferences.cleanMealIDdata();
-                    preferences.cleanUpdateMeal();
+                preferences.cleanMealNamedata();
+                preferences.cleanMealDatedata();
+                preferences.cleanMealdata();
+                preferences.cleanMealIDdata();
+                preferences.cleanUpdateMeal();
+                preferences.cleanRecipeNamedata();
+                preferences.cleanRecipedata();
+
+                if (strSelectedTab == 3)
                     intent = new Intent(context, NewMealActivity.class);
-                }
-                else {
+                else if (strSelectedTab == 4)
+                    intent = new Intent(context, NewRecipeActivity.class);
+                else
                     intent = new Intent(context, AddCustomFoodActivity.class);
-                }
+
                 startActivity(intent);
                 overridePendingTransition(0, 0);
 
@@ -291,7 +299,7 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
             }
         });
 
-        callMyFoodCatApi("1");
+        callMyFoodCatApi("2");
     }
 
     private void setMyFoodData() {
@@ -335,16 +343,16 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
         rv_recipe = (RecyclerView) findViewById(R.id.rv_recipe);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         rv_recipe.setLayoutManager(linearLayoutManager);
-        if (recipeFoodAdapter == null) {
-            recipeFoodAdapter = new RecipeFoodAdapter(context, preferences, rv_recipe, new RecipeFoodAdapter.ClickListner() {
+        if (newRecipeAdapter == null) {
+            newRecipeAdapter = new NewRecipeAdapter(context, preferences, rv_recipe, new NewRecipeAdapter.ClickListner() {
                 @Override
                 public void onDeleteClick(String id) {
-                    callDeleteFoodApi(id);
+                    callDeleteRecipeApi(id);
                 }
             });
         }
-        rv_recipe.setAdapter(recipeFoodAdapter);
-        recipeFoodAdapter.clearAll();
+        rv_recipe.setAdapter(newRecipeAdapter);
+        newRecipeAdapter.clearAll();
 
         edt_my_food.addTextChangedListener(new TextWatcher() {
             @Override
@@ -354,7 +362,7 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                recipeFoodAdapter.filter(edt_my_food.getText().toString());
+                newRecipeAdapter.filter(edt_my_food.getText().toString());
             }
 
             @Override
@@ -363,7 +371,7 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
             }
         });
 
-        callCustomFoodApi();
+        callGetRecipeApi();
     }
 
     private void setMealData() {
@@ -384,6 +392,8 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
                     preferences.cleanMealNamedata();
                     preferences.cleanMealdata();
                     preferences.saveMealIDData(categoryBean.getId());
+                    preferences.cleanRecipedata();
+                    preferences.cleanRecipeNamedata();
                     Intent intent = new Intent(SearchFoodActivity.this, NewMealActivity.class);
                     intent.putExtra("recipeName",categoryBean.getFoodType());
                     intent.putExtra("foodCatID",categoryBean.getId());
@@ -399,6 +409,11 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onDeletClick(String foodCatId, FoodCategoryBean categoryBean) {
 
+            }
+
+            @Override
+            public void onAddClick(FoodCategoryBean categoryBean) {
+                callGetMealApi(categoryBean.getId(),categoryBean.getRecipeBeans().get(0).getId());
             }
         });
         rv_meals.setAdapter(foodCategoryAdapter);
@@ -435,6 +450,44 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
         });
 
         callFoodCatApi("2");
+    }
+
+    private void callGetRecipeApi() {
+        if (CommonUtils.isInternetOn(context)) {
+            binding.progress.setVisibility(View.VISIBLE);
+            HashMap<String, String> map = new HashMap<>();
+            map.put("is_racipe_meal", "1");
+
+            Observable<ModelBean<ArrayList<RecipeListBean>>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).getRecipeApi(map);
+            subscription = signupusers.subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<ModelBean<ArrayList<RecipeListBean>>>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            CommonUtils.toast(context, e.getMessage());
+                            Log.e("callGetRecipeApi"," "+e);
+                            binding.progress.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onNext(ModelBean<ArrayList<RecipeListBean>> apiFoodBean) {
+                            binding.progress.setVisibility(View.GONE);
+                            if (apiFoodBean.getResult() != null && apiFoodBean.getResult().size() > 0) {
+                                newRecipeAdapter.addAllList(apiFoodBean.getResult());
+                            }
+                            else
+                                CommonUtils.toast(context, apiFoodBean.getMessage());
+                        }
+                    });
+
+        } else {
+            CommonUtils.toast(context, context.getString(R.string.snack_bar_no_internet));
+        }
     }
 
     private void callChompApi(String strName) {
@@ -634,6 +687,91 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
                                 recipeFoodAdapter.addAllList(apiFoodBean.getResult());
                             else
                                 CommonUtils.toast(context, apiFoodBean.getMessage());
+                        }
+                    });
+
+        } else {
+            CommonUtils.toast(context, context.getString(R.string.snack_bar_no_internet));
+        }
+    }
+
+    private void callDeleteRecipeApi(String foodId) {
+        if (CommonUtils.isInternetOn(context)) {
+            binding.progress.setVisibility(View.VISIBLE);
+            HashMap<String, String> map = new HashMap<>();
+            map.put("recipe_id", foodId);
+            map.put("is_racipe_meal", "1");
+
+            Observable<ModelBean<ArrayList<RecipeListBean>>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).deleteRecipe(map);
+            subscription = signupusers.subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<ModelBean<ArrayList<RecipeListBean>>>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            CommonUtils.toast(context, e.getMessage());
+                            Log.e("callDeleteFoodApi"," "+e);
+                            binding.progress.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onNext(ModelBean<ArrayList<RecipeListBean>> apiFoodBean) {
+                            binding.progress.setVisibility(View.GONE);
+                            newRecipeAdapter.clearAll();
+                            if (apiFoodBean.getStatus() == 1)
+                            {
+                                if (apiFoodBean.getResult() != null && apiFoodBean.getResult().size() > 0)
+                                    newRecipeAdapter.addAllList(apiFoodBean.getResult());
+                                else
+                                    CommonUtils.toast(context, apiFoodBean.getMessage());
+                            }
+                        }
+                    });
+
+        } else {
+            CommonUtils.toast(context, context.getString(R.string.snack_bar_no_internet));
+        }
+    }
+
+    private void callGetMealApi(String newSnack, String newRecipe) {
+        if (CommonUtils.isInternetOn(context)) {
+            binding.progress.setVisibility(View.VISIBLE);
+            HashMap<String, String> map = new HashMap<>();
+            map.put("meals_id", newRecipe);
+            map.put("food_cat_id", newSnack);
+            map.put("is_racipe_meal", "2");
+
+            Observable<ModelBean<NewRecipeBean>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).getMealApi(map);
+            subscription = signupusers.subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<ModelBean<NewRecipeBean>>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            CommonUtils.toast(context, e.getMessage());
+                            Log.e("callGetMealApi"," "+e);
+                            binding.progress.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onNext(ModelBean<NewRecipeBean> apiFoodBean) {
+                            binding.progress.setVisibility(View.GONE);
+                            if (apiFoodBean.getStatus().toString().equalsIgnoreCase("1") )
+                            {
+                                chompProductBeans = apiFoodBean.getResult().getFood();
+                                preferences.cleanMealdata();
+                                preferences.saveMealData(chompProductBeans);
+                                Intent intent = new Intent(context, NewMealActivity.class);
+                                startActivity(intent);
+                            }
                         }
                     });
 

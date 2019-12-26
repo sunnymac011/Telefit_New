@@ -12,16 +12,25 @@ import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import fit.tele.com.telefit.R;
+import fit.tele.com.telefit.apiBase.FetchServiceBase;
 import fit.tele.com.telefit.base.BaseActivity;
 import fit.tele.com.telefit.databinding.ActivityAddFoodBinding;
 import fit.tele.com.telefit.dialog.AddFoodDialog;
 import fit.tele.com.telefit.modelBean.ExercisesListBean;
+import fit.tele.com.telefit.modelBean.ModelBean;
+import fit.tele.com.telefit.modelBean.RecipeListBean;
 import fit.tele.com.telefit.modelBean.chompBeans.ChompProductBean;
 import fit.tele.com.telefit.modelBean.chompBeans.Details;
 import fit.tele.com.telefit.utils.CircleTransform;
+import fit.tele.com.telefit.utils.CommonUtils;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class AddFoodActivity extends BaseActivity implements View.OnClickListener {
 
@@ -32,7 +41,7 @@ public class AddFoodActivity extends BaseActivity implements View.OnClickListene
             , doubleSodium = 0, doubleProtein = 0,doubleHalfQty = 0;
     private ArrayList<ChompProductBean> chompProductBeans = new ArrayList<>();
     private AddFoodDialog addFoodDialog;
-    private String strFrom = "";
+    private String strFrom = "",recipeId = "";
 
     @Override
     public int getLayoutResId() {
@@ -42,14 +51,21 @@ public class AddFoodActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void init() {
         binding = (ActivityAddFoodBinding) getBindingObj();
-        if(getIntent() != null && getIntent().hasExtra("SelectedItems"))
-            chompProductBean = getIntent().getParcelableExtra("SelectedItems");
         if(getIntent() != null && getIntent().hasExtra("from"))
             strFrom = getIntent().getStringExtra("from");
+        if (!TextUtils.isEmpty(strFrom) && strFrom.equalsIgnoreCase("RecipeAdapter")) {
+            if(getIntent() != null && getIntent().hasExtra("SelectedRecipe"))
+                recipeId = getIntent().getStringExtra("SelectedRecipe");
+            callGetRecipeDetailsApi(recipeId);
+        }
+        else {
 
-        if (chompProductBean != null)
-            setValue();
-        setListner();
+            if(getIntent() != null && getIntent().hasExtra("SelectedItems"))
+                chompProductBean = getIntent().getParcelableExtra("SelectedItems");
+            if (chompProductBean != null)
+                setValue();
+            setListner();
+        }
     }
 
     private void setListner() {
@@ -155,7 +171,11 @@ public class AddFoodActivity extends BaseActivity implements View.OnClickListene
                 && chompProductBean.getDetails().getNutritionLabel().getSugars() != null
                 && !TextUtils.isEmpty(chompProductBean.getDetails().getNutritionLabel().getSugars().getPerServing()))
             doubleSugar = Double.parseDouble(chompProductBean.getDetails().getNutritionLabel().getSugars().getPerServing());
-        doubleCarbs = doubleFiber+doubleSugar;
+        if (chompProductBean.getDetails() != null
+                && chompProductBean.getDetails().getNutritionLabel() != null
+                && chompProductBean.getDetails().getNutritionLabel().getCarbohydrates() != null
+                && !TextUtils.isEmpty(chompProductBean.getDetails().getNutritionLabel().getCarbohydrates().getPerServing()))
+            doubleCarbs = Double.parseDouble(chompProductBean.getDetails().getNutritionLabel().getCarbohydrates().getPerServing());
         if (chompProductBean.getDetails() != null
                 && chompProductBean.getDetails().getNutritionLabel() != null
                 && chompProductBean.getDetails().getNutritionLabel().getProteins() != null
@@ -177,6 +197,8 @@ public class AddFoodActivity extends BaseActivity implements View.OnClickListene
                     .transform(new CircleTransform())
                     .into(binding.imgFood);
         }
+        else
+            binding.imgFood.setImageResource(R.drawable.empty_food);
 
         setData();
     }
@@ -194,7 +216,6 @@ public class AddFoodActivity extends BaseActivity implements View.OnClickListene
             binding.txtSodium.setText(String.format("%.2f", (doubleSodium*intQty+(doubleSodium*doubleHalfQty)))+"g");
             binding.txtFibre.setText(String.format("%.2f", (doubleFiber*intQty+(doubleFiber*doubleHalfQty)))+"g");
             binding.txtSugars.setText(String.format("%.2f", (doubleSugar*intQty+(doubleSugar*doubleHalfQty)))+"g");
-            doubleCarbs = doubleFiber+doubleSugar;
             binding.txtTotalCarbs.setText(String.format("%.2f", (doubleCarbs*intQty+(doubleCarbs*doubleHalfQty)))+"g");
             binding.txtProtein.setText(String.format("%.2f", (doubleProtein*intQty+(doubleProtein*doubleHalfQty)))+"g");
             binding.txtSatFat.setText(String.format("%.2f", (doubleSatFat*intQty+(doubleSatFat*doubleHalfQty)))+"g");
@@ -206,7 +227,6 @@ public class AddFoodActivity extends BaseActivity implements View.OnClickListene
             binding.txtSodium.setText(String.format("%.2f", (doubleSodium*intQty))+"g");
             binding.txtFibre.setText(String.format("%.2f", (doubleFiber*intQty))+"g");
             binding.txtSugars.setText(String.format("%.2f", (doubleSugar*intQty))+"g");
-            doubleCarbs = doubleFiber+doubleSugar;
             binding.txtTotalCarbs.setText(""+String.format("%.2f", (doubleCarbs*intQty))+"g");
             binding.txtProtein.setText(String.format("%.2f", (doubleProtein*intQty))+"g");
             binding.txtSatFat.setText(String.format("%.2f", (doubleSatFat*intQty))+"g");
@@ -249,7 +269,11 @@ public class AddFoodActivity extends BaseActivity implements View.OnClickListene
                 break;
 
             case R.id.txt_add:
-                if (preferences.getMealDataPref() != null) {
+                if (preferences.getRecipeDataPref() != null) {
+                    Gson gson = new Gson();
+                    chompProductBeans = gson.fromJson(preferences.getRecipeDataPref(), new TypeToken<List<ChompProductBean>>(){}.getType());
+                }
+                else if (preferences.getMealDataPref() != null) {
                     Gson gson = new Gson();
                     chompProductBeans = gson.fromJson(preferences.getMealDataPref(), new TypeToken<List<ChompProductBean>>(){}.getType());
                 }
@@ -275,10 +299,61 @@ public class AddFoodActivity extends BaseActivity implements View.OnClickListene
                 else
                     chompProductBeans.add(chompProductBean);
 
-                preferences.saveMealData(chompProductBeans);
-                intent = new Intent(context, NewMealActivity.class);
+                if (preferences.getRecipeNameDataPref() != null) {
+                    preferences.saveRecipeData(chompProductBeans);
+                    intent = new Intent(context, NewRecipeActivity.class);
+                }
+                else {
+                    preferences.saveMealData(chompProductBeans);
+                    intent = new Intent(context, NewMealActivity.class);
+                }
                 startActivity(intent);
                 break;
+        }
+    }
+
+    private void callGetRecipeDetailsApi(String id) {
+        if (CommonUtils.isInternetOn(context)) {
+            binding.progress.setVisibility(View.VISIBLE);
+            HashMap<String, String> map = new HashMap<>();
+            map.put("is_racipe_meal", "1");
+            map.put("recipe_id", id);
+
+            Observable<ModelBean<ChompProductBean>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).getRecipeDetailsApi(map);
+            subscription = signupusers.subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<ModelBean<ChompProductBean>>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            CommonUtils.toast(context, e.getMessage());
+                            Log.e("callGetRecipeDetailsApi"," "+e);
+                            binding.progress.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onNext(ModelBean<ChompProductBean> apiFoodBean) {
+                            binding.progress.setVisibility(View.GONE);
+                            if (apiFoodBean.getResult() != null)
+                            {
+                                chompProductBean = apiFoodBean.getResult();
+                                chompProductBean.setManufacturer("");
+                                chompProductBean.setUpc("");
+                                if (chompProductBean != null)
+                                    setValue();
+                                setListner();
+                            }
+                            else
+                                CommonUtils.toast(context, apiFoodBean.getMessage());
+                        }
+                    });
+
+        } else {
+            CommonUtils.toast(context, context.getString(R.string.snack_bar_no_internet));
         }
     }
 }

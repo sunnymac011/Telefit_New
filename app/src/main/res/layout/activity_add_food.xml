@@ -207,7 +207,6 @@
                         android:id="@+id/img_food"
                         android:layout_width="@dimen/_50sdp"
                         android:layout_height="@dimen/_50sdp"
-                        android:background="@drawable/empty_food"
                         android:layout_marginLeft="@dimen/_20sdp"/>
 
                     <TextView
@@ -518,6 +517,19 @@
 
             </LinearLayout>
 
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_centerInParent="true">
+
+            <ProgressBar
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </RelativeLayout>
 
     </RelativeLayout>

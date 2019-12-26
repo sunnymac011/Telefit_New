@@ -9,8 +9,7 @@
         android:layout_width="@dimen/_50sdp"
         android:layout_height="@dimen/_50sdp"
         android:layout_marginLeft="@dimen/_20sdp"
-        android:layout_centerVertical="true"
-        android:background="@drawable/empty_food"/>
+        android:layout_centerVertical="true"/>
 
     <LinearLayout
         android:id="@+id/ll_details"

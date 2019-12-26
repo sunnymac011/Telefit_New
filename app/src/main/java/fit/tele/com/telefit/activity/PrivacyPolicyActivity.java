@@ -12,6 +12,7 @@ import fit.tele.com.telefit.databinding.ActivityPrivacyPolicyBinding;
 import fit.tele.com.telefit.modelBean.ModelBean;
 import fit.tele.com.telefit.modelBean.PrivacyBean;
 import fit.tele.com.telefit.utils.CommonUtils;
+import fit.tele.com.telefit.utils.MyTagHandler;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -76,7 +77,7 @@ public class PrivacyPolicyActivity extends BaseActivity {
                         @Override
                         public void onNext(ModelBean<PrivacyBean> apiPrivacyBean) {
                             binding.progress.setVisibility(View.GONE);
-                            binding.txtPrivacy.setText(Html.fromHtml(apiPrivacyBean.getResult().getDetails()));
+                            binding.txtPrivacy.setText(Html.fromHtml(""+Html.fromHtml(apiPrivacyBean.getResult().getDetails(), null, new MyTagHandler()), null, new MyTagHandler()));
                             binding.txtPrivacy.setMovementMethod(new ScrollingMovementMethod());
                         }
                     });

@@ -158,7 +158,7 @@ public class YogaActivity extends BaseActivity implements View.OnClickListener {
                         public void onError(Throwable e) {
                             e.printStackTrace();
                             CommonUtils.toast(context, e.getMessage());
-                            Log.e("callEmailLoginApi "," "+e);
+                            Log.e("callSubExerciseApi "," "+e);
                             binding.progress.setVisibility(View.GONE);
                         }
 

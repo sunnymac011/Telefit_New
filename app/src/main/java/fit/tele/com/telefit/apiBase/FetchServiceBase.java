@@ -1,6 +1,7 @@
 package fit.tele.com.telefit.apiBase;
 
 import android.content.Context;
+import android.util.Base64;
 import android.util.Log;
 
 import java.io.IOException;
@@ -19,6 +20,8 @@ public class FetchServiceBase {
     private static String BASE_URL = "https://telefitapp.com/api/v1/";
 //    private static String BASE_URL = "http://appbuckets.com/telefit/api/v1/";
     private static String BASE_CHOMP_URL = "https://chompthis.com/api/";
+    private static String BASE_FITBIT_URL = "https://api.fitbit.com/1/user/-/activities/";
+    private static String BASE_FITBIT_REFRESH_URL = "https://api.fitbit.com/oauth2/";
 
     private static Retrofit GetRestAdapter(final Context context) {
         Interceptor interceptor = new Interceptor() {
@@ -183,4 +186,138 @@ public class FetchServiceBase {
     public static FetchServiceInterFace getFetcherServiceWithUrl(Context context, String headerUrl) {
         return getRestAdapterWithUrl(context,headerUrl).create(FetchServiceInterFace.class);
     }
+
+    private static Retrofit GetFitbitAdapterWithToken(final Context context) {
+        Interceptor interceptor = new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                String token = "Basic " + Base64.encodeToString("22BDPG:64798154b238445f0b44d19da117d025".getBytes(), Base64.NO_WRAP);;
+                Log.e("TOKEN", token);
+                Request original = chain.request();
+                Request request = original.newBuilder()
+                        .header("Content-Type", "application/x-www-form-urlencoded")
+                        .header("Authorization", token)
+                        .method(original.method(), original.body())
+                        .build();
+                return chain.proceed(request);
+            }
+        };
+
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+            @Override
+            public void log(String message) {
+                Log.e("DATA", message);
+            }
+        });
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+
+        builder.addInterceptor(loggingInterceptor)
+                .addInterceptor(interceptor)
+                .writeTimeout(2, TimeUnit.MINUTES)
+                .readTimeout(2, TimeUnit.MINUTES)
+                .connectTimeout(45, TimeUnit.SECONDS);
+
+        OkHttpClient client = builder.build();
+
+        return new Retrofit.Builder()
+                .baseUrl(BASE_FITBIT_REFRESH_URL)
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+
+    }
+
+    public static FetchServiceInterFace getFitbitFetcherServiceWithToken(Context context) {
+        return GetFitbitAdapterWithToken(context).create(FetchServiceInterFace.class);
+    }
+
+    private static Retrofit GetFitbitAdapter(final Context context) {
+        Interceptor interceptor = new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request original = chain.request();
+                Request request = original.newBuilder()
+                        .method(original.method(), original.body())
+                        .build();
+                return chain.proceed(request);
+            }
+        };
+
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+            @Override
+            public void log(String message) {
+                Log.e("DATA", message);
+            }
+        });
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+
+        builder.addInterceptor(loggingInterceptor)
+                .addInterceptor(interceptor)
+                .readTimeout(2, TimeUnit.MINUTES)
+                .writeTimeout(2, TimeUnit.MINUTES)
+                .connectTimeout(45, TimeUnit.SECONDS);
+
+        OkHttpClient client = builder.build();
+
+        return new Retrofit.Builder()
+                .baseUrl(BASE_FITBIT_URL)
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+
+    }
+
+    public static FetchServiceInterFace getFitbitFetcherService(Context context) {
+        return GetFitbitAdapter(context).create(FetchServiceInterFace.class);
+    }
+
+//    private static Retrofit GetFitbitAdapterWithToken(final Context context) {
+//        Interceptor interceptor = new Interceptor() {
+//            @Override
+//            public okhttp3.Response intercept(Chain chain) throws IOException {
+//                String token = "Basic ";
+//                Log.e("TOKEN", token);
+//                Request original = chain.request();
+//                Request request = original.newBuilder()
+//                        .header("Content-Type", "application/json")
+//                        .header("Authorization", token)
+//                        .method(original.method(), original.body())
+//                        .build();
+//                return chain.proceed(request);
+//            }
+//        };
+//
+//        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+//            @Override
+//            public void log(String message) {
+//                Log.e("DATA", message);
+//            }
+//        });
+//        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+//        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+//
+//        builder.addInterceptor(loggingInterceptor)
+//                .addInterceptor(interceptor)
+//                .writeTimeout(2, TimeUnit.MINUTES)
+//                .readTimeout(2, TimeUnit.MINUTES)
+//                .connectTimeout(45, TimeUnit.SECONDS);
+//
+//        OkHttpClient client = builder.build();
+//
+//        return new Retrofit.Builder()
+//                .baseUrl(BASE_URL)
+//                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .client(client)
+//                .build();
+//
+//    }
+//
+//    public static FetchServiceInterFace getFitbitWithToken(Context context) {
+//        return GetFitbitAdapterWithToken(context).create(FetchServiceInterFace.class);
+//    }
 }

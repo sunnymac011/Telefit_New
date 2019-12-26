@@ -108,7 +108,10 @@ public class LoginActivity extends BaseActivity {
                 } else if (!CommonUtils.isValidEmail(binding.inputEmail.getText().toString().trim())) {
                     CommonUtils.toast(context, "Please enter valid email");
                     return false;
-                } else if (binding.inputPassword.getText().toString().isEmpty()) {
+                } else if (binding.inputPassword.getText().toString().length() < 6) {
+                    CommonUtils.toast(context, "Password must be at least 6 characters long!");
+                    return false;
+                }  else if (binding.inputPassword.getText().toString().isEmpty()) {
                     binding.inputPassword.setError("Please enter Password!");
                     return false;
                 } else if (binding.inputPassword.length() < 6) {

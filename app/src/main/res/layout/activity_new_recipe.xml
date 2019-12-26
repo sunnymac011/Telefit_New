@@ -204,7 +204,10 @@
                     android:layout_height="wrap_content"
                     android:text="Create your own recipe
 Add foods as you prefer."
-                    android:layout_margin="@dimen/_10sdp"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:layout_marginLeft="@dimen/_80sdp"
                     android:textColor="@color/light_gray"
                     android:fontFamily="@font/rubik"/>
 
@@ -214,7 +217,7 @@ Add foods as you prefer."
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginTop="@dimen/_10sdp"
-                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:layout_marginLeft="@dimen/_80sdp"
                     android:layout_marginRight="@dimen/_10sdp">
 
                     <EditText
@@ -225,8 +228,7 @@ Add foods as you prefer."
                         android:textColor="@color/main_color"
                         android:textColorHint="@color/main_color"
                         android:fontFamily="@font/rubik"
-                        android:inputType="textPersonName"
-                        android:enabled="false"/>
+                        android:inputType="textPersonName"/>
 
                 </android.support.design.widget.TextInputLayout>
 

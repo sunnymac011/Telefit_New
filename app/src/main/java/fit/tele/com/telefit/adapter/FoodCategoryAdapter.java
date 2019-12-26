@@ -123,6 +123,24 @@ public class FoodCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             btn_barcode = (Button) v.findViewById(R.id.btn_barcode);
             swipeLayout = (SwipeLayout) v.findViewById(R.id.swipe);
 
+            txt_calories.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(clickListener != null && list != null && pos >= 0 && pos < list.size() && list.get(pos) != null) {
+                        clickListener.onAddClick(list.get(pos));
+                    }
+                }
+            });
+
+            txt_recipe_name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(clickListener != null && list != null && pos >= 0 && pos < list.size() && list.get(pos) != null) {
+                        clickListener.onAddClick(list.get(pos));
+                    }
+                }
+            });
+
             btn_add_calorie.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -180,6 +198,7 @@ public class FoodCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public interface ClickListener {
+        void onAddClick(FoodCategoryBean categoryBean);
         void onClick(FoodCategoryBean categoryBean, boolean isBarcode);
         void onDeletClick(String foodCatId, FoodCategoryBean categoryBean);
     }

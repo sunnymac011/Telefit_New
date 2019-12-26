@@ -7,6 +7,8 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 public class TrainerBean implements Parcelable {
 
     @SerializedName("id")
@@ -36,6 +38,18 @@ public class TrainerBean implements Parcelable {
     @SerializedName("description")
     @Expose
     private String description;
+    @SerializedName("Is_subscribe")
+    @Expose
+    private String isSubscribe;
+    @SerializedName("is_package")
+    @Expose
+    private String isPackage;
+    @SerializedName("is_accept ")
+    @Expose
+    private String isAccept ;
+    @SerializedName("package_detail")
+    @Expose
+    private ArrayList<PackageBean> packageDetail;
 
     protected TrainerBean(Parcel in) {
         id = in.readString();
@@ -47,6 +61,10 @@ public class TrainerBean implements Parcelable {
         companyName = in.readString();
         gender = in.readString();
         description = in.readString();
+        isSubscribe = in.readString();
+        isPackage = in.readString();
+        isAccept = in.readString();
+        packageDetail = in.createTypedArrayList(PackageBean.CREATOR);
     }
 
     public static final Creator<TrainerBean> CREATOR = new Creator<TrainerBean>() {
@@ -133,6 +151,38 @@ public class TrainerBean implements Parcelable {
         this.description = description;
     }
 
+    public String getIsSubscribe() {
+        return isSubscribe;
+    }
+
+    public void setIsSubscribe(String isSubscribe) {
+        this.isSubscribe = isSubscribe;
+    }
+
+    public String getIsPackage() {
+        return isPackage;
+    }
+
+    public void setIsPackage(String isPackage) {
+        this.isPackage = isPackage;
+    }
+
+    public String getIsAccept() {
+        return isAccept;
+    }
+
+    public void setIsAccept(String isAccept) {
+        this.isAccept = isAccept;
+    }
+
+    public ArrayList<PackageBean> getPackageDetail() {
+        return packageDetail;
+    }
+
+    public void setPackageDetail(ArrayList<PackageBean> packageDetail) {
+        this.packageDetail = packageDetail;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -149,6 +199,10 @@ public class TrainerBean implements Parcelable {
         dest.writeString(companyName);
         dest.writeString(gender);
         dest.writeString(description);
+        dest.writeString(isSubscribe);
+        dest.writeString(isPackage);
+        dest.writeString(isAccept);
+        dest.writeTypedList(packageDetail);
     }
 
     @Override
@@ -163,6 +217,10 @@ public class TrainerBean implements Parcelable {
                 ", companyName='" + companyName + '\'' +
                 ", gender='" + gender + '\'' +
                 ", description='" + description + '\'' +
+                ", isSubscribe='" + isSubscribe + '\'' +
+                ", isPackage='" + isPackage + '\'' +
+                ", isAccept='" + isAccept + '\'' +
+                ", packageDetail=" + packageDetail +
                 '}';
     }
 }

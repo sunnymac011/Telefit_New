@@ -66,6 +66,7 @@ public class SignUpTwoActivity extends BaseActivity {
         binding.spiActivity.setAdapter(adapter1);
 
         List<String> list2 = new ArrayList<>();
+        list2.add("Maintain weight");
         list2.add("Lose 1 pound per week");
         list2.add("Lose 1.5 pound per week");
         list2.add("Lose 2 pounds per week");

@@ -132,6 +132,7 @@ public class EditProfileActivity extends BaseActivity implements DatePickerDialo
         binding.spiActivity.setAdapter(adapter1);
 
         List<String> list2 = new ArrayList<>();
+        list2.add("Maintain weight");
         list2.add("Lose 1 pound per week");
         list2.add("Lose 1.5 pound per week");
         list2.add("Lose 2 pounds per week");
@@ -291,18 +292,20 @@ public class EditProfileActivity extends BaseActivity implements DatePickerDialo
         }
         if (saveLogiBean != null && saveLogiBean.getMaintainWeight() != null
                 && !TextUtils.isEmpty(saveLogiBean.getMaintainWeight())) {
-            if (saveLogiBean.getMaintainWeight().equalsIgnoreCase("Lose 1 pound per week"))
+            if (saveLogiBean.getMaintainWeight().equalsIgnoreCase("Maintain weight"))
                 binding.spiMaintain.setSelection(0);
-            if (saveLogiBean.getMaintainWeight().equalsIgnoreCase("Lose 1.5 pound per week"))
+            if (saveLogiBean.getMaintainWeight().equalsIgnoreCase("Lose 1 pound per week"))
                 binding.spiMaintain.setSelection(1);
-            if (saveLogiBean.getMaintainWeight().equalsIgnoreCase("Lose 2 pounds per week"))
+            if (saveLogiBean.getMaintainWeight().equalsIgnoreCase("Lose 1.5 pound per week"))
                 binding.spiMaintain.setSelection(2);
-            if (saveLogiBean.getMaintainWeight().equalsIgnoreCase("Gain 0.5 pound per week"))
+            if (saveLogiBean.getMaintainWeight().equalsIgnoreCase("Lose 2 pounds per week"))
                 binding.spiMaintain.setSelection(3);
-            if (saveLogiBean.getMaintainWeight().equalsIgnoreCase("Gain 1 pound per week"))
+            if (saveLogiBean.getMaintainWeight().equalsIgnoreCase("Gain 0.5 pound per week"))
                 binding.spiMaintain.setSelection(4);
-            if (saveLogiBean.getMaintainWeight().equalsIgnoreCase("Gain 1.5 pounds per week"))
+            if (saveLogiBean.getMaintainWeight().equalsIgnoreCase("Gain 1 pound per week"))
                 binding.spiMaintain.setSelection(5);
+            if (saveLogiBean.getMaintainWeight().equalsIgnoreCase("Gain 1.5 pounds per week"))
+                binding.spiMaintain.setSelection(6);
         }
         if (saveLogiBean != null && saveLogiBean.getHeight() != null
                 && !TextUtils.isEmpty(saveLogiBean.getHeight()))

@@ -24,7 +24,7 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
 
     ActivityProfileBinding binding;
     LoginBean saveLogiBean;
-    RelativeLayout rl_notifications, rl_themes, rl_logout, rl_units, rl_about,rl_privacy, rl_food, rl_meals, rl_recipes, rl_help, rl_country,
+    RelativeLayout rl_notifications, rl_themes, rl_logout, rl_about,rl_privacy, rl_food, rl_meals, rl_recipes, rl_help, rl_country,
             rl_exercises, rl_trainer, rl_app_preferences,rl_device;
     TextView txt_themes_count, txt_selected_country;
 
@@ -48,7 +48,6 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
         rl_logout = (RelativeLayout) findViewById(R.id.rl_logout);
         rl_notifications = (RelativeLayout) findViewById(R.id.rl_notifications);
         rl_themes = (RelativeLayout) findViewById(R.id.rl_themes);
-        rl_units = (RelativeLayout) findViewById(R.id.rl_units);
         rl_about = (RelativeLayout) findViewById(R.id.rl_about);
         rl_privacy = (RelativeLayout) findViewById(R.id.rl_privacy);
         rl_food = (RelativeLayout) findViewById(R.id.rl_food);
@@ -82,7 +81,6 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
 
         rl_notifications.setOnClickListener(this);
         rl_themes.setOnClickListener(this);
-        rl_units.setOnClickListener(this);
         rl_privacy.setOnClickListener(this);
         rl_help.setOnClickListener(this);
         rl_country.setOnClickListener(this);
@@ -223,11 +221,6 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
                 startActivity(intent);
                 break;
 
-            case R.id.rl_units :
-                intent = new Intent(context, UnitsActivity.class);
-                startActivity(intent);
-                break;
-
             case R.id.rl_notifications :
                 intent = new Intent(context, NotificationSettingsActiviry.class);
                 startActivity(intent);
@@ -244,6 +237,8 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
                 preferences.cleanMealdata();
                 preferences.cleanMealIDdata();
                 preferences.cleanUpdateMeal();
+                preferences.cleanRecipedata();
+                preferences.cleanRecipeNamedata();
                 intent = new Intent(context, SearchFoodActivity.class);
                 intent.putExtra("tab",2);
                 startActivity(intent);
@@ -255,13 +250,21 @@ public class ProfileActivity extends BaseActivity implements View.OnClickListene
                 preferences.cleanMealdata();
                 preferences.cleanMealIDdata();
                 preferences.cleanUpdateMeal();
+                preferences.cleanRecipedata();
+                preferences.cleanRecipeNamedata();
                 intent = new Intent(context, SearchFoodActivity.class);
                 intent.putExtra("tab",3);
                 startActivity(intent);
                 break;
 
             case R.id.rl_recipes :
+                preferences.cleanMealNamedata();
+                preferences.cleanMealDatedata();
+                preferences.cleanMealdata();
+                preferences.cleanMealIDdata();
+                preferences.cleanUpdateMeal();
                 preferences.cleanRecipedata();
+                preferences.cleanRecipeNamedata();
                 intent = new Intent(context, SearchFoodActivity.class);
                 intent.putExtra("tab",4);
                 startActivity(intent);

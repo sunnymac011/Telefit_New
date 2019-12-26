@@ -214,16 +214,20 @@ public class NewMealActivity extends BaseActivity implements View.OnClickListene
                         newRecipeBean.setFoodType(binding.spiMeal.getSelectedItem().toString());
                         newRecipeBean.setMealDate(binding.txtMealDate.getText().toString());
                         newRecipeBean.setIsRacipeMeal("2");
-                        newRecipeBean.setFood(recipeListAdapter1.getAllData());
                         newRecipeBean.setRecipe_id(mealCategoryBeans.get(binding.spiMeal.getSelectedItemPosition()).getId());
 
                         double intTotCal = 0;
                         if (recipeListAdapter1.getAllData() != null && recipeListAdapter1.getAllData().size() > 0)
                         {
                             for (int i=0;i<recipeListAdapter1.getAllData().size();i++)
+                            {
                                 intTotCal = intTotCal + Double.parseDouble(recipeListAdapter1.getAllData().get(i).getTotalCalories());
+                                recipeListAdapter1.getAllData().get(i).setUpc("");
+                                recipeListAdapter1.getAllData().get(i).setManufacturer("");
+                            }
                         }
                         newRecipeBean.setRacipeCalories(""+intTotCal);
+                        newRecipeBean.setFood(recipeListAdapter1.getAllData());
 
                         if (newRecipeBean.getRecipe_id() != null)
                         {
@@ -247,7 +251,7 @@ public class NewMealActivity extends BaseActivity implements View.OnClickListene
         if (CommonUtils.isInternetOn(context)) {
             binding.progress.setVisibility(View.VISIBLE);
 
-            Observable<ModelBean<NewRecipeBean>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).createRecipeApi(newRecipeBean);
+            Observable<ModelBean<NewRecipeBean>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).createMealApi(newRecipeBean);
             subscription = signupusers.subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<ModelBean<NewRecipeBean>>() {

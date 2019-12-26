@@ -26,6 +26,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import fit.tele.com.telefit.R;
@@ -50,7 +51,8 @@ public class GoalsActivity extends BaseActivity implements View.OnClickListener 
     private ArrayList<String> goalList = new ArrayList<>();
     private ArrayList<Entry> entries = new ArrayList<>();
     private GoalBarBean goalBarBean;
-    private LimitLine ll1,ll2,ll3,ll4,ll5;
+    private LimitLine ll1;
+    private String[] months;
 
     @Override
     public int getLayoutResId() {
@@ -142,12 +144,14 @@ public class GoalsActivity extends BaseActivity implements View.OnClickListener 
         // Set the xAxis position to bottom. Default is top
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         //Customizing x axis value
-        final String[] months = new String[]{"1st week", "2nd week", "3rd week", "4th week", "5th week"};
 
         IAxisValueFormatter formatter = new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return months[(int) value];
+                if (months.length == 1)
+                    return months[0];
+                else
+                    return months[(int) value];
             }
         };
         xAxis.setGranularity(1f); // minimum axis-step (interval) is 1
@@ -160,14 +164,6 @@ public class GoalsActivity extends BaseActivity implements View.OnClickListener 
 
         if (ll1 != null)
             leftAxis.addLimitLine(ll1);
-        if (ll2 != null)
-            leftAxis.addLimitLine(ll2);
-        if (ll3 != null)
-            leftAxis.addLimitLine(ll3);
-        if (ll4 != null)
-            leftAxis.addLimitLine(ll4);
-        if (ll5 != null)
-            leftAxis.addLimitLine(ll5);
         leftAxis.setAxisMinimum(0f);
         leftAxis.setDrawZeroLine(false);
         leftAxis.setDrawLimitLinesBehindData(false);
@@ -210,7 +206,7 @@ public class GoalsActivity extends BaseActivity implements View.OnClickListener 
             dataSets.add(set1);
             LineData data = new LineData(dataSets);
             binding.lineChart.setData(data);
-            binding.lineChart.animateX(2000);
+            binding.lineChart.animateX(1500);
             binding.lineChart.invalidate();
         }
     }
@@ -245,56 +241,32 @@ public class GoalsActivity extends BaseActivity implements View.OnClickListener 
                             {
                                 goalBarBean = apiFoodBean.getResult();
                                 entries.clear();
-                                if (goalBarBean.getOne_week() != null && goalBarBean.getOne_week().getWater() != null &&
-                                        !TextUtils.isEmpty(goalBarBean.getOne_week().getWater()))
+                                if (goalBarBean != null && goalBarBean.getGoalDetails() != null && goalBarBean.getGoalDetails().size() > 0)
                                 {
-                                    ll1 = new LimitLine(Float.parseFloat(goalBarBean.getOne_week().getGoalWater()), "1st Goal");
-                                    ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                                    ll1.setLineWidth(2f);
-                                    entries.add(new Entry(0, Float.parseFloat(goalBarBean.getOne_week().getWater())));
+                                    if (goalBarBean.getGoalWater() != null) {
+                                        ll1 = new LimitLine(Float.parseFloat(goalBarBean.getGoalWater()), "Goal");
+                                        ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+                                        ll1.setLineWidth(2f);
+                                    }
+                                    months = new String[goalBarBean.getGoalDetails().size()];
+                                    for (int i=0;i<goalBarBean.getGoalDetails().size();i++) {
+                                        try {
+                                            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                                            Date date = format.parse(goalBarBean.getGoalDetails().get(i).getGoalDate());
+                                            DateFormat format2=new SimpleDateFormat("dd");
+                                            Log.e("date",""+format2.format(date));
+                                            months[i] = (String) format2.format(date);
+
+                                        } catch (Exception e) {
+                                            Log.e("date Exception",""+e.getMessage());
+                                        }
+                                        if (goalBarBean.getGoalDetails() != null && goalBarBean.getGoalDetails().get(i).getWater() != null &&
+                                                !TextUtils.isEmpty(goalBarBean.getGoalDetails().get(i).getWater()))
+                                            entries.add(new Entry(i, Float.parseFloat(goalBarBean.getGoalDetails().get(i).getWater())));
+                                        else
+                                            entries.add(new Entry(i, 0));
+                                    }
                                 }
-                                else
-                                    entries.add(new Entry(0,0));
-                                if (goalBarBean.getTwo_week() != null && goalBarBean.getTwo_week().getWater() != null &&
-                                        !TextUtils.isEmpty(goalBarBean.getTwo_week().getWater()))
-                                {
-                                    ll2 = new LimitLine(Float.parseFloat(goalBarBean.getTwo_week().getGoalWater()), "2nd Goal");
-                                    ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                                    ll2.setLineWidth(2f);
-                                    entries.add(new Entry(1, Float.parseFloat(goalBarBean.getTwo_week().getWater())));
-                                }
-                                else
-                                    entries.add(new Entry(1,0));
-                                if (goalBarBean.getThree_week() != null && goalBarBean.getThree_week().getWater() != null &&
-                                        !TextUtils.isEmpty(goalBarBean.getThree_week().getWater()))
-                                {
-                                    ll3 = new LimitLine(Float.parseFloat(goalBarBean.getThree_week().getGoalWater()), "3rd Goal");
-                                    ll3.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                                    ll3.setLineWidth(2f);
-                                    entries.add(new Entry(2, Float.parseFloat(goalBarBean.getThree_week().getWater())));
-                                }
-                                else
-                                    entries.add(new Entry(2,0));
-                                if (goalBarBean.getFour_week() != null && goalBarBean.getFour_week().getWater() != null &&
-                                        !TextUtils.isEmpty(goalBarBean.getFour_week().getWater()))
-                                {
-                                    ll4 = new LimitLine(Float.parseFloat(goalBarBean.getFour_week().getGoalWater()), "4th Goal");
-                                    ll4.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                                    ll4.setLineWidth(2f);
-                                    entries.add(new Entry(3, Float.parseFloat(goalBarBean.getFour_week().getWater())));
-                                }
-                                else
-                                    entries.add(new Entry(3,0));
-                                if (goalBarBean.getFive_week() != null && goalBarBean.getFive_week().getWater() != null &&
-                                        !TextUtils.isEmpty(goalBarBean.getFive_week().getWater()))
-                                {
-                                    ll5 = new LimitLine(Float.parseFloat(goalBarBean.getFive_week().getGoalWater()), "5th Goal");
-                                    ll5.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                                    ll5.setLineWidth(2f);
-                                    entries.add(new Entry(4, Float.parseFloat(goalBarBean.getFive_week().getWater())));
-                                }
-                                else
-                                    entries.add(new Entry(4,0));
                                 renderData();
                             }
                         }
@@ -307,502 +279,214 @@ public class GoalsActivity extends BaseActivity implements View.OnClickListener 
 
     private void setLineChartData(String selectedNutrition){
         entries.clear();
-        if (selectedNutrition.equalsIgnoreCase("Protein")) {
-            if (goalBarBean.getOne_week() != null && goalBarBean.getOne_week().getMealProtein() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getOne_week().getMealProtein())
-                    && goalBarBean.getOne_week().getProtein() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getOne_week().getProtein()))
-            {
-                ll1 = new LimitLine(Float.parseFloat(goalBarBean.getOne_week().getProtein()), "1st Goal");
-                ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll1.setLineWidth(2f);
-                entries.add(new Entry(0, Float.parseFloat(goalBarBean.getOne_week().getMealProtein())));
+        if (goalBarBean != null && goalBarBean.getGoalDetails() != null && goalBarBean.getGoalDetails().size() > 0)
+        {
+            if (selectedNutrition.equalsIgnoreCase("Protein")) {
+                if (goalBarBean.getProtein() != null) {
+                    ll1 = new LimitLine(Float.parseFloat(goalBarBean.getProtein()), "Goal");
+                    ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+                    ll1.setLineWidth(2f);
+                }
+
+                months = new String[goalBarBean.getGoalDetails().size()];
+                for (int i=0;i<goalBarBean.getGoalDetails().size();i++) {
+                    try {
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        Date date = format.parse(goalBarBean.getGoalDetails().get(i).getGoalDate());
+                        DateFormat format2=new SimpleDateFormat("dd");
+                        Log.e("date",""+format2.format(date));
+                        months[i] = (String) format2.format(date);
+                    } catch (Exception e) {
+                        Log.e("date Exception",""+e.getMessage());
+                    }
+                    if (goalBarBean.getGoalDetails() != null && goalBarBean.getGoalDetails().get(i).getMealProtein() != null &&
+                            !TextUtils.isEmpty(goalBarBean.getGoalDetails().get(i).getMealProtein()))
+                        entries.add(new Entry(i, Float.parseFloat(goalBarBean.getGoalDetails().get(i).getMealProtein())));
+                    else
+                        entries.add(new Entry(i, 0));
+                }
             }
-            else
-                entries.add(new Entry(0,0));
-            if (goalBarBean.getTwo_week() != null && goalBarBean.getTwo_week().getMealProtein() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getTwo_week().getMealProtein())
-                    && goalBarBean.getTwo_week().getProtein() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getTwo_week().getProtein()))
-            {
-                ll2 = new LimitLine(Float.parseFloat(goalBarBean.getTwo_week().getProtein()), "2nd Goal");
-                ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll2.setLineWidth(2f);
-                entries.add(new Entry(1, Float.parseFloat(goalBarBean.getTwo_week().getMealProtein())));
+            if (selectedNutrition.equalsIgnoreCase("Carbs")) {
+                if (goalBarBean.getCarbs() != null) {
+                    ll1 = new LimitLine(Float.parseFloat(goalBarBean.getCarbs()), "Goal");
+                    ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+                    ll1.setLineWidth(2f);
+                }
+
+                months = new String[goalBarBean.getGoalDetails().size()];
+                for (int i=0;i<goalBarBean.getGoalDetails().size();i++) {
+                    try {
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        Date date = format.parse(goalBarBean.getGoalDetails().get(i).getGoalDate());
+                        DateFormat format2=new SimpleDateFormat("dd");
+                        Log.e("date",""+format2.format(date));
+                        months[i] = (String) format2.format(date);
+
+                    } catch (Exception e) {
+                        Log.e("date Exception",""+e.getMessage());
+                    }
+                    if (goalBarBean.getGoalDetails() != null && goalBarBean.getGoalDetails().get(i).getMealCarbs() != null &&
+                            !TextUtils.isEmpty(goalBarBean.getGoalDetails().get(i).getMealCarbs()))
+                        entries.add(new Entry(i, Float.parseFloat(goalBarBean.getGoalDetails().get(i).getMealCarbs())));
+                    else
+                        entries.add(new Entry(i, 0));
+                }
             }
-            else
-                entries.add(new Entry(1,0));
-            if (goalBarBean.getThree_week() != null && goalBarBean.getThree_week().getProtein() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getThree_week().getMealProtein())
-                    && goalBarBean.getThree_week().getProtein() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getThree_week().getProtein()))
-            {
-                ll3 = new LimitLine(Float.parseFloat(goalBarBean.getThree_week().getProtein()), "3rd Goal");
-                ll3.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll3.setLineWidth(2f);
-                entries.add(new Entry(2, Float.parseFloat(goalBarBean.getThree_week().getMealProtein())));
+            if (selectedNutrition.equalsIgnoreCase("Fat")) {
+                if (goalBarBean.getFat() != null) {
+                    ll1 = new LimitLine(Float.parseFloat(goalBarBean.getFat()), "Goal");
+                    ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+                    ll1.setLineWidth(2f);
+                }
+
+                months = new String[goalBarBean.getGoalDetails().size()];
+                for (int i=0;i<goalBarBean.getGoalDetails().size();i++) {
+                    try {
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        Date date = format.parse(goalBarBean.getGoalDetails().get(i).getGoalDate());
+                        DateFormat format2=new SimpleDateFormat("dd");
+                        Log.e("date",""+format2.format(date));
+                        months[i] = (String) format2.format(date);
+
+                    } catch (Exception e) {
+                        Log.e("date Exception",""+e.getMessage());
+                    }
+                    if (goalBarBean.getGoalDetails() != null && goalBarBean.getGoalDetails().get(i).getMealFat() != null &&
+                            !TextUtils.isEmpty(goalBarBean.getGoalDetails().get(i).getMealFat()))
+                        entries.add(new Entry(i, Float.parseFloat(goalBarBean.getGoalDetails().get(i).getMealFat())));
+                    else
+                        entries.add(new Entry(i, 0));
+                }
             }
-            else
-                entries.add(new Entry(2,0));
-            if (goalBarBean.getFour_week() != null && goalBarBean.getFour_week().getMealProtein() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFour_week().getMealProtein())
-                    && goalBarBean.getFour_week().getProtein() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFour_week().getProtein()))
-            {
-                ll4 = new LimitLine(Float.parseFloat(goalBarBean.getFour_week().getProtein()), "4th Goal");
-                ll4.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll4.setLineWidth(2f);
-                entries.add(new Entry(3, Float.parseFloat(goalBarBean.getFour_week().getMealProtein())));
+            if (selectedNutrition.equalsIgnoreCase("Cholesterol")) {
+                if (goalBarBean.getCholesterol() != null) {
+                    ll1 = new LimitLine(Float.parseFloat(goalBarBean.getCholesterol()), "Goal");
+                    ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+                    ll1.setLineWidth(2f);
+                }
+
+                months = new String[goalBarBean.getGoalDetails().size()];
+                for (int i=0;i<goalBarBean.getGoalDetails().size();i++) {
+                    try {
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        Date date = format.parse(goalBarBean.getGoalDetails().get(i).getGoalDate());
+                        DateFormat format2=new SimpleDateFormat("dd");
+                        Log.e("date",""+format2.format(date));
+                        months[i] = (String) format2.format(date);
+
+                    } catch (Exception e) {
+                        Log.e("date Exception",""+e.getMessage());
+                    }
+                    if (goalBarBean.getGoalDetails() != null && goalBarBean.getGoalDetails().get(i).getMealCholesterol() != null &&
+                            !TextUtils.isEmpty(goalBarBean.getGoalDetails().get(i).getMealCholesterol()))
+                        entries.add(new Entry(i, Float.parseFloat(goalBarBean.getGoalDetails().get(i).getMealCholesterol())));
+                    else
+                        entries.add(new Entry(i, 0));
+                }
             }
-            else
-                entries.add(new Entry(3,0));
-            if (goalBarBean.getFive_week() != null && goalBarBean.getFive_week().getMealProtein() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFive_week().getMealProtein())
-                    && goalBarBean.getFive_week().getProtein() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFive_week().getProtein()))
-            {
-                ll5 = new LimitLine(Float.parseFloat(goalBarBean.getFive_week().getProtein()), "5th Goal");
-                ll5.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll5.setLineWidth(2f);
-                entries.add(new Entry(4, Float.parseFloat(goalBarBean.getFive_week().getMealProtein())));
+            if (selectedNutrition.equalsIgnoreCase("Fiber")) {
+                if (goalBarBean.getFiber() != null) {
+                    ll1 = new LimitLine(Float.parseFloat(goalBarBean.getFiber()), "Goal");
+                    ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+                    ll1.setLineWidth(2f);
+                }
+
+                months = new String[goalBarBean.getGoalDetails().size()];
+                for (int i=0;i<goalBarBean.getGoalDetails().size();i++) {
+                    try {
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        Date date = format.parse(goalBarBean.getGoalDetails().get(i).getGoalDate());
+                        DateFormat format2=new SimpleDateFormat("dd");
+                        Log.e("date",""+format2.format(date));
+                        months[i] = (String) format2.format(date);
+
+                    } catch (Exception e) {
+                        Log.e("date Exception",""+e.getMessage());
+                    }
+                    if (goalBarBean.getGoalDetails() != null && goalBarBean.getGoalDetails().get(i).getMealFiber() != null &&
+                            !TextUtils.isEmpty(goalBarBean.getGoalDetails().get(i).getMealFiber()))
+                        entries.add(new Entry(i, Float.parseFloat(goalBarBean.getGoalDetails().get(i).getMealFiber())));
+                    else
+                        entries.add(new Entry(i, 0));
+                }
             }
-            else
-                entries.add(new Entry(4,0));
+            if (selectedNutrition.equalsIgnoreCase("Weight")) {
+                if (goalBarBean.getGoalWeight() != null) {
+                    ll1 = new LimitLine(Float.parseFloat(goalBarBean.getGoalWeight()), "Goal");
+                    ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+                    ll1.setLineWidth(2f);
+                }
+
+                months = new String[goalBarBean.getGoalDetails().size()];
+                for (int i=0;i<goalBarBean.getGoalDetails().size();i++) {
+                    try {
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        Date date = format.parse(goalBarBean.getGoalDetails().get(i).getGoalDate());
+                        DateFormat format2=new SimpleDateFormat("dd");
+                        Log.e("date",""+format2.format(date));
+                        months[i] = (String) format2.format(date);
+                    } catch (Exception e) {
+                        Log.e("date Exception",""+e.getMessage());
+                    }
+                    if (goalBarBean.getGoalDetails() != null && goalBarBean.getGoalDetails().get(i).getWeight() != null &&
+                            !TextUtils.isEmpty(goalBarBean.getGoalDetails().get(i).getWeight()))
+                        entries.add(new Entry(i, Float.parseFloat(goalBarBean.getGoalDetails().get(i).getWeight())));
+                    else
+                        entries.add(new Entry(i, 0));
+                }
+            }
+            if (selectedNutrition.equalsIgnoreCase("Body Fat")) {
+                if (goalBarBean.getGoalBodyFat() != null) {
+                    ll1 = new LimitLine(Float.parseFloat(goalBarBean.getGoalBodyFat()), "Goal");
+                    ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+                    ll1.setLineWidth(2f);
+                }
+
+                months = new String[goalBarBean.getGoalDetails().size()];
+                for (int i=0;i<goalBarBean.getGoalDetails().size();i++) {
+                    try {
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        Date date = format.parse(goalBarBean.getGoalDetails().get(i).getGoalDate());
+                        DateFormat format2=new SimpleDateFormat("dd");
+                        Log.e("date",""+format2.format(date));
+                        months[i] = (String) format2.format(date);
+
+                    } catch (Exception e) {
+                        Log.e("date Exception",""+e.getMessage());
+                    }
+                    if (goalBarBean.getGoalDetails() != null && goalBarBean.getGoalDetails().get(i).getBodyFat() != null &&
+                            !TextUtils.isEmpty(goalBarBean.getGoalDetails().get(i).getBodyFat()))
+                        entries.add(new Entry(i, Float.parseFloat(goalBarBean.getGoalDetails().get(i).getBodyFat())));
+                    else
+                        entries.add(new Entry(i, 0));
+                }
+            }
+            if (selectedNutrition.equalsIgnoreCase("Water")) {
+                if (goalBarBean.getGoalWater() != null) {
+                    ll1 = new LimitLine(Float.parseFloat(goalBarBean.getGoalWater()), "Goal");
+                    ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+                    ll1.setLineWidth(2f);
+                }
+
+                months = new String[goalBarBean.getGoalDetails().size()];
+                for (int i=0;i<goalBarBean.getGoalDetails().size();i++) {
+                    try {
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        Date date = format.parse(goalBarBean.getGoalDetails().get(i).getGoalDate());
+                        DateFormat format2=new SimpleDateFormat("dd");
+                        Log.e("date",""+format2.format(date));
+                        months[i] = (String) format2.format(date);
+                    } catch (Exception e) {
+                        Log.e("date Exception",""+e.getMessage());
+                    }
+                    if (goalBarBean.getGoalDetails() != null && goalBarBean.getGoalDetails().get(i).getWater() != null &&
+                            !TextUtils.isEmpty(goalBarBean.getGoalDetails().get(i).getWater()))
+                        entries.add(new Entry(i, Float.parseFloat(goalBarBean.getGoalDetails().get(i).getWater())));
+                    else
+                        entries.add(new Entry(i, 0));
+                }
+            }
+            renderData();
         }
-        if (selectedNutrition.equalsIgnoreCase("Carbs")) {
-            if (goalBarBean.getOne_week() != null && goalBarBean.getOne_week().getMealCarbs() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getOne_week().getMealCarbs())
-                    && goalBarBean.getOne_week().getCarbs() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getOne_week().getCarbs()))
-            {
-                ll1 = new LimitLine(Float.parseFloat(goalBarBean.getOne_week().getCarbs()), "1st Goal");
-                ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll1.setLineWidth(2f);
-                entries.add(new Entry(0, Float.parseFloat(goalBarBean.getOne_week().getMealCarbs())));
-            }
-            else
-                entries.add(new Entry(0,0));
-            if (goalBarBean.getTwo_week() != null && goalBarBean.getTwo_week().getMealCarbs() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getTwo_week().getMealCarbs())
-                    && goalBarBean.getTwo_week().getCarbs() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getTwo_week().getCarbs()))
-            {
-                ll2 = new LimitLine(Float.parseFloat(goalBarBean.getTwo_week().getCarbs()), "2nd Goal");
-                ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll2.setLineWidth(2f);
-                entries.add(new Entry(1, Float.parseFloat(goalBarBean.getTwo_week().getMealCarbs())));
-            }
-            else
-                entries.add(new Entry(1,0));
-            if (goalBarBean.getThree_week() != null && goalBarBean.getThree_week().getMealCarbs() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getThree_week().getMealCarbs())
-                    && goalBarBean.getThree_week().getCarbs() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getThree_week().getCarbs()))
-            {
-                ll3 = new LimitLine(Float.parseFloat(goalBarBean.getThree_week().getCarbs()), "3rd Goal");
-                ll3.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll3.setLineWidth(2f);
-                entries.add(new Entry(2, Float.parseFloat(goalBarBean.getThree_week().getMealCarbs())));
-            }
-            else
-                entries.add(new Entry(2,0));
-            if (goalBarBean.getFour_week() != null && goalBarBean.getFour_week().getMealCarbs() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFour_week().getMealCarbs())
-                    && goalBarBean.getFour_week().getCarbs() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFour_week().getCarbs()))
-            {
-                ll4 = new LimitLine(Float.parseFloat(goalBarBean.getFour_week().getCarbs()), "4th Goal");
-                ll4.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll4.setLineWidth(2f);
-                entries.add(new Entry(3, Float.parseFloat(goalBarBean.getFour_week().getMealCarbs())));
-            }
-            else
-                entries.add(new Entry(3,0));
-            if (goalBarBean.getFive_week() != null && goalBarBean.getFive_week().getMealCarbs() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFive_week().getMealCarbs())
-                    && goalBarBean.getFive_week().getCarbs() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFive_week().getCarbs()))
-            {
-                ll5 = new LimitLine(Float.parseFloat(goalBarBean.getFive_week().getCarbs()), "5th Goal");
-                ll5.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll5.setLineWidth(2f);
-                entries.add(new Entry(4, Float.parseFloat(goalBarBean.getFive_week().getMealCarbs())));
-            }
-            else
-                entries.add(new Entry(4,0));
-        }
-        if (selectedNutrition.equalsIgnoreCase("Fat")) {
-            if (goalBarBean.getOne_week() != null && goalBarBean.getOne_week().getMealFat() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getOne_week().getMealFat())
-                    && goalBarBean.getOne_week().getFat() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getOne_week().getFat()))
-            {
-                ll1 = new LimitLine(Float.parseFloat(goalBarBean.getOne_week().getFat()), "1st Goal");
-                ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll1.setLineWidth(2f);
-                entries.add(new Entry(0, Float.parseFloat(goalBarBean.getOne_week().getMealFat())));
-            }
-            else
-                entries.add(new Entry(0,0));
-            if (goalBarBean.getTwo_week() != null && goalBarBean.getTwo_week().getMealFat() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getTwo_week().getMealFat())
-                    && goalBarBean.getTwo_week().getFat() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getTwo_week().getFat()))
-            {
-                ll2 = new LimitLine(Float.parseFloat(goalBarBean.getTwo_week().getFat()), "2nd Goal");
-                ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll2.setLineWidth(2f);
-                entries.add(new Entry(1, Float.parseFloat(goalBarBean.getTwo_week().getMealFat())));
-            }
-            else
-                entries.add(new Entry(1,0));
-            if (goalBarBean.getThree_week() != null && goalBarBean.getThree_week().getMealFat() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getThree_week().getMealFat())
-                    && goalBarBean.getThree_week().getFat() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getThree_week().getFat()))
-            {
-                ll3 = new LimitLine(Float.parseFloat(goalBarBean.getThree_week().getFat()), "3rd Goal");
-                ll3.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll3.setLineWidth(2f);
-                entries.add(new Entry(2, Float.parseFloat(goalBarBean.getThree_week().getMealFat())));
-            }
-            else
-                entries.add(new Entry(2,0));
-            if (goalBarBean.getFour_week() != null && goalBarBean.getFour_week().getMealFat() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFour_week().getMealFat())
-                    && goalBarBean.getFour_week().getFat() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFour_week().getFat()))
-            {
-                ll4 = new LimitLine(Float.parseFloat(goalBarBean.getFour_week().getFat()), "4th Goal");
-                ll4.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll4.setLineWidth(2f);
-                entries.add(new Entry(3, Float.parseFloat(goalBarBean.getFour_week().getMealFat())));
-            }
-            else
-                entries.add(new Entry(3,0));
-            if (goalBarBean.getFive_week() != null && goalBarBean.getFive_week().getMealFat() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFive_week().getMealFat())
-                    && goalBarBean.getFive_week().getFat() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFive_week().getFat()))
-            {
-                ll5 = new LimitLine(Float.parseFloat(goalBarBean.getFive_week().getFat()), "5th Goal");
-                ll5.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll5.setLineWidth(2f);
-                entries.add(new Entry(4, Float.parseFloat(goalBarBean.getFive_week().getMealFat())));
-            }
-            else
-                entries.add(new Entry(4,0));
-        }
-        if (selectedNutrition.equalsIgnoreCase("Cholesterol")) {
-            if (goalBarBean.getOne_week() != null && goalBarBean.getOne_week().getMealCholesterol() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getOne_week().getMealCholesterol())
-                    && goalBarBean.getOne_week().getCholesterol() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getOne_week().getCholesterol()))
-            {
-                ll1 = new LimitLine(Float.parseFloat(goalBarBean.getOne_week().getCholesterol()), "1st Goal");
-                ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll1.setLineWidth(2f);
-                entries.add(new Entry(0, Float.parseFloat(goalBarBean.getOne_week().getMealCholesterol())));
-            }
-            else
-                entries.add(new Entry(0,0));
-            if (goalBarBean.getTwo_week() != null && goalBarBean.getTwo_week().getMealCholesterol() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getTwo_week().getMealCholesterol())
-                    && goalBarBean.getTwo_week().getCholesterol() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getTwo_week().getCholesterol()))
-            {
-                ll2 = new LimitLine(Float.parseFloat(goalBarBean.getTwo_week().getCholesterol()), "2nd Goal");
-                ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll2.setLineWidth(2f);
-                entries.add(new Entry(1, Float.parseFloat(goalBarBean.getTwo_week().getMealCholesterol())));
-            }
-            else
-                entries.add(new Entry(1,0));
-            if (goalBarBean.getThree_week() != null && goalBarBean.getThree_week().getMealCholesterol() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getThree_week().getMealCholesterol())
-                    && goalBarBean.getThree_week().getCholesterol() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getThree_week().getCholesterol()))
-            {
-                ll3 = new LimitLine(Float.parseFloat(goalBarBean.getThree_week().getCholesterol()), "3rd Goal");
-                ll3.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll3.setLineWidth(2f);
-                entries.add(new Entry(2, Float.parseFloat(goalBarBean.getThree_week().getMealCholesterol())));
-            }
-            else
-                entries.add(new Entry(2,0));
-            if (goalBarBean.getFour_week() != null && goalBarBean.getFour_week().getMealCholesterol() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFour_week().getMealCholesterol())
-                    && goalBarBean.getFour_week().getCholesterol() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFour_week().getCholesterol()))
-            {
-                ll4 = new LimitLine(Float.parseFloat(goalBarBean.getFour_week().getCholesterol()), "4th Goal");
-                ll4.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll4.setLineWidth(2f);
-                entries.add(new Entry(3, Float.parseFloat(goalBarBean.getFour_week().getMealCholesterol())));
-            }
-            else
-                entries.add(new Entry(3,0));
-            if (goalBarBean.getFive_week() != null && goalBarBean.getFive_week().getMealCholesterol() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFive_week().getMealCholesterol())
-                    && goalBarBean.getFive_week().getCholesterol() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFive_week().getCholesterol()))
-            {
-                ll5 = new LimitLine(Float.parseFloat(goalBarBean.getFive_week().getCholesterol()), "5th Goal");
-                ll5.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll5.setLineWidth(2f);
-                entries.add(new Entry(4, Float.parseFloat(goalBarBean.getFive_week().getMealCholesterol())));
-            }
-            else
-                entries.add(new Entry(4,0));
-        }
-        if (selectedNutrition.equalsIgnoreCase("Fiber")) {
-            if (goalBarBean.getOne_week() != null && goalBarBean.getOne_week().getMealFiber() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getOne_week().getMealFiber())
-                    && goalBarBean.getOne_week().getFiber() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getOne_week().getFiber()))
-            {
-                ll1 = new LimitLine(Float.parseFloat(goalBarBean.getOne_week().getFiber()), "1st Goal");
-                ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll1.setLineWidth(2f);
-                entries.add(new Entry(0, Float.parseFloat(goalBarBean.getOne_week().getMealFiber())));
-            }
-            else
-                entries.add(new Entry(0,0));
-            if (goalBarBean.getTwo_week() != null && goalBarBean.getTwo_week().getMealFiber() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getTwo_week().getMealFiber())
-                    && goalBarBean.getTwo_week().getFiber() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getTwo_week().getFiber()))
-            {
-                ll2 = new LimitLine(Float.parseFloat(goalBarBean.getTwo_week().getFiber()), "2nd Goal");
-                ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll2.setLineWidth(2f);
-                entries.add(new Entry(1, Float.parseFloat(goalBarBean.getTwo_week().getMealFiber())));
-            }
-            else
-                entries.add(new Entry(1,0));
-            if (goalBarBean.getThree_week() != null && goalBarBean.getThree_week().getMealFiber() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getThree_week().getMealFiber())
-                    && goalBarBean.getThree_week().getFiber() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getThree_week().getFiber()))
-            {
-                ll3 = new LimitLine(Float.parseFloat(goalBarBean.getThree_week().getFiber()), "3rd Goal");
-                ll3.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll3.setLineWidth(2f);
-                entries.add(new Entry(2, Float.parseFloat(goalBarBean.getThree_week().getMealFiber())));
-            }
-            else
-                entries.add(new Entry(2,0));
-            if (goalBarBean.getFour_week() != null && goalBarBean.getFour_week().getMealFiber() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFour_week().getMealFiber())
-                    && goalBarBean.getFour_week().getFiber() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFour_week().getFiber()))
-            {
-                ll4 = new LimitLine(Float.parseFloat(goalBarBean.getFour_week().getFiber()), "4th Goal");
-                ll4.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll4.setLineWidth(2f);
-                entries.add(new Entry(3, Float.parseFloat(goalBarBean.getFour_week().getMealFiber())));
-            }
-            else
-                entries.add(new Entry(3,0));
-            if (goalBarBean.getFive_week() != null && goalBarBean.getFive_week().getMealFiber() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFive_week().getMealFiber())
-                    && goalBarBean.getFive_week().getFiber() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFive_week().getFiber()))
-            {
-                ll5 = new LimitLine(Float.parseFloat(goalBarBean.getFive_week().getFiber()), "5th Goal");
-                ll5.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll5.setLineWidth(2f);
-                entries.add(new Entry(4, Float.parseFloat(goalBarBean.getFive_week().getMealFiber())));
-            }
-            else
-                entries.add(new Entry(4,0));
-        }
-        if (selectedNutrition.equalsIgnoreCase("Weight")) {
-            if (goalBarBean.getOne_week() != null && goalBarBean.getOne_week().getWeight() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getOne_week().getWeight())
-                    && goalBarBean.getOne_week().getGoalWeight() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getOne_week().getGoalWeight()))
-            {
-                ll1 = new LimitLine(Float.parseFloat(goalBarBean.getOne_week().getGoalWeight()), "1st Goal");
-                ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll1.setLineWidth(2f);
-                entries.add(new Entry(0, Float.parseFloat(goalBarBean.getOne_week().getWeight())));
-            }
-            else
-                entries.add(new Entry(0,0));
-            if (goalBarBean.getTwo_week() != null && goalBarBean.getTwo_week().getWeight() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getTwo_week().getWeight())
-                    && goalBarBean.getTwo_week().getGoalWeight() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getTwo_week().getGoalWeight()))
-            {
-                ll2 = new LimitLine(Float.parseFloat(goalBarBean.getTwo_week().getGoalWeight()), "2nd Goal");
-                ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll2.setLineWidth(2f);
-                entries.add(new Entry(1, Float.parseFloat(goalBarBean.getTwo_week().getWeight())));
-            }
-            else
-                entries.add(new Entry(1,0));
-            if (goalBarBean.getThree_week() != null && goalBarBean.getThree_week().getWeight() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getThree_week().getWeight())
-                    && goalBarBean.getThree_week().getGoalWeight() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getThree_week().getGoalWeight()))
-            {
-                ll3 = new LimitLine(Float.parseFloat(goalBarBean.getThree_week().getGoalWeight()), "3rd Goal");
-                ll3.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll3.setLineWidth(2f);
-                entries.add(new Entry(2, Float.parseFloat(goalBarBean.getThree_week().getWeight())));
-            }
-            else
-                entries.add(new Entry(2,0));
-            if (goalBarBean.getFour_week() != null && goalBarBean.getFour_week().getWeight() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFour_week().getWeight())
-                    && goalBarBean.getFour_week().getGoalWeight() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFour_week().getGoalWeight()))
-            {
-                ll4 = new LimitLine(Float.parseFloat(goalBarBean.getFour_week().getGoalWeight()), "4th Goal");
-                ll4.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll4.setLineWidth(2f);
-                entries.add(new Entry(3, Float.parseFloat(goalBarBean.getFour_week().getWeight())));
-            }
-            else
-                entries.add(new Entry(3,0));
-            if (goalBarBean.getFive_week() != null && goalBarBean.getFive_week().getWeight() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFive_week().getWeight())
-                    && goalBarBean.getFive_week().getGoalWeight() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFive_week().getGoalWeight()))
-            {
-                ll5 = new LimitLine(Float.parseFloat(goalBarBean.getFive_week().getGoalWeight()), "5th Goal");
-                ll5.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll5.setLineWidth(2f);
-                entries.add(new Entry(4, Float.parseFloat(goalBarBean.getFive_week().getWeight())));
-            }
-            else
-                entries.add(new Entry(4,0));
-        }
-        if (selectedNutrition.equalsIgnoreCase("Body Fat")) {
-            if (goalBarBean.getOne_week() != null && goalBarBean.getOne_week().getBodyFat() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getOne_week().getBodyFat())
-                    && goalBarBean.getOne_week().getGoalBodyFat() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getOne_week().getGoalBodyFat()))
-            {
-                ll1 = new LimitLine(Float.parseFloat(goalBarBean.getOne_week().getGoalBodyFat()), "1st Goal");
-                ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll1.setLineWidth(2f);
-                entries.add(new Entry(0, Float.parseFloat(goalBarBean.getOne_week().getBodyFat())));
-            }
-            else
-                entries.add(new Entry(0,0));
-            if (goalBarBean.getTwo_week() != null && goalBarBean.getTwo_week().getBodyFat() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getTwo_week().getBodyFat())
-                    && goalBarBean.getTwo_week().getGoalBodyFat() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getTwo_week().getGoalBodyFat()))
-            {
-                ll2 = new LimitLine(Float.parseFloat(goalBarBean.getTwo_week().getGoalBodyFat()), "2nd Goal");
-                ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll2.setLineWidth(2f);
-                entries.add(new Entry(1, Float.parseFloat(goalBarBean.getTwo_week().getBodyFat())));
-            }
-            else
-                entries.add(new Entry(1,0));
-            if (goalBarBean.getThree_week() != null && goalBarBean.getThree_week().getBodyFat() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getThree_week().getBodyFat())
-                    && goalBarBean.getThree_week().getGoalBodyFat() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getThree_week().getGoalBodyFat()))
-            {
-                ll3 = new LimitLine(Float.parseFloat(goalBarBean.getThree_week().getGoalBodyFat()), "3rd Goal");
-                ll3.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll3.setLineWidth(2f);
-                entries.add(new Entry(2, Float.parseFloat(goalBarBean.getThree_week().getBodyFat())));
-            }
-            else
-                entries.add(new Entry(2,0));
-            if (goalBarBean.getFour_week() != null && goalBarBean.getFour_week().getBodyFat() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFour_week().getBodyFat())
-                    && goalBarBean.getFour_week().getGoalBodyFat() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFour_week().getGoalBodyFat()))
-            {
-                ll4 = new LimitLine(Float.parseFloat(goalBarBean.getFour_week().getGoalBodyFat()), "4th Goal");
-                ll4.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll4.setLineWidth(2f);
-                entries.add(new Entry(3, Float.parseFloat(goalBarBean.getFour_week().getBodyFat())));
-            }
-            else
-                entries.add(new Entry(3,0));
-            if (goalBarBean.getFive_week() != null && goalBarBean.getFive_week().getBodyFat() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFive_week().getBodyFat())
-                    && goalBarBean.getFive_week().getGoalBodyFat() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFive_week().getGoalBodyFat()))
-            {
-                ll5 = new LimitLine(Float.parseFloat(goalBarBean.getFive_week().getGoalBodyFat()), "5th Goal");
-                ll5.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll5.setLineWidth(2f);
-                entries.add(new Entry(4, Float.parseFloat(goalBarBean.getFive_week().getBodyFat())));
-            }
-            else
-                entries.add(new Entry(4,0));
-        }
-        if (selectedNutrition.equalsIgnoreCase("Water")) {
-            if (goalBarBean.getOne_week() != null && goalBarBean.getOne_week().getWater() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getOne_week().getWater())
-                    && goalBarBean.getOne_week().getGoalWater() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getOne_week().getGoalWater()))
-            {
-                ll1 = new LimitLine(Float.parseFloat(goalBarBean.getOne_week().getGoalWater()), "1st Goal");
-                ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll1.setLineWidth(2f);
-                entries.add(new Entry(0, Float.parseFloat(goalBarBean.getOne_week().getWater())));
-            }
-            else
-                entries.add(new Entry(0,0));
-            if (goalBarBean.getTwo_week() != null && goalBarBean.getTwo_week().getWater() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getTwo_week().getWater())
-                    && goalBarBean.getTwo_week().getGoalWater() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getTwo_week().getGoalWater()))
-            {
-                ll2 = new LimitLine(Float.parseFloat(goalBarBean.getTwo_week().getGoalWater()), "2nd Goal");
-                ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll2.setLineWidth(2f);
-                entries.add(new Entry(1, Float.parseFloat(goalBarBean.getTwo_week().getWater())));
-            }
-            else
-                entries.add(new Entry(1,0));
-            if (goalBarBean.getThree_week() != null && goalBarBean.getThree_week().getWater() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getThree_week().getWater())
-                    && goalBarBean.getThree_week().getGoalWater() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getThree_week().getGoalWater()))
-            {
-                ll3 = new LimitLine(Float.parseFloat(goalBarBean.getThree_week().getGoalWater()), "3rd Goal");
-                ll3.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll3.setLineWidth(2f);
-                entries.add(new Entry(2, Float.parseFloat(goalBarBean.getThree_week().getWater())));
-            }
-            else
-                entries.add(new Entry(2,0));
-            if (goalBarBean.getFour_week() != null && goalBarBean.getFour_week().getWater() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFour_week().getWater())
-                    && goalBarBean.getFour_week().getGoalWater() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFour_week().getGoalWater()))
-            {
-                ll4 = new LimitLine(Float.parseFloat(goalBarBean.getFour_week().getGoalWater()), "4th Goal");
-                ll4.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll4.setLineWidth(2f);
-                entries.add(new Entry(3, Float.parseFloat(goalBarBean.getFour_week().getWater())));
-            }
-            else
-                entries.add(new Entry(3,0));
-            if (goalBarBean.getFive_week() != null && goalBarBean.getFive_week().getWater() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFive_week().getWater())
-                    && goalBarBean.getFive_week().getGoalWater() != null &&
-                    !TextUtils.isEmpty(goalBarBean.getFive_week().getGoalWater()))
-            {
-                ll5 = new LimitLine(Float.parseFloat(goalBarBean.getFive_week().getGoalWater()), "5th Goal");
-                ll5.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                ll5.setLineWidth(2f);
-                entries.add(new Entry(4, Float.parseFloat(goalBarBean.getFive_week().getWater())));
-            }
-            else
-                entries.add(new Entry(4,0));
-        }
-        renderData();
     }
 }

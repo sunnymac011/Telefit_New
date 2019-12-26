@@ -12,12 +12,14 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 
 import fit.tele.com.telefit.R;
 import fit.tele.com.telefit.utils.CommonUtils;
 
 public class AddGoalsWeightDialog extends Dialog implements View.OnClickListener {
-    private EditText input_goal,input_consume, txt_header;
+    private EditText input_goal,input_consume;
+    private TextView txt_header;
     private Button btn_set;
     private SetDataListener setDataListener;
     private Context context;
@@ -55,7 +57,7 @@ public class AddGoalsWeightDialog extends Dialog implements View.OnClickListener
             //window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
             //window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
-        txt_header = (EditText) contentView.findViewById(R.id.txt_header);
+        txt_header = (TextView) contentView.findViewById(R.id.txt_header);
         input_goal = (EditText) contentView.findViewById(R.id.input_goal);
         input_consume = (EditText) contentView.findViewById(R.id.input_consume);
         txt_header.setText(strHint);

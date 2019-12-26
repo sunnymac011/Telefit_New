@@ -7,30 +7,52 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 public class GoalBarBean implements Parcelable {
 
-    @SerializedName("1st week")
+    @SerializedName("protein")
     @Expose
-    public GoalBean one_week;
-    @SerializedName("2nd week")
+    public String protein;
+    @SerializedName("carbs")
     @Expose
-    public GoalBean two_week;
-    @SerializedName("3rd week")
+    public String carbs;
+    @SerializedName("fat")
     @Expose
-    public GoalBean three_week;
-    @SerializedName("4th week")
+    public String fat;
+    @SerializedName("bmi")
     @Expose
-    public GoalBean four_week;
-    @SerializedName("5th week")
+    public String bmi;
+    @SerializedName("cholesterol")
     @Expose
-    public GoalBean five_week;
+    public String cholesterol;
+    @SerializedName("fiber")
+    @Expose
+    public String fiber;
+    @SerializedName("goal_body_fat")
+    @Expose
+    public String goalBodyFat;
+    @SerializedName("goal_water")
+    @Expose
+    public String goalWater;
+    @SerializedName("goal_weight")
+    @Expose
+    public String goalWeight;
+    @SerializedName("goal_details")
+    @Expose
+    public ArrayList<GoalBean> goalDetails;
 
     protected GoalBarBean(Parcel in) {
-        one_week = in.readParcelable(GoalBean.class.getClassLoader());
-        two_week = in.readParcelable(GoalBean.class.getClassLoader());
-        three_week = in.readParcelable(GoalBean.class.getClassLoader());
-        four_week = in.readParcelable(GoalBean.class.getClassLoader());
-        five_week = in.readParcelable(GoalBean.class.getClassLoader());
+        protein = in.readString();
+        carbs = in.readString();
+        fat = in.readString();
+        bmi = in.readString();
+        cholesterol = in.readString();
+        fiber = in.readString();
+        goalBodyFat = in.readString();
+        goalWater = in.readString();
+        goalWeight = in.readString();
+        goalDetails = in.createTypedArrayList(GoalBean.CREATOR);
     }
 
     public static final Creator<GoalBarBean> CREATOR = new Creator<GoalBarBean>() {
@@ -45,44 +67,84 @@ public class GoalBarBean implements Parcelable {
         }
     };
 
-    public GoalBean getOne_week() {
-        return one_week;
+    public String getProtein() {
+        return protein;
     }
 
-    public void setOne_week(GoalBean one_week) {
-        this.one_week = one_week;
+    public void setProtein(String protein) {
+        this.protein = protein;
     }
 
-    public GoalBean getTwo_week() {
-        return two_week;
+    public String getCarbs() {
+        return carbs;
     }
 
-    public void setTwo_week(GoalBean two_week) {
-        this.two_week = two_week;
+    public void setCarbs(String carbs) {
+        this.carbs = carbs;
     }
 
-    public GoalBean getThree_week() {
-        return three_week;
+    public String getFat() {
+        return fat;
     }
 
-    public void setThree_week(GoalBean three_week) {
-        this.three_week = three_week;
+    public void setFat(String fat) {
+        this.fat = fat;
     }
 
-    public GoalBean getFour_week() {
-        return four_week;
+    public String getBmi() {
+        return bmi;
     }
 
-    public void setFour_week(GoalBean four_week) {
-        this.four_week = four_week;
+    public void setBmi(String bmi) {
+        this.bmi = bmi;
     }
 
-    public GoalBean getFive_week() {
-        return five_week;
+    public String getCholesterol() {
+        return cholesterol;
     }
 
-    public void setFive_week(GoalBean five_week) {
-        this.five_week = five_week;
+    public void setCholesterol(String cholesterol) {
+        this.cholesterol = cholesterol;
+    }
+
+    public String getFiber() {
+        return fiber;
+    }
+
+    public void setFiber(String fiber) {
+        this.fiber = fiber;
+    }
+
+    public String getGoalBodyFat() {
+        return goalBodyFat;
+    }
+
+    public void setGoalBodyFat(String goalBodyFat) {
+        this.goalBodyFat = goalBodyFat;
+    }
+
+    public String getGoalWater() {
+        return goalWater;
+    }
+
+    public void setGoalWater(String goalWater) {
+        this.goalWater = goalWater;
+    }
+
+    public String getGoalWeight() {
+        return goalWeight;
+    }
+
+    public void setGoalWeight(String goalWeight) {
+        this.goalWeight = goalWeight;
+    }
+
+    public ArrayList<GoalBean> getGoalDetails() {
+        return goalDetails;
+    }
+
+    public void setGoalDetails(ArrayList<GoalBean> goalDetails) {
+        this.goalDetails = goalDetails;
     }
 
     @Override
@@ -92,21 +154,31 @@ public class GoalBarBean implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeParcelable(one_week, flags);
-        dest.writeParcelable(two_week, flags);
-        dest.writeParcelable(three_week, flags);
-        dest.writeParcelable(four_week, flags);
-        dest.writeParcelable(five_week, flags);
+        dest.writeString(protein);
+        dest.writeString(carbs);
+        dest.writeString(fat);
+        dest.writeString(bmi);
+        dest.writeString(cholesterol);
+        dest.writeString(fiber);
+        dest.writeString(goalBodyFat);
+        dest.writeString(goalWater);
+        dest.writeString(goalWeight);
+        dest.writeTypedList(goalDetails);
     }
 
     @Override
     public String toString() {
         return "GoalBarBean{" +
-                "one_week=" + one_week +
-                ", two_week=" + two_week +
-                ", three_week=" + three_week +
-                ", four_week=" + four_week +
-                ", five_week=" + five_week +
+                "protein='" + protein + '\'' +
+                ", carbs='" + carbs + '\'' +
+                ", fat='" + fat + '\'' +
+                ", bmi='" + bmi + '\'' +
+                ", cholesterol='" + cholesterol + '\'' +
+                ", fiber='" + fiber + '\'' +
+                ", goalBodyFat='" + goalBodyFat + '\'' +
+                ", goalWater='" + goalWater + '\'' +
+                ", goalWeight='" + goalWeight + '\'' +
+                ", goalDetails=" + goalDetails +
                 '}';
     }
 }

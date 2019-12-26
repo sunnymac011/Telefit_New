@@ -79,6 +79,7 @@ public class FoodCalNutActivity extends BaseActivity implements View.OnClickList
         burnCal = Float.parseFloat(preferences.getBurnedCaloriesPref());
         calendar = Calendar.getInstance();
         binding.txtDate.setText(format1.format(calendar.getTime()));
+        preferences.saveGoalDateData(format1.format(calendar.getTime()));
         strSelectedDate = format.format(calendar.getTime());
         strCurrentDate = format2.format(calendar.getTime());
         calendar.setFirstDayOfWeek(Calendar.SUNDAY);
@@ -127,6 +128,11 @@ public class FoodCalNutActivity extends BaseActivity implements View.OnClickList
                 @Override
                 public void onDeletClick(String foodCatId, FoodCategoryBean categoryBean) {
                     callDeleteCatApi(foodCatId);
+                }
+
+                @Override
+                public void onAddClick(FoodCategoryBean categoryBean) {
+
                 }
             });
         }
@@ -501,6 +507,7 @@ public class FoodCalNutActivity extends BaseActivity implements View.OnClickList
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         String date = ((monthOfYear+1) > 9 ? (monthOfYear+1) : ("0"+(monthOfYear+1))) + "/" + dayOfMonth + "/" + year;
 
+        preferences.saveGoalDateData(date);
         binding.txtDate.setText(date);
         strSelectedDate = date;
         try {
@@ -550,7 +557,7 @@ public class FoodCalNutActivity extends BaseActivity implements View.OnClickList
         if (preferences.getUserDataPref().getGender().equalsIgnoreCase("male"))
             bmr = (float)(66+(13.7*weight)+(5*height)-(6.8*age));
         else
-            bmr = (float)(655+(9.6*weight)+(1.6*height)-(4.7*age));
+            bmr = (float)(655+(9.6*weight)+(1.8*height)-(4.7*age));
 
         if (preferences.getUserDataPref() != null && preferences.getUserDataPref().getActivity() != null
                 && !TextUtils.isEmpty(preferences.getUserDataPref().getActivity())) {
@@ -568,12 +575,14 @@ public class FoodCalNutActivity extends BaseActivity implements View.OnClickList
 
         if (preferences.getUserDataPref() != null && preferences.getUserDataPref().getMaintainWeight() != null
                 && !TextUtils.isEmpty(preferences.getUserDataPref().getMaintainWeight())) {
+            if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Maintain weight"))
+                budgetCal = tdee;
             if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Lose 1 pound per week"))
-                budgetCal = (float)(tdee*0.20);
+                budgetCal = (float)(tdee - (tdee*0.20));
             if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Lose 1.5 pound per week"))
-                budgetCal = (float)(tdee*0.30);
+                budgetCal = (float)(tdee - (tdee*0.30));
             if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Lose 2 pounds per week"))
-                budgetCal = (float)(tdee*0.35);
+                budgetCal = (float)(tdee - (tdee*0.35));
             if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Gain 0.5 pound per week"))
                 budgetCal = (float)(tdee+250);
             if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Gain 1 pound per week"))

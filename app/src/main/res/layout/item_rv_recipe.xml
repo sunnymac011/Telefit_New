@@ -55,8 +55,7 @@
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="@dimen/_40sdp"
                 android:layout_marginLeft="@dimen/_20sdp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/empty_food"/>
+                android:layout_centerVertical="true"/>
 
             <LinearLayout
                 android:id="@+id/ll_details"

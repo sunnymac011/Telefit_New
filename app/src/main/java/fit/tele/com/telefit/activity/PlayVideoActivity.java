@@ -68,7 +68,7 @@ public class PlayVideoActivity extends BaseActivity implements TextToSpeech.OnIn
 
     private DataSource.Factory mediaDataSourceFactory;
     private DefaultTrackSelector trackSelector;
-    private boolean isREStartVideo = false, shouldAutoPlay;
+    private boolean isREStartVideo = false, isPause = false;
     private BandwidthMeter bandwidthMeter;
     private String plan_id="";
     private RoutineExercisesAdapter routineExercisesAdapter;
@@ -220,6 +220,7 @@ public class PlayVideoActivity extends BaseActivity implements TextToSpeech.OnIn
                 if (isPlaying()) {
                     if (player != null) {
                         player.setPlayWhenReady(false);
+                        isPause = true;
                         binding.imgPlay.setBackgroundResource(R.drawable.play_video_button);
                         if (mCountDownTimer != null)
                             mCountDownTimer.cancel();
@@ -245,11 +246,11 @@ public class PlayVideoActivity extends BaseActivity implements TextToSpeech.OnIn
         mCountDownTimer = null;
         int playSecond = 5 * intReps;
         timeCountInMilliSeconds = playSecond * 1000;
+        isPause = false;
         mCountDownTimer = new CountDownTimer(timeCountInMilliSeconds, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 long seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished);
-
                 intPlaySec = intPlaySec+1;
                 if(intPlaySec%5==0){
                     intReps = intReps-1;
@@ -301,6 +302,7 @@ public class PlayVideoActivity extends BaseActivity implements TextToSpeech.OnIn
                                     long minutes = (TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 3600) / 60;
                                     long seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 60;
                                     binding.txtCounts.setText(formatter.format(hours)+":"+formatter.format(minutes)+":"+formatter.format(seconds));
+
                                     if (TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) == 7 && preferences.getSoundPref().equalsIgnoreCase("1"))
                                         textToSpeech.speak("Get ready", TextToSpeech.QUEUE_FLUSH, null);
                                     if (TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) <= 5 && preferences.getSoundPref().equalsIgnoreCase("1"))
@@ -350,6 +352,7 @@ public class PlayVideoActivity extends BaseActivity implements TextToSpeech.OnIn
                                     long minutes = (TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 3600) / 60;
                                     long seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 60;
                                     binding.txtCounts.setText(formatter.format(hours)+":"+formatter.format(minutes)+":"+formatter.format(seconds));
+
                                     if (TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) == 7 && preferences.getSoundPref().equalsIgnoreCase("1"))
                                         textToSpeech.speak("Get ready", TextToSpeech.QUEUE_FLUSH, null);
                                     if (TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) <= 5 && preferences.getSoundPref().equalsIgnoreCase("1"))
@@ -397,15 +400,19 @@ public class PlayVideoActivity extends BaseActivity implements TextToSpeech.OnIn
             intSecond = ((intH * 60)*60) + (intM * 60) + intS;
             binding.txtExeTime.setText(intH+":"+intM+":"+intS);
 
-            timeCountInMilliSeconds = intSecond * 1000;
+            if (!isPause)
+                timeCountInMilliSeconds = intSecond * 1000;
+
+            isPause = false;
             mCountDownTimer = new CountDownTimer(timeCountInMilliSeconds, 1000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
+                    timeCountInMilliSeconds = millisUntilFinished;
                     long hours = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) / 3600;
                     long minutes = (TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 3600) / 60;
                     long seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) % 60;
                     binding.txtExeTime.setText(formatter.format(hours)+":"+formatter.format(minutes)+":"+formatter.format(seconds));
-                    if (TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) >= 5 && preferences.getSoundPref().equalsIgnoreCase("1"))
+                    if (TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) <= 5 && preferences.getSoundPref().equalsIgnoreCase("1"))
                         textToSpeech.speak(""+TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished), TextToSpeech.QUEUE_FLUSH, null);
                 }
 
@@ -505,8 +512,10 @@ public class PlayVideoActivity extends BaseActivity implements TextToSpeech.OnIn
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
                 if (playbackState == ExoPlayer.STATE_BUFFERING){
                     binding.progressBarVideo.setVisibility(View.VISIBLE);
+                    binding.imgPlay.setEnabled(false);
                 } else {
                     binding.progressBarVideo.setVisibility(View.INVISIBLE);
+                    binding.imgPlay.setEnabled(true);
                 }
 
                 if (isMulVideo) {
@@ -589,7 +598,6 @@ public class PlayVideoActivity extends BaseActivity implements TextToSpeech.OnIn
 
     private void releasePlayer() {
         if (player != null) {
-            shouldAutoPlay = player.getPlayWhenReady();
             player.release();
             player = null;
             trackSelector = null;

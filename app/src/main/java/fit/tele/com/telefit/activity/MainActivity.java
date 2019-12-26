@@ -137,6 +137,7 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
         txt_calories_date = (TextView) findViewById(R.id.txt_calories_date);
         txt_calories_date.setOnClickListener(this);
         txt_calories_date.setText(format1.format(calendar.getTime()));
+        preferences.saveGoalDateData(format1.format(calendar.getTime()));
         txt_nutrition_date = (TextView) findViewById(R.id.txt_nutrition_date);
         txt_nutrition_date.setOnClickListener(this);
         txt_nutrition_date.setText(format1.format(calendar.getTime()));
@@ -251,7 +252,7 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
 
     private void setCaloriesBarChart() {
 
-        if (caloriesBarBean.getGoal() != null && caloriesBarBean.getGoal().get(0).getWeight() != null &&
+        if (caloriesBarBean.getGoal() != null && caloriesBarBean.getGoal().size() > 0 && caloriesBarBean.getGoal().get(0).getWeight() != null &&
                 caloriesBarBean.getGoal().get(0).getGoalWeight() != null && caloriesBarBean.getGoal().get(0).getWeightType() != null)
         {
             double dWeight = 0, dgWeight = 0,dGoal =0, dWeeks =0;
@@ -268,6 +269,8 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
 
             if (preferences.getUserDataPref() != null && preferences.getUserDataPref().getMaintainWeight() != null
                     && !TextUtils.isEmpty(preferences.getUserDataPref().getMaintainWeight())) {
+                if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Maintain weight"))
+                    dGoal = 0;
                 if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Lose 1 pound per week"))
                     dGoal = 1;
                 if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Lose 1.5 pound per week"))
@@ -332,7 +335,7 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
         if (preferences.getUserDataPref().getGender().equalsIgnoreCase("male"))
             bmr = (float)(66+(13.7*weight)+(5*height)-(6.8*age));
         else
-            bmr = (float)(655+(9.6*weight)+(1.6*height)-(4.7*age));
+            bmr = (float)(655+(9.6*weight)+(1.8*height)-(4.7*age));
 
         if (preferences.getUserDataPref() != null && preferences.getUserDataPref().getActivity() != null
                 && !TextUtils.isEmpty(preferences.getUserDataPref().getActivity())) {
@@ -350,12 +353,14 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
 
         if (preferences.getUserDataPref() != null && preferences.getUserDataPref().getMaintainWeight() != null
                 && !TextUtils.isEmpty(preferences.getUserDataPref().getMaintainWeight())) {
+            if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Maintain weight"))
+                budgetCal = tdee;
             if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Lose 1 pound per week"))
-                budgetCal = (float)(tdee*0.20);
+                budgetCal = (float)(tdee - (tdee*0.20));
             if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Lose 1.5 pound per week"))
-                budgetCal = (float)(tdee*0.30);
+                budgetCal = (float)(tdee - (tdee*0.30));
             if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Lose 2 pounds per week"))
-                budgetCal = (float)(tdee*0.35);
+                budgetCal = (float)(tdee - (tdee*0.35));
             if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Gain 0.5 pound per week"))
                 budgetCal = (float)(tdee+250);
             if (preferences.getUserDataPref().getMaintainWeight().equalsIgnoreCase("Gain 1 pound per week"))
@@ -1276,6 +1281,7 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         String date = ((monthOfYear+1) > 9 ? (monthOfYear+1) : ("0"+(monthOfYear+1))) + "/" + dayOfMonth + "/" + year;
 
+        preferences.saveGoalDateData(date);
         if (binding.vf.getDisplayedChild() == 0) {
             txt_calories_date.setText(date);
             callGetCaloriesApi(date);

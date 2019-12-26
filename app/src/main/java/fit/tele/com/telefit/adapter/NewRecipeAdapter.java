@@ -22,18 +22,18 @@ import java.util.Locale;
 
 import fit.tele.com.telefit.R;
 import fit.tele.com.telefit.activity.AddFoodActivity;
+import fit.tele.com.telefit.modelBean.RecipeListBean;
 import fit.tele.com.telefit.modelBean.chompBeans.ChompProductBean;
 import fit.tele.com.telefit.utils.CircleTransform;
-import fit.tele.com.telefit.utils.CommonUtils;
 import fit.tele.com.telefit.utils.OnLoadMoreListener;
 import fit.tele.com.telefit.utils.Preferences;
 
-public class RecipeFoodAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class NewRecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
     private Context context;
-    private ArrayList<ChompProductBean> list;
-    private ArrayList<ChompProductBean> listFill = new ArrayList<>();
+    private ArrayList<RecipeListBean> list;
+    private ArrayList<RecipeListBean> listFill = new ArrayList<>();
     private boolean isLoading;
     private int visibleThreshold = 3;
     private int lastVisibleItem, totalItemCount;
@@ -41,7 +41,7 @@ public class RecipeFoodAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private Preferences preferences;
     private ClickListner clickListner;
 
-    public RecipeFoodAdapter(Context context, Preferences preferences, RecyclerView recyclerView,ClickListner clickListner) {
+    public NewRecipeAdapter(Context context, Preferences preferences, RecyclerView recyclerView, ClickListner clickListner) {
         this.context = context;
         this.preferences = preferences;
         this.clickListner = clickListner;
@@ -112,7 +112,7 @@ public class RecipeFoodAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         notifyDataSetChanged();
     }
 
-    public void addAllList(ArrayList<ChompProductBean> data) {
+    public void addAllList(ArrayList<RecipeListBean> data) {
         list.addAll(data);
         listFill.addAll(data);
         notifyDataSetChanged();
@@ -168,14 +168,10 @@ public class RecipeFoodAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 @Override
                 public void onClick(View view) {
                     if(list != null && pos >= 0 && pos < list.size() && list.get(pos) != null) {
-//                        if (preferences.getRecipeNameDataPref() != null || preferences.getMealNameDataPref() != null) {
-                            Intent intent = new Intent(context, AddFoodActivity.class);
-                            intent.putExtra("from","FoodAdapter");
-                            intent.putExtra("SelectedItems",list.get(pos));
-                            context.startActivity(intent);
-//                        }
-//                        else
-//                            CommonUtils.toast(context,"Please select Meal first to add this food!");
+                        Intent intent = new Intent(context, AddFoodActivity.class);
+                        intent.putExtra("from","RecipeAdapter");
+                        intent.putExtra("SelectedRecipe",list.get(pos).getId());
+                        context.startActivity(intent);
                     }
                 }
             });
@@ -199,11 +195,9 @@ public class RecipeFoodAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             this.pos = position;
             if (list != null && pos >= 0 && pos < list.size() && list.get(pos) != null) {
 
-                if(list.get(pos).getDetails() != null && list.get(pos).getDetails().getImages() != null &&
-                        list.get(pos).getDetails().getImages().getFront() != null &&
-                        list.get(pos).getDetails().getImages().getFront().getSmall() != null && !TextUtils.isEmpty(list.get(pos).getDetails().getImages().getFront().getSmall())) {
+                if(list.get(pos).getImage() != null && !TextUtils.isEmpty(list.get(pos).getImage())) {
                     Picasso.with(context)
-                            .load(list.get(pos).getDetails().getImages().getFront().getSmall())
+                            .load(list.get(pos).getImage())
                             .error(R.drawable.empty_food)
                             .placeholder(R.drawable.empty_food)
                             .transform(new CircleTransform())
@@ -214,10 +208,12 @@ public class RecipeFoodAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                 if(list.get(pos).getName() != null && !TextUtils.isEmpty(list.get(pos).getName()))
                     txt_list_title.setText(Html.fromHtml(list.get(pos).getName()));
-                if(list.get(pos).getDetails() != null && list.get(pos).getDetails().getNutritionLabel() != null &&
-                        list.get(pos).getDetails().getNutritionLabel().getCalories() != null && list.get(pos).getDetails().getNutritionLabel().getCalories().getPerServing() != null &&
-                        !TextUtils.isEmpty(list.get(pos).getDetails().getNutritionLabel().getCalories().getPerServing()))
-                    txt_list_desc.setText(list.get(pos).getDetails().getNutritionLabel().getCalories().getPerServing()+" cals per serving");
+                if(list.get(pos).getRacipeCalories() != null && !TextUtils.isEmpty(list.get(pos).getRacipeCalories()))
+                {
+                    double doubleCalories = Double.parseDouble(list.get(pos).getRacipeCalories());
+                    double convertedCal = doubleCalories/4.184;
+                    txt_list_desc.setText(String.format("%.2f", convertedCal)+" cals per serving");
+                }
             }
         }
     }
@@ -232,7 +228,7 @@ public class RecipeFoodAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
         else
         {
-            for (ChompProductBean wp : listFill)
+            for (RecipeListBean wp : listFill)
             {
                 if (wp.getName().toLowerCase(Locale.getDefault()).contains(charText))
                 {

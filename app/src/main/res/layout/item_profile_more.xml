@@ -59,7 +59,8 @@
                 android:id="@+id/view1"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/light_gray"/>
+                android:background="@color/light_gray"
+                android:visibility="gone"/>
 
             <RelativeLayout
                 android:id="@+id/rl_themes"
@@ -113,7 +114,8 @@
                 android:id="@+id/rl_units"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/_20sdp">
+                android:padding="@dimen/_20sdp"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/txt_units"
@@ -155,7 +157,8 @@
                 android:id="@+id/view3"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/light_gray"/>
+                android:background="@color/light_gray"
+                android:visibility="gone"/>
 
             <RelativeLayout
                 android:id="@+id/rl_country"

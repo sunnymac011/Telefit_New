@@ -1,12 +1,18 @@
 package fit.tele.com.telefit.activity;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.customtabs.CustomTabsClient;
+import android.support.customtabs.CustomTabsIntent;
+import android.support.customtabs.CustomTabsServiceConnection;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
@@ -33,10 +39,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -48,7 +58,9 @@ import fit.tele.com.telefit.databinding.ActivityDeviceBinding;
 import fit.tele.com.telefit.modelBean.CaloriesBarBean;
 import fit.tele.com.telefit.modelBean.DeviceBean;
 import fit.tele.com.telefit.modelBean.ModelBean;
+import fit.tele.com.telefit.modelBean.chompBeans.ChompProductBean;
 import fit.tele.com.telefit.utils.CommonUtils;
+import okhttp3.ResponseBody;
 import retrofit2.http.Field;
 import rx.Observable;
 import rx.Subscriber;
@@ -61,11 +73,11 @@ public class DeviceActivity extends BaseActivity implements View.OnClickListener
     private ArrayList<DeviceBean> deviceBeans = new ArrayList<>();
     private DeviceBean deviceBean;
     private DeviceAdapter deviceAdapter;
-    private GoogleApiClient fitApiClient;
-    String TAG = "google fit";
+    String TAG = "google fit", strFitbit = "";
     private GoogleApiClient mClient;
     private boolean authInProgress = false;
     private static final int REQUEST_OAUTH = 1;
+    private CustomTabsServiceConnection connection;
 
     @Override
     public int getLayoutResId() {
@@ -81,6 +93,19 @@ public class DeviceActivity extends BaseActivity implements View.OnClickListener
                 onBackPressed();
             }
         });
+        onNewIntent(getIntent());
+
+        if (!TextUtils.isEmpty(strFitbit)) {
+            String accessToken = strFitbit.substring(strFitbit.indexOf("&access_token") + 48, strFitbit.indexOf("&user_id"));
+            String userId = strFitbit.substring(strFitbit.indexOf("&user_id")+9, strFitbit.indexOf("&scope"));
+            String tokenType = strFitbit.substring(strFitbit.indexOf("&token_type")+12,strFitbit.indexOf("&expires_in"));
+
+            preferences.saveFitbitTokenData(accessToken);
+            preferences.saveFitbitIDData(userId);
+            preferences.saveFitbitTypeData(tokenType);
+
+            callFitbitApi(accessToken);
+        }
 
         binding.llProfile.setOnClickListener(this);
         binding.llNutrition.setOnClickListener(this);
@@ -93,6 +118,11 @@ public class DeviceActivity extends BaseActivity implements View.OnClickListener
         deviceBean.setDeviceName("Google Fit");
         deviceBean.setLastSync("");
         deviceBeans.add(deviceBean);
+        deviceBean = new DeviceBean();
+        deviceBean.setDeviceImage(R.drawable.fitbit_icon);
+        deviceBean.setDeviceName("Fitbit");
+        deviceBean.setLastSync("");
+        deviceBeans.add(deviceBean);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         binding.rvDevice.setLayoutManager(linearLayoutManager);
@@ -103,6 +133,9 @@ public class DeviceActivity extends BaseActivity implements View.OnClickListener
                 public void onClick(String name) {
                     if (name.equalsIgnoreCase("Google Fit")) {
                         syncGoogleFit();
+                    }
+                    else if (name.equalsIgnoreCase("Fitbit")) {
+                        syncFitbit();
                     }
                 }
             });
@@ -149,7 +182,125 @@ public class DeviceActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void syncFitbit() {
+        binding.progress.setVisibility(View.VISIBLE);
+        if (TextUtils.isEmpty(preferences.getFitbitTokenPref()) || preferences.getFitbitTokenPref().equalsIgnoreCase("0")) {
+            connection = new CustomTabsServiceConnection() {
+                @Override
+                public void onCustomTabsServiceConnected(ComponentName componentName, CustomTabsClient client) {
+                    final CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                    final CustomTabsIntent intent = builder.build();
+                    client.warmup(0L); // This prevents backgrounding after redirection
+                    Uri uri = Uri.parse("https://www.fitbit.com/oauth2/authorize?response_type=token" +
+                            "&client_id=22BDPG" +
+                            "&redirect_uri=anything://auth_callback_anything" +
+                            "&scope=activity&expires_in=604800");
+                    intent.launchUrl(context, uri);
+                }
+                @Override
+                public void onServiceDisconnected(ComponentName name) {}
+            };
+            CustomTabsClient.bindCustomTabsService(context, "com.android.chrome", connection);
+            binding.progress.setVisibility(View.GONE);
+        }
+        else
+        {
+            binding.progress.setVisibility(View.GONE);
+            callFitbitApi(preferences.getFitbitTypePref()+" "+preferences.getFitbitTokenPref());
+        }
 
+    }
+
+    private void callFitbitApi(String token) {
+        if (CommonUtils.isInternetOn(context)) {
+            binding.progress.setVisibility(View.VISIBLE);
+            Observable<ResponseBody> signupusers;
+
+            signupusers = FetchServiceBase.getFitbitFetcherService(context).getFitbitCalories(token);
+            subscription = signupusers.subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<ResponseBody>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            CommonUtils.toast(context, e.getMessage());
+                            Log.e("callFitbitApi "," "+e);
+                            binding.progress.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onNext(ResponseBody fitbitJSON) {
+                            binding.progress.setVisibility(View.GONE);
+                            try {
+//                                {"success":false,"errors":[{"errorType":"invalid_token","message":"Access token invalid: eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyMkJEUEciLCJzdWIiOiI3Vzc3N0QiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJyYWN0IiwiZXhwIjoxNTc3ODgwNzY1LCJpYXQiOjE1NzcyNzU5ODJ9.Uke31QCg7U9bFr69Qf7zbfjKPn_e1drZApC8JeLSUGE. Visit https://dev.fitbit.com/docs/oauth2 for more information on the Fitbit Web API authorization process."}]}
+                                JSONObject jsonObject = new JSONObject(fitbitJSON.string());
+                                if (!jsonObject.getString("success").equalsIgnoreCase("false")) {
+                                    if (jsonObject.has("summary")) {
+                                        JSONObject summaryObject = jsonObject.getJSONObject("summary");
+                                        String burnedCalories = summaryObject.getString("caloriesOut");
+                                        Log.e("burnedCalories",""+burnedCalories);
+                                        CommonUtils.toast(context,"Burned Calories synced from Fitbit!");
+                                        preferences.saveBurnedCaloriesData(""+burnedCalories);
+                                    }
+                                }
+                                else {
+                                    callFitbitRefreshApi(token);
+                                }
+
+                            }catch (Exception e) {
+                                Log.e("callFitbitApi exc",""+e.getCause());
+                            }
+                        }
+                    });
+
+        } else {
+            CommonUtils.toast(context, context.getString(R.string.snack_bar_no_internet));
+        }
+    }
+
+    private void callFitbitRefreshApi(String token) {
+        if (CommonUtils.isInternetOn(context)) {
+            binding.progress.setVisibility(View.VISIBLE);
+            Observable<ResponseBody> signupusers;
+
+            signupusers = FetchServiceBase.getFitbitFetcherServiceWithToken(context).getRefreshToken("refresh_token",token);
+            subscription = signupusers.subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<ResponseBody>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            CommonUtils.toast(context, e.getMessage());
+                            Log.e("callFitbitApi "," "+e);
+                            binding.progress.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onNext(ResponseBody fitbitJSON) {
+                            binding.progress.setVisibility(View.GONE);
+                            try {
+                                JSONObject jsonObject = new JSONObject(fitbitJSON.string());
+                                JSONObject summaryObject = jsonObject.getJSONObject("summary");
+                                String burnedCalories = summaryObject.getString("caloriesOut");
+                                Log.e("burnedCalories",""+burnedCalories);
+                                CommonUtils.toast(context,"Burned Calories synced from Fitbit!");
+                                preferences.saveBurnedCaloriesData(""+burnedCalories);
+                            }catch (Exception e) {
+                                Log.e("callFitbitApi exc",""+e.getCause());
+                            }
+                        }
+                    });
+
+        } else {
+            CommonUtils.toast(context, context.getString(R.string.snack_bar_no_internet));
+        }
     }
 
     private void syncGoogleFit() {
@@ -283,4 +434,16 @@ public class DeviceActivity extends BaseActivity implements View.OnClickListener
         }
     }*/
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        strFitbit = intent.getDataString();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (connection != null)
+            this.unbindService(connection);
+        connection = null;
+    }
 }

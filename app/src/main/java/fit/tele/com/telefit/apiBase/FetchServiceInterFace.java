@@ -23,6 +23,7 @@ import fit.tele.com.telefit.modelBean.ExercisesBean;
 import fit.tele.com.telefit.modelBean.ExercisesListBean;
 import fit.tele.com.telefit.modelBean.FoodCategoryBean;
 import fit.tele.com.telefit.modelBean.GoalBarBean;
+import fit.tele.com.telefit.modelBean.GoalBean;
 import fit.tele.com.telefit.modelBean.LoginBean;
 import fit.tele.com.telefit.modelBean.MealCategoryBean;
 import fit.tele.com.telefit.modelBean.ModelBean;
@@ -30,6 +31,7 @@ import fit.tele.com.telefit.modelBean.NewRecipeBean;
 import fit.tele.com.telefit.modelBean.NutritionBarBean;
 import fit.tele.com.telefit.modelBean.PaymentInfoBean;
 import fit.tele.com.telefit.modelBean.PrivacyBean;
+import fit.tele.com.telefit.modelBean.RecipeListBean;
 import fit.tele.com.telefit.modelBean.RoutinePlanBean;
 import fit.tele.com.telefit.modelBean.RoutinePlanDetailsBean;
 import fit.tele.com.telefit.modelBean.RoutinePlanListBean;
@@ -48,6 +50,7 @@ import okhttp3.ResponseBody;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -160,14 +163,14 @@ public interface FetchServiceInterFace {
     @POST("customer/post-list")
     Observable<ModelBean<ArrayList<CreatePostBean>>> getAllActivities(@Body Map<String, String> params); //done
 
-    @POST("customer/cust_add_meals")
+    @POST("customer/cust_add_recipe")
     Observable<ModelBean<NewRecipeBean>> createRecipeApi(@Body NewRecipeBean request); //done
 
-     @POST("customer/send-notification")
-    Observable<ModelBean<UserModel>> sendNotification(@Body Map<String, String> params); //done
+    @POST("customer/cust_add_meals")
+    Observable<ModelBean<NewRecipeBean>> createMealApi(@Body NewRecipeBean request); //done
 
-    @POST("customer/cust_get_recipe")
-    Observable<ModelBean<ArrayList<CreatedRecipeListBean>>> getRecipeApi(); //done
+    @POST("customer/send-notification")
+    Observable<ModelBean<UserModel>> sendNotification(@Body Map<String, String> params); //done
 
     @POST("customer/customer_exe_plane_delete")
     Observable<ModelBean<ArrayList<RoutinePlanBean>>> deleteRoutine(@Body Map<String, String> params); //done
@@ -184,8 +187,11 @@ public interface FetchServiceInterFace {
     @POST("customer/add_food_category")
     Observable<ModelBean<ArrayList<FoodCategoryBean>>> setSnackAPI(@Body Map<String, String> params); //done
 
+    @POST("customer/cust_get_recipe")
+    Observable<ModelBean<ArrayList<RecipeListBean>>> getRecipeApi(@Body Map<String, String> params); //done
+
     @POST("customer/cust_get_recipe_details")
-    Observable<ModelBean<NewRecipeBean>> getRecipeApi(@Body Map<String, String> params); //done
+    Observable<ModelBean<ChompProductBean>> getRecipeDetailsApi(@Body Map<String, String> params); //done
 
     @POST("customer/cust_edit_recipe")
     Observable<ModelBean<NewRecipeBean>> editRecipeApi(@Body NewRecipeBean request); //done
@@ -208,6 +214,9 @@ public interface FetchServiceInterFace {
     @POST("customer/cust_delete_food")
     Observable<ModelBean<ArrayList<ChompProductBean>>> deleteFood(@Body Map<String, String> params); //done
 
+    @POST("customer/cust_delete_recipe")
+    Observable<ModelBean<ArrayList<RecipeListBean>>> deleteRecipe(@Body Map<String, String> params); //done
+
     @POST("customer/cust_get_meals_food_category")
     Observable<ModelBean<ArrayList<MealCategoryBean>>> getMealCatApi(@Body Map<String, String> params); //done
 
@@ -221,7 +230,10 @@ public interface FetchServiceInterFace {
     Observable<ModelBean<LoginBean>> setHelp(@Body Map<String, String> params); //done
 
     @POST("customer/cust_goal_add")
-    Observable<ModelBean<LoginBean>> setGoals(@Body Map<String, String> params); //done
+    Observable<ModelBean<GoalBean>> setGoals(@Body Map<String, String> params); //done
+
+    @POST("customer/cust_goal_edit")
+    Observable<ModelBean<GoalBean>> getGoals(@Body Map<String, String> params); //done
 
     @POST("customer/cust_set_notification")
     Observable<ModelBean<LoginBean>> setNotificationSettings(@Body Map<String, String> params); //done
@@ -264,5 +276,21 @@ public interface FetchServiceInterFace {
 
     @POST("customer/cust_goal_get")
     Observable<ModelBean<GoalBarBean>> getGoalApi(@Body Map<String, String> params); //done
+
+    @GET("request_token")
+    rx.Observable<ResponseBody> getFitbit(@Query("oauth_consumer_key") String ock, @Query("name") String appid);
+
+    @GET("date/2019-11-26.json")
+    rx.Observable<ResponseBody> getFitbitCalories(@Header("Authorization")String accessToken);
+
+    @POST("customer/send_request_cust_to_trainer")
+    Observable<ModelBean<TrainerBean>> sendRequest(@Body Map<String, String> params); //done
+
+    @POST("customer/trainer_profile")
+    Observable<ModelBean<TrainerBean>> getTrainerApi(); //done
+
+    @GET("token")
+    rx.Observable<ResponseBody> getRefreshToken(@Query("grant_type") String q, @Query("refresh_token") String token);
+
 
 }

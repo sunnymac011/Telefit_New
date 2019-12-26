@@ -3,15 +3,27 @@ package fit.tele.com.telefit.activity;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import fit.tele.com.telefit.R;
+import fit.tele.com.telefit.apiBase.FetchServiceBase;
 import fit.tele.com.telefit.base.BaseActivity;
 import fit.tele.com.telefit.databinding.ActivityTrainerProfileBinding;
+import fit.tele.com.telefit.modelBean.ModelBean;
+import fit.tele.com.telefit.modelBean.RoutinePlanBean;
 import fit.tele.com.telefit.modelBean.TrainerBean;
 import fit.tele.com.telefit.utils.CircleTransform;
+import fit.tele.com.telefit.utils.CommonUtils;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class TrainerProfileActivity extends BaseActivity implements View.OnClickListener {
 
@@ -68,6 +80,17 @@ public class TrainerProfileActivity extends BaseActivity implements View.OnClick
                 binding.txtAddress.setText(data.getCity()+", "+data.getState());
             if(data.getDescription() != null && !TextUtils.isEmpty(data.getDescription()))
                 binding.txtTrainerDetails.setText(data.getDescription());
+            if(data.getIsSubscribe() != null && data.getIsSubscribe().equalsIgnoreCase("1"))
+                binding.txtRequestTrainer.setText("Schedule Conference >");
+            else {
+                if(data.getIsAccept() != null && data.getIsAccept().equalsIgnoreCase("Accept"))
+                    binding.txtRequestTrainer.setText("Buy Package >");
+                if(data.getIsAccept() != null && data.getIsAccept().equalsIgnoreCase("Pending"))
+                    binding.txtRequestTrainer.setText("Request Pending");
+                else
+                    binding.txtRequestTrainer.setText("Request Trainer >");
+            }
+
         }
     }
 
@@ -106,9 +129,21 @@ public class TrainerProfileActivity extends BaseActivity implements View.OnClick
                 break;
 
             case R.id.txt_request_trainer :
-                intent = new Intent(context, VideoConferenceActivity.class);
-                startActivity(intent);
-                this.overridePendingTransition(0, 0);
+                if(trainerBean.getIsSubscribe() != null && trainerBean.getIsSubscribe().equalsIgnoreCase("1"))
+                {
+                    intent = new Intent(context, VideoConferenceActivity.class);
+                    startActivity(intent);
+                    this.overridePendingTransition(0, 0);
+                }
+                else {
+                    if(trainerBean.getIsAccept() != null && trainerBean.getIsAccept().equalsIgnoreCase("Accept"))
+                        binding.txtRequestTrainer.setText("Buy Package >");
+                    if(trainerBean.getIsAccept() != null && trainerBean.getIsAccept().equalsIgnoreCase("Pending"))
+                        binding.txtRequestTrainer.setText("Request Pending");
+                    else
+                        sendRequest(trainerBean.getId());
+                }
+
                 break;
         }
     }
@@ -117,5 +152,42 @@ public class TrainerProfileActivity extends BaseActivity implements View.OnClick
     public void onBackPressed() {
         super.onBackPressed();
         this.overridePendingTransition(0, 0);
+    }
+
+    private void sendRequest(String trainer_id) {
+        if (CommonUtils.isInternetOn(context)) {
+            binding.progress.setVisibility(View.VISIBLE);
+            HashMap<String, String> map = new HashMap<>();
+            map.put("trainer_id",trainer_id);
+
+            Observable<ModelBean<TrainerBean>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).sendRequest(map);
+            subscription = signupusers.subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<ModelBean<TrainerBean>>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            Log.e("deleteRoutine"," "+e);
+                            binding.progress.setVisibility(View.GONE);
+                        }
+                        @Override
+                        public void onNext(ModelBean<TrainerBean> arrayListModelBean) {
+                            binding.progress.setVisibility(View.GONE);
+                            if (arrayListModelBean.getStatus().toString().equalsIgnoreCase("1") )
+                            {
+                                Intent intent = new Intent(context,TrainersActivity.class);
+                                startActivity(intent);
+                            }
+                            else
+                                CommonUtils.toast(context, ""+arrayListModelBean.getMessage());
+                        }
+                    });
+
+        } else {
+            CommonUtils.toast(context, context.getString(R.string.snack_bar_no_internet));
+        }
     }
 }

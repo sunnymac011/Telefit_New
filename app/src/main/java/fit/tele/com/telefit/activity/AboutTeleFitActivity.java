@@ -65,10 +65,5 @@ public class AboutTeleFitActivity extends BaseActivity implements View.OnClickLi
                 startActivity(intent);
                 break;
         }
-
-        //Changes sunny
-        //New thing
-        // again
-        //HEllo
     }
 }

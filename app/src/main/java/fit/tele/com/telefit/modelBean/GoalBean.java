@@ -63,7 +63,7 @@ public class GoalBean implements Parcelable {
     @SerializedName("updated_at")
     @Expose
     public String updatedAt;
-    @SerializedName("goal_date")
+    @SerializedName("goal_day_date")
     @Expose
     public String goalDate;
     @SerializedName("meal_protein")

@@ -2,6 +2,7 @@ package fit.tele.com.telefit.activity;
 
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
@@ -28,6 +29,8 @@ import fit.tele.com.telefit.databinding.ActivityGoalsBinding;
 import fit.tele.com.telefit.dialog.AddGoalsDialog;
 import fit.tele.com.telefit.dialog.AddGoalsWeightDialog;
 import fit.tele.com.telefit.dialog.SetNumbersDialog;
+import fit.tele.com.telefit.modelBean.GoalBarBean;
+import fit.tele.com.telefit.modelBean.GoalBean;
 import fit.tele.com.telefit.modelBean.LoginBean;
 import fit.tele.com.telefit.modelBean.ModelBean;
 import fit.tele.com.telefit.utils.CommonUtils;
@@ -45,6 +48,7 @@ public class EditGoalsActivity extends BaseActivity implements View.OnClickListe
     private Map<String, String> map = new HashMap<>();
     private Calendar calendar = Calendar.getInstance();
     private DateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
+    private String strDate = "";
 
     @Override
     public int getLayoutResId() {
@@ -79,11 +83,17 @@ public class EditGoalsActivity extends BaseActivity implements View.OnClickListe
         binding.txtWaterCount.setOnClickListener(this);
         binding.txtWeightCount.setOnClickListener(this);
 
+        if (preferences.getGoalDatePref()!= null && !TextUtils.isEmpty(preferences.getGoalDatePref()))
+            strDate = preferences.getGoalDatePref();
+        else
+            strDate = format1.format(calendar.getTime());
+
+        callGetGoalsApi(strDate);
         binding.txtAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (validation())
-                    callSetGoalsApi(format1.format(calendar.getTime()));
+                    callSetGoalsApi(strDate);
             }
 
             private boolean validation() {
@@ -123,6 +133,17 @@ public class EditGoalsActivity extends BaseActivity implements View.OnClickListe
                     return true;
             }
         });
+    }
+
+    private void setData(GoalBean goalBean) {
+        binding.txtProteinCount.setText(goalBean.getProtein()+"g");
+        binding.txtCarbsCount.setText(goalBean.getCarbs()+"g");
+        binding.txtFatCount.setText(goalBean.getFat()+"g");
+        binding.txtBfatCount.setText(goalBean.getGoalBodyFat()+"%, "+goalBean.getBodyFat()+"%");
+        binding.txtCholesterolCount.setText(goalBean.getCholesterol()+"mg");
+        binding.txtFiberCount.setText(goalBean.getFiber()+"g");
+        binding.txtWaterCount.setText(goalBean.getGoalWater()+"fl, "+goalBean.getWater()+"oz");
+        binding.txtWeightCount.setText(goalBean.getGoalWeight()+goalBean.getWeightType()+", "+goalBean.getWeight()+goalBean.getWeightType());
     }
 
     @Override
@@ -259,10 +280,10 @@ public class EditGoalsActivity extends BaseActivity implements View.OnClickListe
             binding.progress.setVisibility(View.VISIBLE);
             map.put("goal_date", strDate);
 
-            Observable<ModelBean<LoginBean>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).setGoals(map);
+            Observable<ModelBean<GoalBean>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).setGoals(map);
             subscription = signupusers.subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Subscriber<ModelBean<LoginBean>>() {
+                    .subscribe(new Subscriber<ModelBean<GoalBean>>() {
                         @Override
                         public void onCompleted() {
                         }
@@ -271,19 +292,62 @@ public class EditGoalsActivity extends BaseActivity implements View.OnClickListe
                         public void onError(Throwable e) {
                             e.printStackTrace();
                             CommonUtils.toast(context, e.getMessage());
-                            Log.e("callSubmitHelpApi "," "+e);
+                            Log.e("callSetGoalsApi "," "+e);
                             binding.progress.setVisibility(View.GONE);
                         }
 
                         @Override
-                        public void onNext(ModelBean<LoginBean> loginBean) {
+                        public void onNext(ModelBean<GoalBean> goalBarBean) {
                             binding.progress.setVisibility(View.GONE);
-                            if (loginBean.getStatus() == 1) {
+                            if (goalBarBean.getStatus() == 1) {
+                                if (strDate.equalsIgnoreCase(format1.format(calendar.getTime()))) {
+                                    LoginBean loginBean = preferences.getUserDataPref();
+                                    loginBean.setWeight(goalBarBean.getResult().getWeight());
+                                    preferences.saveUserData(loginBean);
+                                }
+
                                 Intent intent = new Intent(context, GoalsActivity.class);
                                 startActivity(intent);
                                 overridePendingTransition(0, 0);
                             } else
-                                CommonUtils.toast(context,loginBean.getMessage());
+                                CommonUtils.toast(context,goalBarBean.getMessage());
+                        }
+                    });
+
+        } else {
+            CommonUtils.toast(context, context.getString(R.string.snack_bar_no_internet));
+        }
+    }
+
+    private void callGetGoalsApi(String strDate) {
+        if (CommonUtils.isInternetOn(context)) {
+            binding.progress.setVisibility(View.VISIBLE);
+            map.put("goal_day_date", strDate);
+
+            Observable<ModelBean<GoalBean>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).getGoals(map);
+            subscription = signupusers.subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<ModelBean<GoalBean>>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+
+                        @Override
+
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            CommonUtils.toast(context, e.getMessage());
+                            Log.e("callGetGoalsApi "," "+e);
+                            binding.progress.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onNext(ModelBean<GoalBean> goalBean) {
+                            binding.progress.setVisibility(View.GONE);
+                            if (goalBean.getStatus() == 1) {
+                                setData(goalBean.getResult());
+                            } else
+                                CommonUtils.toast(context,goalBean.getMessage());
                         }
                     });
 

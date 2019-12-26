@@ -201,10 +201,7 @@ public class Preferences {
 
     public String getRecipeDataPref() {
         SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
-        Gson gson = new Gson();
         String json = preferences.getString("RecipeData", null);
-        Type type = new TypeToken<ArrayList<ChompProductBean>>() {
-        }.getType();
         return json;
     }
 
@@ -223,6 +220,26 @@ public class Preferences {
         SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("RecipeData", null);
+        editor.apply();
+    }
+
+    public String getRecipeNameDataPref() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        String json = preferences.getString("RecipePrefBean", null);
+        return json;
+    }
+
+    public void saveRecipeNameData(String recipeName) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("RecipePrefBean", recipeName);
+        editor.apply();
+    }
+
+    public void cleanRecipeNamedata() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("RecipePrefBean", null);
         editor.apply();
     }
 
@@ -480,14 +497,79 @@ public class Preferences {
 
     public String getBurnedCaloriesPref() {
         SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
-        String json = preferences.getString("burnedCalories", "0");
+        String json = preferences.getString("GoogleburnedCalories", "0");
         return json;
     }
 
     public void saveBurnedCaloriesData(String burnedCalories) {
         SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("burnedCalories", burnedCalories);
+        editor.putString("GoogleburnedCalories", burnedCalories);
+        editor.apply();
+    }
+
+    public String getFitbitBurnedCaloriesPref() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        String json = preferences.getString("FitbitburnedCalories", "0");
+        return json;
+    }
+
+    public void saveFitbitBurnedCaloriesData(String burnedCalories) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("FitbitburnedCalories", burnedCalories);
+        editor.apply();
+    }
+
+    public String getFitbitTokenPref() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        String json = preferences.getString("FitbitToken", "0");
+        return json;
+    }
+
+    public void saveFitbitTokenData(String burnedCalories) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("FitbitToken", burnedCalories);
+        editor.apply();
+    }
+
+    public String getFitbitIDPref() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        String json = preferences.getString("FitbitID", "0");
+        return json;
+    }
+
+    public void saveFitbitIDData(String burnedCalories) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("FitbitID", burnedCalories);
+        editor.apply();
+    }
+
+    public String getFitbitTypePref() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        String json = preferences.getString("FitbitType", "0");
+        return json;
+    }
+
+    public void saveFitbitTypeData(String burnedCalories) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("FitbitType", burnedCalories);
+        editor.apply();
+    }
+
+    public String getGoalDatePref() {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        String json = preferences.getString("GoalDate", "0");
+        return json;
+    }
+
+    public void saveGoalDateData(String GoalDate) {
+        SharedPreferences preferences = context.getSharedPreferences(context.getString(R.string.share_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("GoalDate", GoalDate);
         editor.apply();
     }
 }
