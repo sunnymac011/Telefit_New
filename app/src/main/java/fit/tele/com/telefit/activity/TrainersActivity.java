@@ -60,6 +60,7 @@ public class TrainersActivity extends BaseActivity implements View.OnClickListen
                 public void onClick(TrainerBean trainerBean) {
                     Intent intent = new Intent(context, TrainerProfileActivity.class);
                     intent.putExtra("TrainerBean", trainerBean);
+                    intent.putExtra("from", "TrainerList");
                     startActivity(intent);
                     overridePendingTransition(0, 0);
                 }

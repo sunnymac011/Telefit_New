@@ -200,6 +200,10 @@ public class AddFoodActivity extends BaseActivity implements View.OnClickListene
         else
             binding.imgFood.setImageResource(R.drawable.empty_food);
 
+        if (chompProductBean.getServingQtySecond() != 0)
+            doubleHalfQty = chompProductBean.getServingQtySecond();
+        if (chompProductBean.getServingQty() != 0)
+            intQty = chompProductBean.getServingQty();
         setData();
     }
 

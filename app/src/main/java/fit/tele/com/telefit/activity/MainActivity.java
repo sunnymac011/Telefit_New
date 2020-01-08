@@ -136,18 +136,27 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
         txt_show_chart_nutrients.setOnClickListener(this);
         txt_calories_date = (TextView) findViewById(R.id.txt_calories_date);
         txt_calories_date.setOnClickListener(this);
-        txt_calories_date.setText(format1.format(calendar.getTime()));
-        preferences.saveGoalDateData(format1.format(calendar.getTime()));
         txt_nutrition_date = (TextView) findViewById(R.id.txt_nutrition_date);
         txt_nutrition_date.setOnClickListener(this);
-        txt_nutrition_date.setText(format1.format(calendar.getTime()));
 
         binding.llProfile.setOnClickListener(this);
         binding.llFitness.setOnClickListener(this);
         binding.llGoals.setOnClickListener(this);
         binding.llSocial.setOnClickListener(this);
 
-        callGetCaloriesApi(format1.format(calendar.getTime()));
+        if (preferences.getGoalDatePref().equalsIgnoreCase("0"))
+        {
+            txt_nutrition_date.setText(format1.format(calendar.getTime()));
+            txt_calories_date.setText(format1.format(calendar.getTime()));
+            preferences.saveGoalDateData(format1.format(calendar.getTime()));
+            callGetCaloriesApi(format1.format(calendar.getTime()));
+        }
+        else {
+            txt_nutrition_date.setText(preferences.getGoalDatePref());
+            txt_calories_date.setText(preferences.getGoalDatePref());
+            preferences.saveGoalDateData(preferences.getGoalDatePref());
+            callGetCaloriesApi(preferences.getGoalDatePref());
+        }
     }
 
     @Override
@@ -157,12 +166,29 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
         {
             case R.id.txt_calories_tab:
                 binding.vf.setDisplayedChild(0);
-                callGetCaloriesApi(format1.format(calendar.getTime()));
+                if (preferences.getGoalDatePref().equalsIgnoreCase("0"))
+                {
+                    callGetCaloriesApi(format1.format(calendar.getTime()));
+                    preferences.saveGoalDateData(format1.format(calendar.getTime()));
+                }
+                else {
+                    callGetCaloriesApi(preferences.getGoalDatePref());
+                    preferences.saveGoalDateData(preferences.getGoalDatePref());
+                }
                 break;
 
             case R.id.txt_nutrients_tab:
                 binding.vf.setDisplayedChild(1);
-                callGetNutritionApi(format1.format(calendar.getTime()));
+                if (preferences.getGoalDatePref().equalsIgnoreCase("0"))
+                {
+                    callGetNutritionApi(format1.format(calendar.getTime()));
+                    preferences.saveGoalDateData(format1.format(calendar.getTime()));
+                }
+                else {
+                    callGetNutritionApi(preferences.getGoalDatePref());
+                    preferences.saveGoalDateData(preferences.getGoalDatePref());
+                }
+
                 break;
 
             case R.id.ll_profile:
@@ -202,9 +228,6 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
                 break;
 
             case R.id.txt_show_log_calories:
-
-
-
                 ll_calories_details.setVisibility(View.VISIBLE);
                 rl_calories_bar.setVisibility(View.GONE);
                 break;
@@ -300,11 +323,14 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
             txt_calories_remainder_date.setText(""+format1.format(cal.getTime()));
         }
 
-        if (preferences.getUserDataPref().getWeightType().equalsIgnoreCase("kg"))
-            weight = Float.parseFloat(preferences.getUserDataPref().getWeight());
-        else
-            weight = (float) (Float.parseFloat(preferences.getUserDataPref().getWeight())*0.453592);
-        if (preferences.getUserDataPref().getHeight() != null)
+        if (preferences.getUserDataPref() != null && preferences.getUserDataPref().getWeight() != null) {
+            if (preferences.getUserDataPref().getWeightType() != null &&
+                    preferences.getUserDataPref().getWeightType().equalsIgnoreCase("kg"))
+                weight = Float.parseFloat(preferences.getUserDataPref().getWeight());
+            else
+                weight = (float) (Float.parseFloat(preferences.getUserDataPref().getWeight())*0.453592);
+        }
+        if (preferences.getUserDataPref() != null && preferences.getUserDataPref().getHeight() != null)
         {
             if (preferences.getUserDataPref().getHeightType() != null) {
                 if (preferences.getUserDataPref().getHeightType().equalsIgnoreCase("ft")) {
@@ -323,7 +349,7 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
             }
 
         }
-        if (preferences.getUserDataPref().getDob() != null)
+        if (preferences.getUserDataPref() != null && preferences.getUserDataPref().getDob() != null)
         {
             String[] items1 = preferences.getUserDataPref().getDob().split("[/-]");
             String year = items1[0];
@@ -332,7 +358,7 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
             age = CommonUtils.getAge(Integer.parseInt(year),Integer.parseInt(month),Integer.parseInt(date1));
         }
 
-        if (preferences.getUserDataPref().getGender().equalsIgnoreCase("male"))
+        if (preferences.getUserDataPref() != null && preferences.getUserDataPref().getGender().equalsIgnoreCase("male"))
             bmr = (float)(66+(13.7*weight)+(5*height)-(6.8*age));
         else
             bmr = (float)(655+(9.6*weight)+(1.8*height)-(4.7*age));

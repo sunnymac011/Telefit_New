@@ -183,7 +183,7 @@ public class DeviceActivity extends BaseActivity implements View.OnClickListener
 
     private void syncFitbit() {
         binding.progress.setVisibility(View.VISIBLE);
-        if (TextUtils.isEmpty(preferences.getFitbitTokenPref()) || preferences.getFitbitTokenPref().equalsIgnoreCase("0")) {
+//        if (TextUtils.isEmpty(preferences.getFitbitTokenPref()) || preferences.getFitbitTokenPref().equalsIgnoreCase("0")) {
             connection = new CustomTabsServiceConnection() {
                 @Override
                 public void onCustomTabsServiceConnected(ComponentName componentName, CustomTabsClient client) {
@@ -201,12 +201,13 @@ public class DeviceActivity extends BaseActivity implements View.OnClickListener
             };
             CustomTabsClient.bindCustomTabsService(context, "com.android.chrome", connection);
             binding.progress.setVisibility(View.GONE);
-        }
-        else
-        {
-            binding.progress.setVisibility(View.GONE);
-            callFitbitApi(preferences.getFitbitTypePref()+" "+preferences.getFitbitTokenPref());
-        }
+//        }
+//        else
+//        {
+//            binding.progress.setVisibility(View.GONE);
+//            callFitbitRefreshApi(preferences.getFitbitTokenPref());
+////            callFitbitApi(preferences.getFitbitTypePref()+" "+preferences.getFitbitTokenPref());
+//        }
 
     }
 
@@ -237,18 +238,19 @@ public class DeviceActivity extends BaseActivity implements View.OnClickListener
                             try {
 //                                {"success":false,"errors":[{"errorType":"invalid_token","message":"Access token invalid: eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyMkJEUEciLCJzdWIiOiI3Vzc3N0QiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJyYWN0IiwiZXhwIjoxNTc3ODgwNzY1LCJpYXQiOjE1NzcyNzU5ODJ9.Uke31QCg7U9bFr69Qf7zbfjKPn_e1drZApC8JeLSUGE. Visit https://dev.fitbit.com/docs/oauth2 for more information on the Fitbit Web API authorization process."}]}
                                 JSONObject jsonObject = new JSONObject(fitbitJSON.string());
-                                if (!jsonObject.getString("success").equalsIgnoreCase("false")) {
-                                    if (jsonObject.has("summary")) {
+//                                Log.e("success  ",""+jsonObject.getString("success"));
+//                                if (!jsonObject.getString("success").equalsIgnoreCase("false")) {
+//                                    if (jsonObject.has("summary")) {
                                         JSONObject summaryObject = jsonObject.getJSONObject("summary");
                                         String burnedCalories = summaryObject.getString("caloriesOut");
                                         Log.e("burnedCalories",""+burnedCalories);
                                         CommonUtils.toast(context,"Burned Calories synced from Fitbit!");
                                         preferences.saveBurnedCaloriesData(""+burnedCalories);
-                                    }
-                                }
-                                else {
-                                    callFitbitRefreshApi(token);
-                                }
+//                                    }
+//                                }
+//                                else {
+//                                    callFitbitRefreshApi(token);
+//                                }
 
                             }catch (Exception e) {
                                 Log.e("callFitbitApi exc",""+e.getCause());
@@ -278,7 +280,7 @@ public class DeviceActivity extends BaseActivity implements View.OnClickListener
                         public void onError(Throwable e) {
                             e.printStackTrace();
                             CommonUtils.toast(context, e.getMessage());
-                            Log.e("callFitbitApi "," "+e);
+                            Log.e("callFitbitRefreshApi "," "+e);
                             binding.progress.setVisibility(View.GONE);
                         }
 

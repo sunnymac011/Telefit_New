@@ -16,6 +16,7 @@ import fit.tele.com.telefit.databinding.ActivityMainExercisesBinding;
 import fit.tele.com.telefit.modelBean.CategoryBean;
 import fit.tele.com.telefit.modelBean.ModelBean;
 import fit.tele.com.telefit.modelBean.RoutinePlanListBean;
+import fit.tele.com.telefit.modelBean.TrainerBean;
 import fit.tele.com.telefit.utils.CircleTransform;
 import fit.tele.com.telefit.utils.CommonUtils;
 import rx.Observable;
@@ -157,9 +158,7 @@ public class MainExercisesActivity extends BaseActivity implements View.OnClickL
                 break;
 
             case R.id.txt_trainers:
-                intent = new Intent(context, TrainersActivity.class);
-                startActivity(intent);
-                overridePendingTransition(0, 0);
+                getTrainerApi();
                 break;
         }
     }
@@ -191,6 +190,50 @@ public class MainExercisesActivity extends BaseActivity implements View.OnClickL
                             }
                             else
                                 CommonUtils.toast(context, ""+apiExercisesBean.getMessage());
+                        }
+                    });
+
+        } else {
+            CommonUtils.toast(context, context.getString(R.string.snack_bar_no_internet));
+        }
+    }
+
+    private void getTrainerApi() {
+        if (CommonUtils.isInternetOn(context)) {
+            binding.progress.setVisibility(View.VISIBLE);
+
+            Observable<ModelBean<TrainerBean>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).getTrainerApi();
+            subscription = signupusers.subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<ModelBean<TrainerBean>>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            CommonUtils.toast(context, e.getMessage());
+                            Log.e("getTrainerApi"," "+e);
+                            binding.progress.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onNext(ModelBean<TrainerBean> apiExercisesBean) {
+                            binding.progress.setVisibility(View.GONE);
+                            if (apiExercisesBean.getStatus().toString().equalsIgnoreCase("1") )
+                            {
+                                Intent intent = new Intent(context, TrainerProfileActivity.class);
+                                intent.putExtra("TrainerBean", apiExercisesBean.getResult());
+                                intent.putExtra("from", "other");
+                                startActivity(intent);
+                            }
+                            else
+                            {
+                                Intent intent = new Intent(context, TrainersActivity.class);
+                                startActivity(intent);
+                                overridePendingTransition(0, 0);
+                            }
                         }
                     });
 

@@ -5,11 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
+        android:id="@+id/ll_bg"
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/_15sdp"
-        android:background="@drawable/rectangle_main_blue_bg"
+        android:background="@drawable/gradiant_package_bg"
         android:layout_marginRight="@dimen/_20sdp">
 
         <TextView

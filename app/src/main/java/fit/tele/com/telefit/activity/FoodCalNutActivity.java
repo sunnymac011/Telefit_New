@@ -82,8 +82,6 @@ public class FoodCalNutActivity extends BaseActivity implements View.OnClickList
         preferences.saveGoalDateData(format1.format(calendar.getTime()));
         strSelectedDate = format.format(calendar.getTime());
         strCurrentDate = format2.format(calendar.getTime());
-        calendar.setFirstDayOfWeek(Calendar.SUNDAY);
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
 
         setDates();
 
@@ -593,6 +591,8 @@ public class FoodCalNutActivity extends BaseActivity implements View.OnClickList
     }
 
     private void setDates(){
+        calendar.setFirstDayOfWeek(Calendar.SUNDAY);
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
         for (int i = 0; i < 7; i++)
         {
             if (i==0)

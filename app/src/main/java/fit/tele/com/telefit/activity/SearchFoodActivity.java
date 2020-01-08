@@ -29,6 +29,7 @@ import java.util.Iterator;
 import fit.tele.com.telefit.R;
 import fit.tele.com.telefit.adapter.FoodAdapter;
 import fit.tele.com.telefit.adapter.FoodCategoryAdapter;
+import fit.tele.com.telefit.adapter.MealAdapter;
 import fit.tele.com.telefit.adapter.NewRecipeAdapter;
 import fit.tele.com.telefit.adapter.RecipeFoodAdapter;
 import fit.tele.com.telefit.apiBase.FetchServiceBase;
@@ -58,7 +59,7 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
     private EditText foodSv, edt_recipes, edt_meals,edt_my_food;
     private ArrayList<ChompProductBean> chompProductBeans;
     private int strSelectedTab = 1, strTab = 0;
-    private FoodCategoryAdapter foodCategoryAdapter;
+    private MealAdapter mealAdapter;
     private ImageView img_search_barcode,img_my_barcode,img_meals_barcode,img_recipes_barcode;
     private LinearLayout ll_add_meal,ll_add_recipe;
     private ImageView img_search;
@@ -379,8 +380,8 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
         rv_meals = (RecyclerView) findViewById(R.id.rv_meals);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         rv_meals.setLayoutManager(linearLayoutManager);
-        foodCategoryAdapter = null;
-        foodCategoryAdapter = new FoodCategoryAdapter(context, new FoodCategoryAdapter.ClickListener() {
+        mealAdapter = null;
+        mealAdapter = new MealAdapter(context, new MealAdapter.ClickListener() {
             @Override
             public void onClick(FoodCategoryBean categoryBean, boolean isBarcode) {
                 if (isBarcode) {
@@ -416,8 +417,8 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
                 callGetMealApi(categoryBean.getId(),categoryBean.getRecipeBeans().get(0).getId());
             }
         });
-        rv_meals.setAdapter(foodCategoryAdapter);
-        foodCategoryAdapter.clearAll();
+        rv_meals.setAdapter(mealAdapter);
+        mealAdapter.clearAll();
 
         edt_meals.addTextChangedListener(new TextWatcher() {
             @Override
@@ -427,7 +428,7 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                foodCategoryAdapter.filter(edt_meals.getText().toString());
+                mealAdapter.filter(edt_meals.getText().toString());
             }
 
             @Override
@@ -439,7 +440,7 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
         ll_add_meal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int newSnack = (foodCategoryAdapter.getItemCount()-5)+3;
+                int newSnack = (mealAdapter.getItemCount()-5)+3;
                 Intent intent = new Intent(SearchFoodActivity.this, NewMealActivity.class);
                 intent.putExtra("recipeName","Snack"+newSnack);
                 intent.putExtra("foodCatID","0");
@@ -568,7 +569,7 @@ public class SearchFoodActivity extends BaseActivity implements View.OnClickList
                             binding.progress.setVisibility(View.GONE);
                             if (apiFoodBean.getStatus().toString().equalsIgnoreCase("1") )
                             {
-                                foodCategoryAdapter.addAllList(apiFoodBean.getResult());
+                                mealAdapter.addAllList(apiFoodBean.getResult());
                             }
                             else
                                 CommonUtils.toast(context, ""+apiFoodBean.getMessage());

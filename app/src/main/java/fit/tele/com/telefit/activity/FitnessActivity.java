@@ -192,10 +192,15 @@ public class FitnessActivity extends BaseActivity implements View.OnClickListene
                             {
                                 Intent intent = new Intent(context, TrainerProfileActivity.class);
                                 intent.putExtra("TrainerBean", apiExercisesBean.getResult());
+                                intent.putExtra("from", "other");
                                 startActivity(intent);
                             }
                             else
-                                CommonUtils.toast(context, ""+apiExercisesBean.getMessage());
+                            {
+                                Intent intent = new Intent(context, TrainersActivity.class);
+                                startActivity(intent);
+                                overridePendingTransition(0, 0);
+                            }
                         }
                     });
 

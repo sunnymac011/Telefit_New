@@ -11,7 +11,8 @@
             android:id="@+id/rl_main_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/main_color">
+            android:background="@color/main_color"
+            android:paddingBottom="@dimen/_20sdp">
 
             <RelativeLayout
                 android:id="@+id/rl_header"
@@ -84,7 +85,6 @@
                 android:fontFamily="@font/rubik"
                 android:layout_below="@+id/ratingbar_trainer"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:layout_marginBottom="@dimen/_20sdp"
                 android:layout_centerHorizontal="true"/>
 
         </RelativeLayout>
@@ -99,6 +99,34 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/ll_buttons"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/img_video"
+                        android:layout_width="@dimen/_45sdp"
+                        android:layout_height="@dimen/_35sdp"
+                        android:background="@drawable/gradiant_package_bg"
+                        android:src="@drawable/video_camera"
+                        android:padding="@dimen/_10sdp"/>
+
+                    <ImageView
+                        android:id="@+id/img_message"
+                        android:layout_width="@dimen/_45sdp"
+                        android:layout_height="@dimen/_35sdp"
+                        android:background="@drawable/gradiant_package_bg"
+                        android:src="@drawable/send_msg"
+                        android:padding="@dimen/_10sdp"
+                        android:layout_marginLeft="@dimen/_10sdp"/>
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/txt_trainer_details"

@@ -15,14 +15,23 @@ import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.StackedValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.Utils;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -43,16 +52,14 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class GoalsActivity extends BaseActivity implements View.OnClickListener {
+public class GoalsActivity extends BaseActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
 
     ActivityGoalsBinding binding;
     private DateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
     private GoalCategoryAdapter goalCategoryAdapter;
     private ArrayList<String> goalList = new ArrayList<>();
-    private ArrayList<Entry> entries = new ArrayList<>();
     private GoalBarBean goalBarBean;
-    private LimitLine ll1;
-    private String[] months;
+    private DatePickerDialog dpd;
 
     @Override
     public int getLayoutResId() {
@@ -95,7 +102,17 @@ public class GoalsActivity extends BaseActivity implements View.OnClickListener 
         goalCategoryAdapter.clearAll();
         goalCategoryAdapter.addAllList(goalList);
 
-        callGetGoalApi(format1.format(calendar.getTime()));
+        binding.txtGoalDate.setOnClickListener(this);
+        if (preferences.getGoalDatePref().equalsIgnoreCase("0"))
+        {
+            binding.txtGoalDate.setText(format1.format(calendar.getTime()));
+            callGetGoalApi(format1.format(calendar.getTime()));
+        }
+        else
+        {
+            binding.txtGoalDate.setText(preferences.getGoalDatePref());
+            callGetGoalApi(preferences.getGoalDatePref());
+        }
     }
 
     @Override
@@ -131,83 +148,10 @@ public class GoalsActivity extends BaseActivity implements View.OnClickListener 
                 startActivity(intent);
                 overridePendingTransition(0, 0);
                 break;
-        }
-    }
 
-    public void renderData() {
-        binding.lineChart.clear();
-        binding.lineChart.setTouchEnabled(false);
-        binding.lineChart.setPinchZoom(false);
-        binding.lineChart.getDescription().setEnabled(false);
-        binding.lineChart.getLegend().setEnabled(false);
-        XAxis xAxis = binding.lineChart.getXAxis();
-        // Set the xAxis position to bottom. Default is top
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        //Customizing x axis value
-
-        IAxisValueFormatter formatter = new IAxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-                if (months.length == 1)
-                    return months[0];
-                else
-                    return months[(int) value];
-            }
-        };
-        xAxis.setGranularity(1f); // minimum axis-step (interval) is 1
-        xAxis.setValueFormatter(formatter);
-        xAxis.setDrawAxisLine(false);
-        xAxis.setDrawGridLines(false);
-
-        YAxis leftAxis = binding.lineChart.getAxisLeft();
-        leftAxis.removeAllLimitLines();
-
-        if (ll1 != null)
-            leftAxis.addLimitLine(ll1);
-        leftAxis.setAxisMinimum(0f);
-        leftAxis.setDrawZeroLine(false);
-        leftAxis.setDrawLimitLinesBehindData(false);
-        leftAxis.setDrawAxisLine(false);
-        leftAxis.setDrawGridLines(false);
-
-        binding.lineChart.getAxisRight().setEnabled(false);
-        setData();
-    }
-
-    private void setData() {
-
-//        ArrayList<Entry> values = new ArrayList<>();
-//        values.add(new Entry(0, 50));
-//        values.add(new Entry(1, 100));
-//        values.add(new Entry(2, 80));
-//        values.add(new Entry(3, 120));
-//        values.add(new Entry(4, 110));
-
-        LineDataSet set1;
-        if (binding.lineChart.getData() != null &&
-                binding.lineChart.getData().getDataSetCount() > 0) {
-            set1 = (LineDataSet) binding.lineChart.getData().getDataSetByIndex(0);
-            set1.setValues(entries);
-            binding.lineChart.getData().notifyDataChanged();
-            binding.lineChart.notifyDataSetChanged();
-        } else {
-            set1 = new LineDataSet(entries, "");
-            set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-            set1.setDrawIcons(false);
-            set1.setDrawValues(false);
-            set1.setColor(getResources().getColor(R.color.main_color));
-            set1.setCircleColor(getResources().getColor(R.color.light_blue));
-            set1.setLineWidth(3f);
-            set1.setCircleRadius(6f);
-            set1.setDrawCircleHole(false);
-            set1.setDrawFilled(false);
-            set1.setFormLineWidth(1f);
-            ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-            dataSets.add(set1);
-            LineData data = new LineData(dataSets);
-            binding.lineChart.setData(data);
-            binding.lineChart.animateX(1500);
-            binding.lineChart.invalidate();
+            case R.id.txt_goal_date:
+                datePicker();
+                break;
         }
     }
 
@@ -240,34 +184,10 @@ public class GoalsActivity extends BaseActivity implements View.OnClickListener 
                             if (apiFoodBean.getStatus().toString().equalsIgnoreCase("1") )
                             {
                                 goalBarBean = apiFoodBean.getResult();
-                                entries.clear();
                                 if (goalBarBean != null && goalBarBean.getGoalDetails() != null && goalBarBean.getGoalDetails().size() > 0)
                                 {
-                                    if (goalBarBean.getGoalWater() != null) {
-                                        ll1 = new LimitLine(Float.parseFloat(goalBarBean.getGoalWater()), "Goal");
-                                        ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                                        ll1.setLineWidth(2f);
-                                    }
-                                    months = new String[goalBarBean.getGoalDetails().size()];
-                                    for (int i=0;i<goalBarBean.getGoalDetails().size();i++) {
-                                        try {
-                                            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                                            Date date = format.parse(goalBarBean.getGoalDetails().get(i).getGoalDate());
-                                            DateFormat format2=new SimpleDateFormat("dd");
-                                            Log.e("date",""+format2.format(date));
-                                            months[i] = (String) format2.format(date);
-
-                                        } catch (Exception e) {
-                                            Log.e("date Exception",""+e.getMessage());
-                                        }
-                                        if (goalBarBean.getGoalDetails() != null && goalBarBean.getGoalDetails().get(i).getWater() != null &&
-                                                !TextUtils.isEmpty(goalBarBean.getGoalDetails().get(i).getWater()))
-                                            entries.add(new Entry(i, Float.parseFloat(goalBarBean.getGoalDetails().get(i).getWater())));
-                                        else
-                                            entries.add(new Entry(i, 0));
-                                    }
+                                    
                                 }
-                                renderData();
                             }
                         }
                     });
@@ -278,215 +198,255 @@ public class GoalsActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void setLineChartData(String selectedNutrition){
-        entries.clear();
         if (goalBarBean != null && goalBarBean.getGoalDetails() != null && goalBarBean.getGoalDetails().size() > 0)
         {
             if (selectedNutrition.equalsIgnoreCase("Protein")) {
-                if (goalBarBean.getProtein() != null) {
-                    ll1 = new LimitLine(Float.parseFloat(goalBarBean.getProtein()), "Goal");
-                    ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                    ll1.setLineWidth(2f);
-                }
-
-                months = new String[goalBarBean.getGoalDetails().size()];
-                for (int i=0;i<goalBarBean.getGoalDetails().size();i++) {
-                    try {
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                        Date date = format.parse(goalBarBean.getGoalDetails().get(i).getGoalDate());
-                        DateFormat format2=new SimpleDateFormat("dd");
-                        Log.e("date",""+format2.format(date));
-                        months[i] = (String) format2.format(date);
-                    } catch (Exception e) {
-                        Log.e("date Exception",""+e.getMessage());
-                    }
-                    if (goalBarBean.getGoalDetails() != null && goalBarBean.getGoalDetails().get(i).getMealProtein() != null &&
-                            !TextUtils.isEmpty(goalBarBean.getGoalDetails().get(i).getMealProtein()))
-                        entries.add(new Entry(i, Float.parseFloat(goalBarBean.getGoalDetails().get(i).getMealProtein())));
-                    else
-                        entries.add(new Entry(i, 0));
-                }
+                
             }
             if (selectedNutrition.equalsIgnoreCase("Carbs")) {
-                if (goalBarBean.getCarbs() != null) {
-                    ll1 = new LimitLine(Float.parseFloat(goalBarBean.getCarbs()), "Goal");
-                    ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                    ll1.setLineWidth(2f);
-                }
-
-                months = new String[goalBarBean.getGoalDetails().size()];
-                for (int i=0;i<goalBarBean.getGoalDetails().size();i++) {
-                    try {
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                        Date date = format.parse(goalBarBean.getGoalDetails().get(i).getGoalDate());
-                        DateFormat format2=new SimpleDateFormat("dd");
-                        Log.e("date",""+format2.format(date));
-                        months[i] = (String) format2.format(date);
-
-                    } catch (Exception e) {
-                        Log.e("date Exception",""+e.getMessage());
-                    }
-                    if (goalBarBean.getGoalDetails() != null && goalBarBean.getGoalDetails().get(i).getMealCarbs() != null &&
-                            !TextUtils.isEmpty(goalBarBean.getGoalDetails().get(i).getMealCarbs()))
-                        entries.add(new Entry(i, Float.parseFloat(goalBarBean.getGoalDetails().get(i).getMealCarbs())));
-                    else
-                        entries.add(new Entry(i, 0));
-                }
+                
             }
             if (selectedNutrition.equalsIgnoreCase("Fat")) {
-                if (goalBarBean.getFat() != null) {
-                    ll1 = new LimitLine(Float.parseFloat(goalBarBean.getFat()), "Goal");
-                    ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                    ll1.setLineWidth(2f);
-                }
-
-                months = new String[goalBarBean.getGoalDetails().size()];
-                for (int i=0;i<goalBarBean.getGoalDetails().size();i++) {
-                    try {
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                        Date date = format.parse(goalBarBean.getGoalDetails().get(i).getGoalDate());
-                        DateFormat format2=new SimpleDateFormat("dd");
-                        Log.e("date",""+format2.format(date));
-                        months[i] = (String) format2.format(date);
-
-                    } catch (Exception e) {
-                        Log.e("date Exception",""+e.getMessage());
-                    }
-                    if (goalBarBean.getGoalDetails() != null && goalBarBean.getGoalDetails().get(i).getMealFat() != null &&
-                            !TextUtils.isEmpty(goalBarBean.getGoalDetails().get(i).getMealFat()))
-                        entries.add(new Entry(i, Float.parseFloat(goalBarBean.getGoalDetails().get(i).getMealFat())));
-                    else
-                        entries.add(new Entry(i, 0));
-                }
+                
             }
             if (selectedNutrition.equalsIgnoreCase("Cholesterol")) {
-                if (goalBarBean.getCholesterol() != null) {
-                    ll1 = new LimitLine(Float.parseFloat(goalBarBean.getCholesterol()), "Goal");
-                    ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                    ll1.setLineWidth(2f);
-                }
-
-                months = new String[goalBarBean.getGoalDetails().size()];
-                for (int i=0;i<goalBarBean.getGoalDetails().size();i++) {
-                    try {
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                        Date date = format.parse(goalBarBean.getGoalDetails().get(i).getGoalDate());
-                        DateFormat format2=new SimpleDateFormat("dd");
-                        Log.e("date",""+format2.format(date));
-                        months[i] = (String) format2.format(date);
-
-                    } catch (Exception e) {
-                        Log.e("date Exception",""+e.getMessage());
-                    }
-                    if (goalBarBean.getGoalDetails() != null && goalBarBean.getGoalDetails().get(i).getMealCholesterol() != null &&
-                            !TextUtils.isEmpty(goalBarBean.getGoalDetails().get(i).getMealCholesterol()))
-                        entries.add(new Entry(i, Float.parseFloat(goalBarBean.getGoalDetails().get(i).getMealCholesterol())));
-                    else
-                        entries.add(new Entry(i, 0));
-                }
+                
             }
             if (selectedNutrition.equalsIgnoreCase("Fiber")) {
-                if (goalBarBean.getFiber() != null) {
-                    ll1 = new LimitLine(Float.parseFloat(goalBarBean.getFiber()), "Goal");
-                    ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                    ll1.setLineWidth(2f);
-                }
-
-                months = new String[goalBarBean.getGoalDetails().size()];
-                for (int i=0;i<goalBarBean.getGoalDetails().size();i++) {
-                    try {
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                        Date date = format.parse(goalBarBean.getGoalDetails().get(i).getGoalDate());
-                        DateFormat format2=new SimpleDateFormat("dd");
-                        Log.e("date",""+format2.format(date));
-                        months[i] = (String) format2.format(date);
-
-                    } catch (Exception e) {
-                        Log.e("date Exception",""+e.getMessage());
-                    }
-                    if (goalBarBean.getGoalDetails() != null && goalBarBean.getGoalDetails().get(i).getMealFiber() != null &&
-                            !TextUtils.isEmpty(goalBarBean.getGoalDetails().get(i).getMealFiber()))
-                        entries.add(new Entry(i, Float.parseFloat(goalBarBean.getGoalDetails().get(i).getMealFiber())));
-                    else
-                        entries.add(new Entry(i, 0));
-                }
+                
             }
             if (selectedNutrition.equalsIgnoreCase("Weight")) {
-                if (goalBarBean.getGoalWeight() != null) {
-                    ll1 = new LimitLine(Float.parseFloat(goalBarBean.getGoalWeight()), "Goal");
-                    ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                    ll1.setLineWidth(2f);
-                }
-
-                months = new String[goalBarBean.getGoalDetails().size()];
-                for (int i=0;i<goalBarBean.getGoalDetails().size();i++) {
-                    try {
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                        Date date = format.parse(goalBarBean.getGoalDetails().get(i).getGoalDate());
-                        DateFormat format2=new SimpleDateFormat("dd");
-                        Log.e("date",""+format2.format(date));
-                        months[i] = (String) format2.format(date);
-                    } catch (Exception e) {
-                        Log.e("date Exception",""+e.getMessage());
-                    }
-                    if (goalBarBean.getGoalDetails() != null && goalBarBean.getGoalDetails().get(i).getWeight() != null &&
-                            !TextUtils.isEmpty(goalBarBean.getGoalDetails().get(i).getWeight()))
-                        entries.add(new Entry(i, Float.parseFloat(goalBarBean.getGoalDetails().get(i).getWeight())));
-                    else
-                        entries.add(new Entry(i, 0));
-                }
+                
             }
             if (selectedNutrition.equalsIgnoreCase("Body Fat")) {
-                if (goalBarBean.getGoalBodyFat() != null) {
-                    ll1 = new LimitLine(Float.parseFloat(goalBarBean.getGoalBodyFat()), "Goal");
-                    ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                    ll1.setLineWidth(2f);
-                }
-
-                months = new String[goalBarBean.getGoalDetails().size()];
-                for (int i=0;i<goalBarBean.getGoalDetails().size();i++) {
-                    try {
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                        Date date = format.parse(goalBarBean.getGoalDetails().get(i).getGoalDate());
-                        DateFormat format2=new SimpleDateFormat("dd");
-                        Log.e("date",""+format2.format(date));
-                        months[i] = (String) format2.format(date);
-
-                    } catch (Exception e) {
-                        Log.e("date Exception",""+e.getMessage());
-                    }
-                    if (goalBarBean.getGoalDetails() != null && goalBarBean.getGoalDetails().get(i).getBodyFat() != null &&
-                            !TextUtils.isEmpty(goalBarBean.getGoalDetails().get(i).getBodyFat()))
-                        entries.add(new Entry(i, Float.parseFloat(goalBarBean.getGoalDetails().get(i).getBodyFat())));
-                    else
-                        entries.add(new Entry(i, 0));
-                }
+                
             }
             if (selectedNutrition.equalsIgnoreCase("Water")) {
-                if (goalBarBean.getGoalWater() != null) {
-                    ll1 = new LimitLine(Float.parseFloat(goalBarBean.getGoalWater()), "Goal");
-                    ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
-                    ll1.setLineWidth(2f);
-                }
-
-                months = new String[goalBarBean.getGoalDetails().size()];
-                for (int i=0;i<goalBarBean.getGoalDetails().size();i++) {
-                    try {
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                        Date date = format.parse(goalBarBean.getGoalDetails().get(i).getGoalDate());
-                        DateFormat format2=new SimpleDateFormat("dd");
-                        Log.e("date",""+format2.format(date));
-                        months[i] = (String) format2.format(date);
-                    } catch (Exception e) {
-                        Log.e("date Exception",""+e.getMessage());
-                    }
-                    if (goalBarBean.getGoalDetails() != null && goalBarBean.getGoalDetails().get(i).getWater() != null &&
-                            !TextUtils.isEmpty(goalBarBean.getGoalDetails().get(i).getWater()))
-                        entries.add(new Entry(i, Float.parseFloat(goalBarBean.getGoalDetails().get(i).getWater())));
-                    else
-                        entries.add(new Entry(i, 0));
-                }
+                
             }
-            renderData();
         }
+    }
+
+//    private void setCaloriesbinding.bChart() {
+//
+//        binding.bChart.getDescription().setEnabled(false);
+//
+//        binding.bChart.setMaxVisibleValueCount(40);
+//
+//        binding.bChart.setPinchZoom(false);
+//        binding.bChart.setScaleEnabled(false);
+//
+//        binding.bChart.setDrawGridBackground(false);
+//        binding.bChart.setDrawBarShadow(false);
+//
+//        binding.bChart.setDrawValueAboveBar(false);
+//        binding.bChart.setHighlightFullBarEnabled(false);
+//
+//        binding.bChart.getAxisRight().setEnabled(false);
+////        binding.bChart.getAxisLeft().setEnabled(false);
+//        binding.bChart.getAxisLeft().setDrawLabels(false);
+//        binding.bChart.getAxisLeft().setDrawAxisLine(false);
+//        binding.bChart.getAxisLeft().setDrawGridLines(false);
+//        binding.bChart.getXAxis().setDrawLabels(true);
+//        binding.bChart.getXAxis().setDrawAxisLine(false);
+//        binding.bChart.getXAxis().setDrawGridLines(false);
+//        binding.bChart.animateXY(2000, 2000);
+//        LimitLine ll = new LimitLine(budgetCal, "");
+//        ll.setLineWidth(0.5f);
+//        ll.setLineColor(context.getResources().getColor(R.color.light_gray));
+//        binding.bChart.getAxisLeft().addLimitLine(ll);
+//
+//        XAxis xLabels = binding.bChart.getXAxis();
+//        xLabels.setPosition(XAxis.XAxisPosition.BOTTOM);
+//        binding.bChart.getLegend().setEnabled(false);
+//
+//        final ArrayList<String> xAxisLabel = new ArrayList<>();
+//        xAxisLabel.add("Su");
+//        xAxisLabel.add("Mo");
+//        xAxisLabel.add("Tu");
+//        xAxisLabel.add("We");
+//        xAxisLabel.add("Th");
+//        xAxisLabel.add("Fr");
+//        xAxisLabel.add("Sa");
+//
+//        xLabels.setValueFormatter(new IAxisValueFormatter() {
+//            @Override
+//            public String getFormattedValue(float value, AxisBase axis) {
+//                return xAxisLabel.get((int) value);
+//            }
+//        });
+//
+//    }
+//
+//    private void addCaloriesBarDataSet() {
+//
+//        ArrayList<BarEntry> values = new ArrayList<>();
+//
+//        values.add(new BarEntry(
+//                0,
+//                new float[]{caloriesBarBean.getSunday()}));
+//
+//        values.add(new BarEntry(
+//                1,
+//                new float[]{caloriesBarBean.getMonday()}));
+//
+//        values.add(new BarEntry(
+//                2,
+//                new float[]{caloriesBarBean.getTuesday()}));
+//
+//        values.add(new BarEntry(
+//                3,
+//                new float[]{caloriesBarBean.getWednesday()}));
+//
+//        values.add(new BarEntry(
+//                4,
+//                new float[]{caloriesBarBean.getThursday()}));
+//
+//        values.add(new BarEntry(
+//                5,
+//                new float[]{caloriesBarBean.getFriday()}));
+//
+//        values.add(new BarEntry(
+//                6,
+//                new float[]{caloriesBarBean.getSaturday()}));
+//
+//        BarDataSet set1;
+//
+//        if (binding.bChart.getData() != null &&
+//                binding.bChart.getData().getDataSetCount() > 0) {
+//            set1 = (BarDataSet) binding.bChart.getData().getDataSetByIndex(0);
+//            set1.setValues(values);
+//            set1.setDrawValues(false);
+//            binding.bChart.getData().notifyDataChanged();
+//            binding.bChart.notifyDataSetChanged();
+//        } else {
+//            set1 = new BarDataSet(values, "");
+//            set1.setDrawIcons(false);
+//            set1.setDrawValues(false);
+//
+//            ArrayList<Integer> colors = new ArrayList<>();
+//            if (dayOfTheWeek.equalsIgnoreCase("sunday"))
+//            {
+//                colors.add(getResources().getColor(R.color.light_blue_text));
+//                yData[0] = caloriesBarBean.getSunday();
+//                if (caloriesBarBean.getSunday() > budgetCal)
+//                    yData[1] = 0;
+//                else
+//                    yData[1] = budgetCal;
+//            }
+//            else
+//                colors.add(getResources().getColor(R.color.colorAccent));
+//            if (dayOfTheWeek.equalsIgnoreCase("monday"))
+//            {
+//                colors.add(getResources().getColor(R.color.light_blue_text));
+//                yData[0] = caloriesBarBean.getMonday();
+//                if (caloriesBarBean.getMonday() > budgetCal)
+//                    yData[1] = 0;
+//                else
+//                    yData[1] = budgetCal;
+//            }
+//            else
+//                colors.add(getResources().getColor(R.color.colorAccent));
+//            if (dayOfTheWeek.equalsIgnoreCase("tuesday"))
+//            {
+//                colors.add(getResources().getColor(R.color.light_blue_text));
+//                yData[0] = caloriesBarBean.getTuesday();
+//                if (caloriesBarBean.getTuesday() > budgetCal)
+//                    yData[1] = 0;
+//                else
+//                    yData[1] = budgetCal;
+//            }
+//            else
+//                colors.add(getResources().getColor(R.color.colorAccent));
+//            if (dayOfTheWeek.equalsIgnoreCase("wednesday"))
+//            {
+//                colors.add(getResources().getColor(R.color.light_blue_text));
+//                yData[0] = caloriesBarBean.getWednesday();
+//                if (caloriesBarBean.getWednesday() > budgetCal)
+//                    yData[1] = 0;
+//                else
+//                    yData[1] = budgetCal;
+//            }
+//            else
+//                colors.add(getResources().getColor(R.color.colorAccent));
+//            if (dayOfTheWeek.equalsIgnoreCase("thursday"))
+//            {
+//                colors.add(getResources().getColor(R.color.light_blue_text));
+//                yData[0] = caloriesBarBean.getThursday();
+//                if (caloriesBarBean.getThursday() > budgetCal)
+//                    yData[1] = 0;
+//                else
+//                    yData[1] = budgetCal;
+//            }
+//            else
+//                colors.add(getResources().getColor(R.color.colorAccent));
+//            if (dayOfTheWeek.equalsIgnoreCase("friday"))
+//            {
+//                colors.add(getResources().getColor(R.color.light_blue_text));
+//                yData[0] = caloriesBarBean.getFriday();
+//                if (caloriesBarBean.getFriday() > budgetCal)
+//                    yData[1] = 0;
+//                else
+//                    yData[1] = budgetCal;
+//            }
+//            else
+//                colors.add(getResources().getColor(R.color.colorAccent));
+//            if (dayOfTheWeek.equalsIgnoreCase("saturday"))
+//            {
+//                colors.add(getResources().getColor(R.color.light_blue_text));
+//                yData[0] = caloriesBarBean.getSaturday();
+//                if (caloriesBarBean.getSaturday() > budgetCal)
+//                    yData[1] = 0;
+//                else
+//                    yData[1] = budgetCal;
+//            }
+//            else
+//                colors.add(getResources().getColor(R.color.colorAccent));
+//
+//            set1.setColors(colors);
+////            set1.setStackLabels(new String[]{"Calories", "Burned Calories"});
+//
+//            ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+//            dataSets.add(set1);
+//
+//            BarData data = new BarData(dataSets);
+//            data.setValueFormatter(new StackedValueFormatter(false, "", 1));
+//            data.setValueTextColor(Color.WHITE);
+//            data.setBarWidth(0.6f);
+//
+//            binding.bChart.setData(data);
+//        }
+//
+//        binding.bChart.setFitBars(true);
+//        binding.bChart.invalidate();
+//
+//    }
+
+    private void datePicker() {
+        if (dpd == null || !dpd.isVisible()) {
+            Calendar now = Calendar.getInstance();
+            int year = now.get(Calendar.YEAR);
+            int mm = now.get(Calendar.MONTH);
+            int dd = now.get(Calendar.DAY_OF_MONTH);
+
+            dpd = DatePickerDialog.newInstance(GoalsActivity.this, year, mm, dd);
+            dpd.setThemeDark(false);
+            dpd.vibrate(false);
+            dpd.dismissOnPause(true);
+            dpd.showYearPickerFirst(false);
+            dpd.setVersion(DatePickerDialog.Version.VERSION_1);
+            dpd.setAccentColor(ContextCompat.getColor(context, R.color.colorAccent));
+            dpd.setTitle("Select date");
+            dpd.show(getFragmentManager(), "Datepickerdialog");
+        }
+    }
+
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        String date = ((monthOfYear+1) > 9 ? (monthOfYear+1) : ("0"+(monthOfYear+1))) + "/" + dayOfMonth + "/" + year;
+
+        preferences.saveGoalDateData(date);
+        binding.txtGoalDate.setText(date);
+        callGetGoalApi(date);
     }
 }

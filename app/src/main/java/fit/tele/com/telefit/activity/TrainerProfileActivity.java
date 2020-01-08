@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import fit.tele.com.telefit.R;
+import fit.tele.com.telefit.adapter.PackageAdapter;
 import fit.tele.com.telefit.apiBase.FetchServiceBase;
 import fit.tele.com.telefit.base.BaseActivity;
 import fit.tele.com.telefit.databinding.ActivityTrainerProfileBinding;
@@ -29,6 +30,8 @@ public class TrainerProfileActivity extends BaseActivity implements View.OnClick
 
     ActivityTrainerProfileBinding binding;
     private TrainerBean trainerBean;
+    private PackageAdapter packageAdapter;
+    private String package_id = "0",strFrom = "";
 
     @Override
     public int getLayoutResId() {
@@ -51,16 +54,28 @@ public class TrainerProfileActivity extends BaseActivity implements View.OnClick
         binding.llGoals.setOnClickListener(this);
         binding.llSocial.setOnClickListener(this);
 
+        binding.imgVideo.setOnClickListener(this);
+        binding.imgMessage.setOnClickListener(this);
         binding.txtRequestTrainer.setOnClickListener(this);
 
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        binding.rvPackages.setLayoutManager(linearLayoutManager);
+        packageAdapter = new PackageAdapter(context, new PackageAdapter.ClickListener() {
+            @Override
+            public void onClick(String packageId) {
+                package_id = packageId;
+            }
+        });
+        binding.rvPackages.setAdapter(packageAdapter);
+        packageAdapter.clearAll();
+
+        if(getIntent() != null && getIntent().hasExtra("from"))
+            strFrom = getIntent().getStringExtra("from");
         if(getIntent() != null && getIntent().hasExtra("TrainerBean"))
         {
             trainerBean = getIntent().getParcelableExtra("TrainerBean");
             setData(trainerBean);
         }
-
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-        binding.rvPackages.setLayoutManager(linearLayoutManager);
     }
 
     private void setData(TrainerBean data) {
@@ -80,9 +95,8 @@ public class TrainerProfileActivity extends BaseActivity implements View.OnClick
                 binding.txtAddress.setText(data.getCity()+", "+data.getState());
             if(data.getDescription() != null && !TextUtils.isEmpty(data.getDescription()))
                 binding.txtTrainerDetails.setText(data.getDescription());
-            if(data.getIsSubscribe() != null && data.getIsSubscribe().equalsIgnoreCase("1"))
-                binding.txtRequestTrainer.setText("Schedule Conference >");
-            else {
+            if(strFrom.equalsIgnoreCase("TrainerList"))
+            {
                 if(data.getIsAccept() != null && data.getIsAccept().equalsIgnoreCase("Accept"))
                     binding.txtRequestTrainer.setText("Buy Package >");
                 if(data.getIsAccept() != null && data.getIsAccept().equalsIgnoreCase("Pending"))
@@ -90,7 +104,15 @@ public class TrainerProfileActivity extends BaseActivity implements View.OnClick
                 else
                     binding.txtRequestTrainer.setText("Request Trainer >");
             }
+            else {
+                binding.txtRequestTrainer.setVisibility(View.GONE);
+                binding.txtPackage.setVisibility(View.GONE);
+                binding.rvPackages.setVisibility(View.GONE);
+                binding.llButtons.setVisibility(View.VISIBLE);
+            }
 
+            if (data.getPackageDetail() != null)
+                packageAdapter.addAllList(data.getPackageDetail());
         }
     }
 
@@ -128,20 +150,32 @@ public class TrainerProfileActivity extends BaseActivity implements View.OnClick
                 this.overridePendingTransition(0, 0);
                 break;
 
+            case R.id.img_video :
+                intent = new Intent(context, VideoConferenceActivity.class);
+                startActivity(intent);
+                this.overridePendingTransition(0, 0);
+                break;
+
+            case R.id.img_message :
+
+                break;
+
             case R.id.txt_request_trainer :
-                if(trainerBean.getIsSubscribe() != null && trainerBean.getIsSubscribe().equalsIgnoreCase("1"))
+                if(trainerBean.getIsAccept() != null && trainerBean.getIsAccept().equalsIgnoreCase("Accept"))
+                    binding.txtRequestTrainer.setText("Buy Package >");
+                if(trainerBean.getIsAccept() != null && trainerBean.getIsAccept().equalsIgnoreCase("Pending"))
+                    binding.txtRequestTrainer.setText("Request Pending");
+                else
                 {
-                    intent = new Intent(context, VideoConferenceActivity.class);
-                    startActivity(intent);
-                    this.overridePendingTransition(0, 0);
-                }
-                else {
-                    if(trainerBean.getIsAccept() != null && trainerBean.getIsAccept().equalsIgnoreCase("Accept"))
-                        binding.txtRequestTrainer.setText("Buy Package >");
-                    if(trainerBean.getIsAccept() != null && trainerBean.getIsAccept().equalsIgnoreCase("Pending"))
-                        binding.txtRequestTrainer.setText("Request Pending");
+                    if (!package_id.equalsIgnoreCase("0"))
+                        sendRequest(trainerBean.getId(),package_id);
                     else
-                        sendRequest(trainerBean.getId());
+                    {
+                        if (trainerBean != null && trainerBean.getPackageDetail() != null && trainerBean.getPackageDetail().size() > 0)
+                            sendRequest(trainerBean.getId(),trainerBean.getPackageDetail().get(0).getId());
+                        else
+                            CommonUtils.toast(context,"Trainer package are not available!");
+                    }
                 }
 
                 break;
@@ -154,11 +188,12 @@ public class TrainerProfileActivity extends BaseActivity implements View.OnClick
         this.overridePendingTransition(0, 0);
     }
 
-    private void sendRequest(String trainer_id) {
+    private void sendRequest(String trainer_id,String package_id) {
         if (CommonUtils.isInternetOn(context)) {
             binding.progress.setVisibility(View.VISIBLE);
             HashMap<String, String> map = new HashMap<>();
             map.put("trainer_id",trainer_id);
+            map.put("package_id",package_id);
 
             Observable<ModelBean<TrainerBean>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).sendRequest(map);
             subscription = signupusers.subscribeOn(Schedulers.newThread())
@@ -170,7 +205,7 @@ public class TrainerProfileActivity extends BaseActivity implements View.OnClick
                         @Override
                         public void onError(Throwable e) {
                             e.printStackTrace();
-                            Log.e("deleteRoutine"," "+e);
+                            Log.e("sendRequest"," "+e);
                             binding.progress.setVisibility(View.GONE);
                         }
                         @Override
