@@ -280,8 +280,8 @@ public interface FetchServiceInterFace {
     @GET("request_token")
     rx.Observable<ResponseBody> getFitbit(@Query("oauth_consumer_key") String ock, @Query("name") String appid);
 
-    @GET("date/2020-01-06.json")
-    rx.Observable<ResponseBody> getFitbitCalories(@Header("Authorization")String accessToken);
+    @GET("date/{fitDate}")
+    rx.Observable<ResponseBody> getFitbitCalories(@Header("Authorization")String accessToken,@Path("fitDate") String fitDate);
 
     @POST("customer/send_request_cust_to_trainer")
     Observable<ModelBean<TrainerBean>> sendRequest(@Body Map<String, String> params); //done
@@ -291,6 +291,9 @@ public interface FetchServiceInterFace {
 
     @POST("token")
     rx.Observable<ResponseBody> getRefreshToken(@Query("grant_type") String q, @Query("refresh_token") String token);
+
+    @POST("customer/set_fitbit")
+    Observable<ModelBean<GoalBarBean>> getBurnCalApi(@Body Map<String, String> params); //done
 
 
 }

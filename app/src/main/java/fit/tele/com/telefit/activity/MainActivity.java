@@ -73,7 +73,7 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
     private DateFormat sdf = new SimpleDateFormat("EEEE");
     private DatePickerDialog dpd;
     private Calendar calendar;
-    private float budgetCal = 0,burnCal = 0,netCal = 0,underCal = 0, bmr = 0, weight=0, height=0, age =0, selectedFat = 0, selectedCarb = 0,
+    private float budgetCal = 0,netCal = 0,underCal = 0, bmr = 0, weight=0, height=0, age =0, selectedFat = 0, selectedCarb = 0,
             selectedProtin = 0, tdee = 0;
 
     @Override
@@ -91,7 +91,6 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
     }
 
     private void setListner() {
-        burnCal = Float.parseFloat(preferences.getBurnedCaloriesPref());
         calendar = Calendar.getInstance();
         dayOfTheWeek = sdf.format(calendar.getTime());
 
@@ -456,31 +455,31 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
 
         values.add(new BarEntry(
                 0,
-                new float[]{caloriesBarBean.getSunday()}));
+                new float[]{caloriesBarBean.getSunday().getTotalCalories()}));
 
         values.add(new BarEntry(
                 1,
-                new float[]{caloriesBarBean.getMonday()}));
+                new float[]{caloriesBarBean.getMonday().getTotalCalories()}));
 
         values.add(new BarEntry(
                 2,
-                new float[]{caloriesBarBean.getTuesday()}));
+                new float[]{caloriesBarBean.getTuesday().getTotalCalories()}));
 
         values.add(new BarEntry(
                 3,
-                new float[]{caloriesBarBean.getWednesday()}));
+                new float[]{caloriesBarBean.getWednesday().getTotalCalories()}));
 
         values.add(new BarEntry(
                 4,
-                new float[]{caloriesBarBean.getThursday()}));
+                new float[]{caloriesBarBean.getThursday().getTotalCalories()}));
 
         values.add(new BarEntry(
                 5,
-                new float[]{caloriesBarBean.getFriday()}));
+                new float[]{caloriesBarBean.getFriday().getTotalCalories()}));
 
         values.add(new BarEntry(
                 6,
-                new float[]{caloriesBarBean.getSaturday()}));
+                new float[]{caloriesBarBean.getSaturday().getTotalCalories()}));
 
         BarDataSet set1;
 
@@ -500,106 +499,113 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
             if (dayOfTheWeek.equalsIgnoreCase("sunday"))
             {
                 colors.add(getResources().getColor(R.color.light_blue_text));
-                yData[0] = caloriesBarBean.getSunday();
-                if (caloriesBarBean.getSunday() > budgetCal)
+                yData[0] = caloriesBarBean.getSunday().getTotalCalories();
+                if (caloriesBarBean.getSunday().getTotalCalories() > budgetCal)
                     yData[1] = 0;
                 else
                     yData[1] = budgetCal;
-                txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getSunday()));
-                netCal = caloriesBarBean.getSunday() - burnCal;
+                txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getSunday().getTotalCalories()));
+                netCal = caloriesBarBean.getSunday().getTotalCalories() - caloriesBarBean.getSunday().getFitbitCalories();
 
-                txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getSunday())+" of total "+(int)budgetCal+" calories utilized.");
-                txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getSunday())+" of total "+(int)budgetCal+" calories utilized.");
+                txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getSunday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
+                txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getSunday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
+                txt_exercise_count.setText(""+String.format("%.2f", caloriesBarBean.getSunday().getFitbitCalories()));
             }
             else
                 colors.add(getResources().getColor(R.color.colorAccent));
             if (dayOfTheWeek.equalsIgnoreCase("monday"))
             {
                 colors.add(getResources().getColor(R.color.light_blue_text));
-                yData[0] = caloriesBarBean.getMonday();
-                if (caloriesBarBean.getMonday() > budgetCal)
+                yData[0] = caloriesBarBean.getMonday().getTotalCalories();
+                if (caloriesBarBean.getMonday().getTotalCalories() > budgetCal)
                     yData[1] = 0;
                 else
                     yData[1] = budgetCal;
-                txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getMonday()));
-                netCal = caloriesBarBean.getMonday() - burnCal;
-                txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getMonday())+" of total "+(int)budgetCal+" calories utilized.");
-                txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getMonday())+" of total "+(int)budgetCal+" calories utilized.");
+                txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getMonday().getTotalCalories()));
+                netCal = caloriesBarBean.getMonday().getTotalCalories() - caloriesBarBean.getMonday().getFitbitCalories();
+                txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getMonday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
+                txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getMonday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
+                txt_exercise_count.setText(""+String.format("%.2f", caloriesBarBean.getMonday().getFitbitCalories()));
             }
             else
                 colors.add(getResources().getColor(R.color.colorAccent));
             if (dayOfTheWeek.equalsIgnoreCase("tuesday"))
             {
                 colors.add(getResources().getColor(R.color.light_blue_text));
-                yData[0] = caloriesBarBean.getTuesday();
-                if (caloriesBarBean.getTuesday() > budgetCal)
+                yData[0] = caloriesBarBean.getTuesday().getTotalCalories();
+                if (caloriesBarBean.getTuesday().getTotalCalories() > budgetCal)
                     yData[1] = 0;
                 else
                     yData[1] = budgetCal;
-                txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getTuesday()));
-                netCal = caloriesBarBean.getTuesday() - burnCal;
-                txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getTuesday())+" of total "+(int)budgetCal+" calories utilized.");
-                txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getTuesday())+" of total "+(int)budgetCal+" calories utilized.");
+                txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getTuesday().getTotalCalories()));
+                netCal = caloriesBarBean.getTuesday().getTotalCalories() - caloriesBarBean.getTuesday().getFitbitCalories();
+                txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getTuesday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
+                txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getTuesday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
+                txt_exercise_count.setText(""+String.format("%.2f", caloriesBarBean.getTuesday().getFitbitCalories()));
             }
             else
                 colors.add(getResources().getColor(R.color.colorAccent));
             if (dayOfTheWeek.equalsIgnoreCase("wednesday"))
             {
                 colors.add(getResources().getColor(R.color.light_blue_text));
-                yData[0] = caloriesBarBean.getWednesday();
-                if (caloriesBarBean.getWednesday() > budgetCal)
+                yData[0] = caloriesBarBean.getWednesday().getTotalCalories();
+                if (caloriesBarBean.getWednesday().getTotalCalories() > budgetCal)
                     yData[1] = 0;
                 else
                     yData[1] = budgetCal;
-                txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getWednesday()));
-                netCal = caloriesBarBean.getWednesday() - burnCal;
-                txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getWednesday())+" of total "+(int)budgetCal+" calories utilized.");
-                txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getWednesday())+" of total "+(int)budgetCal+" calories utilized.");
+                txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getWednesday().getTotalCalories()));
+                netCal = caloriesBarBean.getWednesday().getTotalCalories() - caloriesBarBean.getWednesday().getFitbitCalories();
+                txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getWednesday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
+                txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getWednesday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
+                txt_exercise_count.setText(""+String.format("%.2f", caloriesBarBean.getWednesday().getFitbitCalories()));
             }
             else
                 colors.add(getResources().getColor(R.color.colorAccent));
             if (dayOfTheWeek.equalsIgnoreCase("thursday"))
             {
                 colors.add(getResources().getColor(R.color.light_blue_text));
-                yData[0] = caloriesBarBean.getThursday();
-                if (caloriesBarBean.getThursday() > budgetCal)
+                yData[0] = caloriesBarBean.getThursday().getTotalCalories();
+                if (caloriesBarBean.getThursday().getTotalCalories() > budgetCal)
                     yData[1] = 0;
                 else
                     yData[1] = budgetCal;
-                txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getThursday()));
-                netCal = caloriesBarBean.getThursday() - burnCal;
-                txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getThursday())+" of total "+(int)budgetCal+" calories utilized.");
-                txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getThursday())+" of total "+(int)budgetCal+" calories utilized.");
+                txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getThursday().getTotalCalories()));
+                netCal = caloriesBarBean.getThursday().getTotalCalories() - caloriesBarBean.getThursday().getFitbitCalories();
+                txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getThursday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
+                txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getThursday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
+                txt_exercise_count.setText(""+String.format("%.2f", caloriesBarBean.getThursday().getFitbitCalories()));
             }
             else
                 colors.add(getResources().getColor(R.color.colorAccent));
             if (dayOfTheWeek.equalsIgnoreCase("friday"))
             {
                 colors.add(getResources().getColor(R.color.light_blue_text));
-                yData[0] = caloriesBarBean.getFriday();
-                if (caloriesBarBean.getFriday() > budgetCal)
+                yData[0] = caloriesBarBean.getFriday().getTotalCalories();
+                if (caloriesBarBean.getFriday().getTotalCalories() > budgetCal)
                     yData[1] = 0;
                 else
                     yData[1] = budgetCal;
-                txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getFriday()));
-                netCal = caloriesBarBean.getFriday() - burnCal;
-                txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getFriday())+" of total "+(int)budgetCal+" calories utilized.");
-                txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getFriday())+" of total "+(int)budgetCal+" calories utilized.");
+                txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getFriday().getTotalCalories()));
+                netCal = caloriesBarBean.getFriday().getTotalCalories() - caloriesBarBean.getFriday().getFitbitCalories();
+                txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getFriday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
+                txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getFriday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
+                txt_exercise_count.setText(""+String.format("%.2f", caloriesBarBean.getFriday().getFitbitCalories()));
             }
             else
                 colors.add(getResources().getColor(R.color.colorAccent));
             if (dayOfTheWeek.equalsIgnoreCase("saturday"))
             {
                 colors.add(getResources().getColor(R.color.light_blue_text));
-                yData[0] = caloriesBarBean.getSaturday();
-                if (caloriesBarBean.getSaturday() > budgetCal)
+                yData[0] = caloriesBarBean.getSaturday().getTotalCalories();
+                if (caloriesBarBean.getSaturday().getTotalCalories() > budgetCal)
                     yData[1] = 0;
                 else
                     yData[1] = budgetCal;
-                txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getSaturday()));
-                netCal = caloriesBarBean.getSaturday() - burnCal;
-                txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getSaturday())+" of total "+(int)budgetCal+" calories utilized.");
-                txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getSaturday())+" of total "+(int)budgetCal+" calories utilized.");
+                txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getSaturday().getTotalCalories()));
+                netCal = caloriesBarBean.getSaturday().getTotalCalories() - caloriesBarBean.getSaturday().getFitbitCalories();
+                txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getSaturday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
+                txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getSaturday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
+                txt_exercise_count.setText(""+String.format("%.2f", caloriesBarBean.getSaturday().getFitbitCalories()));
             }
             else
                 colors.add(getResources().getColor(R.color.colorAccent));
@@ -618,7 +624,6 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
 
             txt_under.setText(""+(int) Math.abs(underCal));
             txt_daily_count.setText(""+String.format("%.2f", budgetCal));
-            txt_exercise_count.setText(""+String.format("%.2f", burnCal));
             txt_net_count.setText(""+String.format("%.2f", netCal));
             set1.setColors(colors);
 //            set1.setStackLabels(new String[]{"Calories", "Burned Calories"});
@@ -643,93 +648,100 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
                 final String x = barChart.getXAxis().getValueFormatter().getFormattedValue(e.getX(), barChart.getXAxis());
                 if (x.equalsIgnoreCase("su"))
                 {
-                    yData[0] = caloriesBarBean.getSunday();
-                    if (caloriesBarBean.getSunday() > budgetCal)
+                    yData[0] = caloriesBarBean.getSunday().getTotalCalories();
+                    if (caloriesBarBean.getSunday().getTotalCalories() > budgetCal)
                         yData[1] = 0;
                     else
                         yData[1] = budgetCal;
-                    netCal = caloriesBarBean.getSunday() - burnCal;
-                    txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getSunday()));
-                    txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getSunday())+" of total "+(int)budgetCal+" calories utilized.");
-                    txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getSunday())+" of total "+(int)budgetCal+" calories utilized.");
+                    netCal = caloriesBarBean.getSunday().getTotalCalories() - caloriesBarBean.getSunday().getFitbitCalories();
+                    txt_exercise_count.setText(""+String.format("%.2f", caloriesBarBean.getSunday().getFitbitCalories()));
+                    txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getSunday().getTotalCalories()));
+                    txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getSunday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
+                    txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getSunday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
                     addCaloriesPieDataSet();
                 }
                 if (x.equalsIgnoreCase("mo"))
                 {
-                    yData[0] = caloriesBarBean.getMonday();
-                    if (caloriesBarBean.getMonday() > budgetCal)
+                    yData[0] = caloriesBarBean.getMonday().getTotalCalories();
+                    if (caloriesBarBean.getMonday().getTotalCalories() > budgetCal)
                         yData[1] = 0;
                     else
                         yData[1] = budgetCal;
-                    netCal = caloriesBarBean.getMonday() - burnCal;
-                    txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getMonday()));
-                    txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getMonday())+" of total "+(int)budgetCal+" calories utilized.");
-                    txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getMonday())+" of total "+(int)budgetCal+" calories utilized.");
+                    netCal = caloriesBarBean.getMonday().getTotalCalories() - caloriesBarBean.getMonday().getFitbitCalories();
+                    txt_exercise_count.setText(""+String.format("%.2f", caloriesBarBean.getMonday().getFitbitCalories()));
+                    txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getMonday().getTotalCalories()));
+                    txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getMonday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
+                    txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getMonday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
                     addCaloriesPieDataSet();
                 }
                 if (x.equalsIgnoreCase("tu"))
                 {
-                    yData[0] = caloriesBarBean.getTuesday();
-                    if (caloriesBarBean.getTuesday() > budgetCal)
+                    yData[0] = caloriesBarBean.getTuesday().getTotalCalories();
+                    if (caloriesBarBean.getTuesday().getTotalCalories() > budgetCal)
                         yData[1] = 0;
                     else
                         yData[1] = budgetCal;
-                    netCal = caloriesBarBean.getTuesday() - burnCal;
-                    txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getTuesday()));
-                    txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getTuesday())+" of total "+(int)budgetCal+" calories utilized.");
-                    txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getTuesday())+" of total "+(int)budgetCal+" calories utilized.");
+                    netCal = caloriesBarBean.getTuesday().getTotalCalories() - caloriesBarBean.getTuesday().getFitbitCalories();
+                    txt_exercise_count.setText(""+String.format("%.2f", caloriesBarBean.getTuesday().getFitbitCalories()));
+                    txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getTuesday().getTotalCalories()));
+                    txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getTuesday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
+                    txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getTuesday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
                     addCaloriesPieDataSet();
                 }
                 if (x.equalsIgnoreCase("we"))
                 {
-                    yData[0] = caloriesBarBean.getWednesday();
-                    if (caloriesBarBean.getWednesday() > budgetCal)
+                    yData[0] = caloriesBarBean.getWednesday().getTotalCalories();
+                    if (caloriesBarBean.getWednesday().getTotalCalories() > budgetCal)
                         yData[1] = 0;
                     else
                         yData[1] = budgetCal;
-                    netCal = caloriesBarBean.getWednesday() - burnCal;
-                    txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getWednesday()));
-                    txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getWednesday())+" of total "+(int)budgetCal+" calories utilized.");
-                    txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getWednesday())+" of total "+(int)budgetCal+" calories utilized.");
+                    netCal = caloriesBarBean.getWednesday().getTotalCalories() - caloriesBarBean.getWednesday().getFitbitCalories();
+                    txt_exercise_count.setText(""+String.format("%.2f", caloriesBarBean.getWednesday().getFitbitCalories()));
+                    txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getWednesday().getTotalCalories()));
+                    txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getWednesday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
+                    txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getWednesday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
                     addCaloriesPieDataSet();
                 }
                 if (x.equalsIgnoreCase("th"))
                 {
-                    yData[0] = caloriesBarBean.getThursday();
-                    if (caloriesBarBean.getThursday() > budgetCal)
+                    yData[0] = caloriesBarBean.getThursday().getTotalCalories();
+                    if (caloriesBarBean.getThursday().getTotalCalories() > budgetCal)
                         yData[1] = 0;
                     else
                         yData[1] = budgetCal;
-                    netCal = caloriesBarBean.getThursday() - burnCal;
-                    txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getThursday()));
-                    txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getThursday())+" of total "+(int)budgetCal+" calories utilized.");
-                    txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getThursday())+" of total "+(int)budgetCal+" calories utilized.");
+                    netCal = caloriesBarBean.getThursday().getTotalCalories() - caloriesBarBean.getThursday().getFitbitCalories();
+                    txt_exercise_count.setText(""+String.format("%.2f", caloriesBarBean.getThursday().getFitbitCalories()));
+                    txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getThursday().getTotalCalories()));
+                    txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getThursday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
+                    txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getThursday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
                     addCaloriesPieDataSet();
                 }
                 if (x.equalsIgnoreCase("fr"))
                 {
-                    yData[0] = caloriesBarBean.getFriday();
-                    if (caloriesBarBean.getFriday() > budgetCal)
+                    yData[0] = caloriesBarBean.getFriday().getTotalCalories();
+                    if (caloriesBarBean.getFriday().getTotalCalories() > budgetCal)
                         yData[1] = 0;
                     else
                         yData[1] = budgetCal;
-                    netCal = caloriesBarBean.getFriday() - burnCal;
-                    txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getFriday()));
-                    txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getFriday())+" of total "+(int)budgetCal+" calories utilized.");
-                    txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getFriday())+" of total "+(int)budgetCal+" calories utilized.");
+                    netCal = caloriesBarBean.getFriday().getTotalCalories() - caloriesBarBean.getFriday().getFitbitCalories();
+                    txt_exercise_count.setText(""+String.format("%.2f", caloriesBarBean.getFriday().getFitbitCalories()));
+                    txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getFriday().getTotalCalories()));
+                    txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getFriday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
+                    txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getFriday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
                     addCaloriesPieDataSet();
                 }
                 if (x.equalsIgnoreCase("sa"))
                 {
-                    yData[0] = caloriesBarBean.getSaturday();
-                    if (caloriesBarBean.getSaturday() > budgetCal)
+                    yData[0] = caloriesBarBean.getSaturday().getTotalCalories();
+                    if (caloriesBarBean.getSaturday().getTotalCalories() > budgetCal)
                         yData[1] = 0;
                     else
                         yData[1] = budgetCal;
-                    netCal = caloriesBarBean.getSaturday() - burnCal;
-                    txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getSaturday()));
-                    txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getSaturday())+" of total "+(int)budgetCal+" calories utilized.");
-                    txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getSaturday())+" of total "+(int)budgetCal+" calories utilized.");
+                    netCal = caloriesBarBean.getSaturday().getTotalCalories() - caloriesBarBean.getSaturday().getFitbitCalories();
+                    txt_exercise_count.setText(""+String.format("%.2f", caloriesBarBean.getSaturday().getFitbitCalories()));
+                    txt_food_count.setText(""+String.format("%.2f", caloriesBarBean.getSaturday().getTotalCalories()));
+                    txt_total_calories_detail.setText(String.format("%.2f", caloriesBarBean.getSaturday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
+                    txt_total_calories.setText(String.format("%.2f", caloriesBarBean.getSaturday().getTotalCalories())+" of total "+(int)budgetCal+" calories utilized.");
                     addCaloriesPieDataSet();
                 }
 
@@ -746,7 +758,6 @@ public class MainActivity extends BaseActivity implements OnChartValueSelectedLi
                 }
                 txt_under.setText(""+(int) Math.abs(underCal));
                 txt_daily_count.setText(""+String.format("%.2f", budgetCal));
-                txt_exercise_count.setText(""+String.format("%.2f", burnCal));
                 txt_net_count.setText(""+String.format("%.2f", netCal));
             }
 

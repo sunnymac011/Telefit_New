@@ -40,7 +40,7 @@ public class FoodCalNutActivity extends BaseActivity implements View.OnClickList
     private DateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
     private DateFormat format = new SimpleDateFormat("dd");
     private DateFormat format2 = new SimpleDateFormat("yyyy/MM");
-    private double totalCal = 0, convertedTotalCal = 0,budgetCal = 0,burnCal = 0,netCal = 0,underCal = 0,weektotalCal = 0,convertedWeektotalCal = 0,weekbudgetCal = 0,weekburnCal = 0
+    private double totalCal = 0, convertedTotalCal = 0,budgetCal = 0,netCal = 0,underCal = 0,weektotalCal = 0,convertedWeektotalCal = 0,weekbudgetCal = 0,weekburnCal = 0
             ,weeknetCal = 0,weekunderCal = 0, bmr = 0, weight=0, height=0, age =0, tdee = 0;
     private Calendar calendar;
 
@@ -76,7 +76,6 @@ public class FoodCalNutActivity extends BaseActivity implements View.OnClickList
     }
 
     private void setData() {
-        burnCal = Float.parseFloat(preferences.getBurnedCaloriesPref());
         calendar = Calendar.getInstance();
         binding.txtDate.setText(format1.format(calendar.getTime()));
         preferences.saveGoalDateData(format1.format(calendar.getTime()));
@@ -305,8 +304,8 @@ public class FoodCalNutActivity extends BaseActivity implements View.OnClickList
                                 convertedTotalCal = totalCal/4.184;
                                 binding.txtFood.setText(""+String.format("%.2f", convertedTotalCal));
                                 binding.txtBudget.setText(""+String.format("%.2f", budgetCal));
-                                binding.txtExercise.setText(""+String.format("%.2f", burnCal));
-                                netCal = convertedTotalCal - burnCal;
+                                binding.txtExercise.setText(apiFoodBean.getResult().get(0).getFitbitCalories());
+                                netCal = convertedTotalCal - Float.parseFloat(apiFoodBean.getResult().get(0).getFitbitCalories());
                                 underCal = budgetCal - netCal;
                                 binding.txtNet.setText(""+String.format("%.2f", netCal));
                                 binding.txtUnder.setText(""+String.format("%.2f", Math.abs(underCal)));
@@ -378,8 +377,8 @@ public class FoodCalNutActivity extends BaseActivity implements View.OnClickList
                                 convertedTotalCal = totalCal/4.184;
                                 binding.txtFood.setText(""+String.format("%.2f", convertedTotalCal));
                                 binding.txtBudget.setText(""+String.format("%.2f", budgetCal));
-                                binding.txtExercise.setText(""+String.format("%.2f", burnCal));
-                                netCal = convertedTotalCal - burnCal;
+                                binding.txtExercise.setText(apiFoodBean.getResult().get(0).getFitbitCalories());
+                                netCal = convertedTotalCal - Float.parseFloat(apiFoodBean.getResult().get(0).getFitbitCalories());
                                 underCal = budgetCal - netCal;
                                 binding.txtNet.setText(""+String.format("%.2f", netCal));
                                 binding.txtUnder.setText(""+String.format("%.2f", Math.abs(underCal)));
@@ -450,8 +449,8 @@ public class FoodCalNutActivity extends BaseActivity implements View.OnClickList
                                 convertedTotalCal = totalCal/4.184;
                                 binding.txtFood.setText(""+String.format("%.2f", convertedTotalCal));
                                 binding.txtBudget.setText(""+String.format("%.2f", budgetCal));
-                                binding.txtExercise.setText(""+String.format("%.2f", burnCal));
-                                netCal = convertedTotalCal - burnCal;
+                                binding.txtExercise.setText(apiFoodBean.getResult().get(0).getFitbitCalories());
+                                netCal = convertedTotalCal - Float.parseFloat(apiFoodBean.getResult().get(0).getFitbitCalories());
                                 underCal = budgetCal - netCal;
                                 binding.txtNet.setText(""+String.format("%.2f", netCal));
                                 binding.txtUnder.setText(""+String.format("%.2f", Math.abs(underCal)));

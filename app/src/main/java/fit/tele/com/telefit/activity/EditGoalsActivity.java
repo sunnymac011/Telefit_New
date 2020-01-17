@@ -49,6 +49,7 @@ public class EditGoalsActivity extends BaseActivity implements View.OnClickListe
     private Calendar calendar = Calendar.getInstance();
     private DateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
     private String strDate = "";
+    GoalBean goalBean;
 
     @Override
     public int getLayoutResId() {
@@ -135,20 +136,21 @@ public class EditGoalsActivity extends BaseActivity implements View.OnClickListe
         });
     }
 
-    private void setData(GoalBean goalBean) {
+    private void setData() {
         binding.txtProteinCount.setText(goalBean.getProtein()+"g");
         binding.txtCarbsCount.setText(goalBean.getCarbs()+"g");
         binding.txtFatCount.setText(goalBean.getFat()+"g");
         binding.txtBfatCount.setText(goalBean.getGoalBodyFat()+"%, "+goalBean.getBodyFat()+"%");
         binding.txtCholesterolCount.setText(goalBean.getCholesterol()+"mg");
         binding.txtFiberCount.setText(goalBean.getFiber()+"g");
-        binding.txtWaterCount.setText(goalBean.getGoalWater()+"fl, "+goalBean.getWater()+"oz");
+        binding.txtWaterCount.setText(goalBean.getGoalWater()+"floz, "+goalBean.getWater()+"floz");
         binding.txtWeightCount.setText(goalBean.getGoalWeight()+goalBean.getWeightType()+", "+goalBean.getWeight()+goalBean.getWeightType());
     }
 
     @Override
     public void onClick(View v) {
         Intent intent;
+        String strBody = "",strCurrentWeight = "";
         switch (v.getId()) {
             case R.id.ll_nutrition:
                 intent = new Intent(context, MainActivity.class);
@@ -214,7 +216,11 @@ public class EditGoalsActivity extends BaseActivity implements View.OnClickListe
                 break;
 
             case R.id.txt_bfat_count:
-                addGoalsDialog = new AddGoalsDialog(context, "Current Body Fat%", new AddGoalsDialog.SetDataListener() {
+                if (goalBean != null && goalBean.getGoalBodyFat() != null)
+                    strBody = goalBean.getGoalBodyFat();
+                else
+                    strBody = "";
+                addGoalsDialog = new AddGoalsDialog(context, "Current Body Fat%",strBody, new AddGoalsDialog.SetDataListener() {
                     @Override
                     public void onContinueClick(String goal, String consumed) {
                         binding.txtBfatCount.setText(goal+"%, "+consumed+"%");
@@ -248,7 +254,11 @@ public class EditGoalsActivity extends BaseActivity implements View.OnClickListe
                 break;
 
             case R.id.txt_water_count:
-                addGoalsDialog = new AddGoalsDialog(context, "Consumed", new AddGoalsDialog.SetDataListener() {
+                if (goalBean != null && goalBean.getGoalBodyFat() != null)
+                    strBody = goalBean.getGoalWater();
+                else
+                    strBody = "";
+                addGoalsDialog = new AddGoalsDialog(context, "Consumed", strBody, new AddGoalsDialog.SetDataListener() {
                     @Override
                     public void onContinueClick(String goal, String consumed) {
                         binding.txtWaterCount.setText(goal+"fl, "+consumed+"oz");
@@ -261,7 +271,15 @@ public class EditGoalsActivity extends BaseActivity implements View.OnClickListe
 
             case R.id.txt_weight_count:
                 String strType = preferences.getUserDataPref().getWeightType();
-                addGoalsWeightDialog = new AddGoalsWeightDialog(context, "Set Value in "+strType, new AddGoalsWeightDialog.SetDataListener() {
+                if (goalBean != null && goalBean.getGoalBodyFat() != null)
+                    strBody = goalBean.getGoalWeight();
+                else
+                    strBody = "";
+                if (goalBean != null && goalBean.getWeight() != null)
+                    strCurrentWeight = goalBean.getWeight();
+                else
+                    strCurrentWeight = "";
+                addGoalsWeightDialog = new AddGoalsWeightDialog(context, "Set Value in "+strType, strBody, strCurrentWeight, new AddGoalsWeightDialog.SetDataListener() {
                     @Override
                     public void onContinueClick(String goal, String consumed) {
                         binding.txtWeightCount.setText(goal+strType+", "+consumed+strType);
@@ -342,12 +360,13 @@ public class EditGoalsActivity extends BaseActivity implements View.OnClickListe
                         }
 
                         @Override
-                        public void onNext(ModelBean<GoalBean> goalBean) {
+                        public void onNext(ModelBean<GoalBean> goal_bean) {
                             binding.progress.setVisibility(View.GONE);
-                            if (goalBean.getStatus() == 1) {
-                                setData(goalBean.getResult());
+                            if (goal_bean.getStatus() == 1) {
+                                goalBean = goal_bean.getResult();
+                                setData();
                             } else
-                                CommonUtils.toast(context,goalBean.getMessage());
+                                CommonUtils.toast(context,goal_bean.getMessage());
                         }
                     });
 

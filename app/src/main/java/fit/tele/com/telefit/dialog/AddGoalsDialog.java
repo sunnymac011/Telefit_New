@@ -25,13 +25,14 @@ public class AddGoalsDialog extends Dialog implements View.OnClickListener {
     private Button btn_set;
     private SetDataListener setDataListener;
     private Context context;
-    private String strHint;
+    private String strHint,strGoalValue;
 
-    public AddGoalsDialog(@NonNull Context context, String strHint, SetDataListener setDataListener) {
+    public AddGoalsDialog(@NonNull Context context, String strHint, String strGoalValue, SetDataListener setDataListener) {
         super(context);
         this.setDataListener = setDataListener;
         this.context = context;
         this.strHint = strHint;
+        this.strGoalValue = strGoalValue;
     }
 
     public AddGoalsDialog(@NonNull Context context, @StyleRes int themeResId, SetDataListener setDataListener) {
@@ -64,6 +65,8 @@ public class AddGoalsDialog extends Dialog implements View.OnClickListener {
         input_consume.setHint(strHint);
         btn_set = (Button) contentView.findViewById(R.id.btn_set);
         btn_set.setOnClickListener(this);
+
+        input_goal.setText(strGoalValue);
 
     }
 

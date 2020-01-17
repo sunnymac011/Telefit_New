@@ -135,7 +135,7 @@ public class CreatePost extends BaseActivity {
                             @Override
                             public void shareOnTwitter() {
 
-                                if (isTwitterAvailable()) {
+                                if (!isTwitterAvailable()) {
                                     CreatePost.this.shareOnTwitter(binding.inputPost.getText().toString(), Uri.fromFile(fileProfile));
                                 } else {
                                     CommonUtils.toast(context, "Twitter is not installed on your phone");
@@ -464,10 +464,10 @@ public class CreatePost extends BaseActivity {
 
                                     @Override
                                     public void shareOnTwitter() {
-                                        if (isTwitterAvailable()) {
+                                        if (!isTwitterAvailable()) {
                                             CreatePost.this.shareOnTwitter(binding.inputPost.getText().toString(), Uri.fromFile(fileProfile));
                                         }else {
-
+                                            CommonUtils.toast(context, "Twitter is not installed on your phone");
                                         }
 //                                        shareTwitter(binding.inputPost.getText().toString());
 
@@ -488,7 +488,6 @@ public class CreatePost extends BaseActivity {
     }
 
     public void shareOnFacebookNew() {
-        Log.w("imagebitmap", "" + adjustedBitmap);
         if (adjustedBitmap != null) {
             if (validation()) {
                 SharePhoto photo = new SharePhoto.Builder()
@@ -504,9 +503,6 @@ public class CreatePost extends BaseActivity {
         }else {
             CommonUtils.toast(context,"Please select photo upload on social media");
         }
-
-
-
     }
 
     public boolean isFacebookAvailable() {
@@ -522,8 +518,6 @@ public class CreatePost extends BaseActivity {
         }
         return false;
     }
-
-
 
     public void shareOnInsta(){
         Intent intent = getPackageManager().getLaunchIntentForPackage("com.instagram.android");

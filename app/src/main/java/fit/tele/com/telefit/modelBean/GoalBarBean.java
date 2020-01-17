@@ -40,7 +40,7 @@ public class GoalBarBean implements Parcelable {
     public String goalWeight;
     @SerializedName("goal_details")
     @Expose
-    public ArrayList<GoalBean> goalDetails;
+    public GoalDetailsBean goalDetails;
 
     protected GoalBarBean(Parcel in) {
         protein = in.readString();
@@ -52,7 +52,7 @@ public class GoalBarBean implements Parcelable {
         goalBodyFat = in.readString();
         goalWater = in.readString();
         goalWeight = in.readString();
-        goalDetails = in.createTypedArrayList(GoalBean.CREATOR);
+        goalDetails = in.readParcelable(GoalDetailsBean.class.getClassLoader());
     }
 
     public static final Creator<GoalBarBean> CREATOR = new Creator<GoalBarBean>() {
@@ -139,11 +139,11 @@ public class GoalBarBean implements Parcelable {
         this.goalWeight = goalWeight;
     }
 
-    public ArrayList<GoalBean> getGoalDetails() {
+    public GoalDetailsBean getGoalDetails() {
         return goalDetails;
     }
 
-    public void setGoalDetails(ArrayList<GoalBean> goalDetails) {
+    public void setGoalDetails(GoalDetailsBean goalDetails) {
         this.goalDetails = goalDetails;
     }
 
@@ -163,22 +163,6 @@ public class GoalBarBean implements Parcelable {
         dest.writeString(goalBodyFat);
         dest.writeString(goalWater);
         dest.writeString(goalWeight);
-        dest.writeTypedList(goalDetails);
-    }
-
-    @Override
-    public String toString() {
-        return "GoalBarBean{" +
-                "protein='" + protein + '\'' +
-                ", carbs='" + carbs + '\'' +
-                ", fat='" + fat + '\'' +
-                ", bmi='" + bmi + '\'' +
-                ", cholesterol='" + cholesterol + '\'' +
-                ", fiber='" + fiber + '\'' +
-                ", goalBodyFat='" + goalBodyFat + '\'' +
-                ", goalWater='" + goalWater + '\'' +
-                ", goalWeight='" + goalWeight + '\'' +
-                ", goalDetails=" + goalDetails +
-                '}';
+        dest.writeParcelable(goalDetails, flags);
     }
 }

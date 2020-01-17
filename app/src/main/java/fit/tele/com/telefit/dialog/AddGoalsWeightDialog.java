@@ -23,13 +23,15 @@ public class AddGoalsWeightDialog extends Dialog implements View.OnClickListener
     private Button btn_set;
     private SetDataListener setDataListener;
     private Context context;
-    private String strHint;
+    private String strHint,strGoalValue,strCurrentValue;
 
-    public AddGoalsWeightDialog(@NonNull Context context, String strHint, SetDataListener setDataListener) {
+    public AddGoalsWeightDialog(@NonNull Context context, String strHint, String strGoalValue, String strCurrentValue, SetDataListener setDataListener) {
         super(context);
         this.setDataListener = setDataListener;
         this.context = context;
         this.strHint = strHint;
+        this.strGoalValue = strGoalValue;
+        this.strCurrentValue = strCurrentValue;
     }
 
     public AddGoalsWeightDialog(@NonNull Context context, @StyleRes int themeResId, SetDataListener setDataListener) {
@@ -63,7 +65,8 @@ public class AddGoalsWeightDialog extends Dialog implements View.OnClickListener
         txt_header.setText(strHint);
         btn_set = (Button) contentView.findViewById(R.id.btn_set);
         btn_set.setOnClickListener(this);
-
+        input_goal.setText(strGoalValue);
+        input_consume.setText(strCurrentValue);
     }
 
     @Override
@@ -73,7 +76,7 @@ public class AddGoalsWeightDialog extends Dialog implements View.OnClickListener
                 if (input_goal.getText().toString().isEmpty())
                     CommonUtils.toast(context,"Please enter goal!");
                 else if (input_consume.getText().toString().isEmpty())
-                    CommonUtils.toast(context,"Please enter consumed!");
+                    CommonUtils.toast(context,"Please enter Current Weight!");
                 else {
                     setDataListener.onContinueClick(input_goal.getText().toString(),input_consume.getText().toString());
                     dismiss();

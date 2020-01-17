@@ -145,7 +145,8 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 @Override
                 public void onClick(View view) {
                     if(clickListener != null && list != null && pos >= 0 && pos < list.size() && list.get(pos) != null) {
-                        clickListener.onClick(list.get(pos), false);
+//                        clickListener.onClick(list.get(pos), false);
+                        clickListener.onAddClick(list.get(pos));
                     }
                 }
             });

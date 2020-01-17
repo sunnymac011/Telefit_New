@@ -41,6 +41,9 @@ public class FoodCategoryBean implements Parcelable {
     @SerializedName("total_calories_week")
     @Expose
     private String totalCaloriesWeek;
+    @SerializedName("fitbit_calories")
+    @Expose
+    private String fitbitCalories;
     @SerializedName("recipe")
     @Expose
     private ArrayList<RecipeBean> recipeBeans;
@@ -56,6 +59,7 @@ public class FoodCategoryBean implements Parcelable {
         updatedAt = in.readString();
         isRecipe = in.readString();
         totalCaloriesWeek = in.readString();
+        fitbitCalories = in.readString();
         recipeBeans = in.createTypedArrayList(RecipeBean.CREATOR);
     }
 
@@ -151,6 +155,14 @@ public class FoodCategoryBean implements Parcelable {
         this.totalCaloriesWeek = totalCaloriesWeek;
     }
 
+    public String getFitbitCalories() {
+        return fitbitCalories;
+    }
+
+    public void setFitbitCalories(String fitbitCalories) {
+        this.fitbitCalories = fitbitCalories;
+    }
+
     public ArrayList<RecipeBean> getRecipeBeans() {
         return recipeBeans;
     }
@@ -176,6 +188,7 @@ public class FoodCategoryBean implements Parcelable {
         dest.writeString(updatedAt);
         dest.writeString(isRecipe);
         dest.writeString(totalCaloriesWeek);
+        dest.writeString(fitbitCalories);
         dest.writeTypedList(recipeBeans);
     }
 
@@ -192,6 +205,7 @@ public class FoodCategoryBean implements Parcelable {
                 ", updatedAt='" + updatedAt + '\'' +
                 ", isRecipe='" + isRecipe + '\'' +
                 ", totalCaloriesWeek='" + totalCaloriesWeek + '\'' +
+                ", fitbitCalories='" + fitbitCalories + '\'' +
                 ", recipeBeans=" + recipeBeans +
                 '}';
     }

@@ -45,7 +45,7 @@
                 android:id="@+id/input_consume"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Consumed"
+                android:hint="Current Weight"
                 android:inputType="number"
                 android:textColor="@color/main_color"
                 android:singleLine="true"

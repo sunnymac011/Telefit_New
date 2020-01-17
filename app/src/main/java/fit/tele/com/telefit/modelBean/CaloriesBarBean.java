@@ -13,65 +13,40 @@ public class CaloriesBarBean implements Parcelable {
 
     @SerializedName("Monday")
     @Expose
-    public Float monday;
+    public MainCaloriesBean monday;
     @SerializedName("Tuesday")
     @Expose
-    public Float tuesday;
+    public MainCaloriesBean tuesday;
     @SerializedName("Wednesday")
     @Expose
-    public Float wednesday;
+    public MainCaloriesBean wednesday;
     @SerializedName("Thursday")
     @Expose
-    public Float thursday;
+    public MainCaloriesBean thursday;
     @SerializedName("Friday")
     @Expose
-    public Float friday;
+    public MainCaloriesBean friday;
     @SerializedName("Saturday")
     @Expose
-    public Float saturday;
+    public MainCaloriesBean saturday;
     @SerializedName("Sunday")
     @Expose
-    public Float sunday;
+    public MainCaloriesBean sunday;
     @SerializedName("goal")
     @Expose
     public ArrayList<GoalBean> goal = null;
 
+    public CaloriesBarBean() {
+    }
+
     protected CaloriesBarBean(Parcel in) {
-        if (in.readByte() == 0) {
-            monday = null;
-        } else {
-            monday = in.readFloat();
-        }
-        if (in.readByte() == 0) {
-            tuesday = null;
-        } else {
-            tuesday = in.readFloat();
-        }
-        if (in.readByte() == 0) {
-            wednesday = null;
-        } else {
-            wednesday = in.readFloat();
-        }
-        if (in.readByte() == 0) {
-            thursday = null;
-        } else {
-            thursday = in.readFloat();
-        }
-        if (in.readByte() == 0) {
-            friday = null;
-        } else {
-            friday = in.readFloat();
-        }
-        if (in.readByte() == 0) {
-            saturday = null;
-        } else {
-            saturday = in.readFloat();
-        }
-        if (in.readByte() == 0) {
-            sunday = null;
-        } else {
-            sunday = in.readFloat();
-        }
+        monday = in.readParcelable(MainCaloriesBean.class.getClassLoader());
+        tuesday = in.readParcelable(MainCaloriesBean.class.getClassLoader());
+        wednesday = in.readParcelable(MainCaloriesBean.class.getClassLoader());
+        thursday = in.readParcelable(MainCaloriesBean.class.getClassLoader());
+        friday = in.readParcelable(MainCaloriesBean.class.getClassLoader());
+        saturday = in.readParcelable(MainCaloriesBean.class.getClassLoader());
+        sunday = in.readParcelable(MainCaloriesBean.class.getClassLoader());
         goal = in.createTypedArrayList(GoalBean.CREATOR);
     }
 
@@ -87,59 +62,59 @@ public class CaloriesBarBean implements Parcelable {
         }
     };
 
-    public Float getMonday() {
-        return (float) (monday/4.184);
+    public MainCaloriesBean getMonday() {
+        return monday;
     }
 
-    public void setMonday(Float monday) {
+    public void setMonday(MainCaloriesBean monday) {
         this.monday = monday;
     }
 
-    public Float getTuesday() {
-        return (float) (tuesday/4.184);
+    public MainCaloriesBean getTuesday() {
+        return tuesday;
     }
 
-    public void setTuesday(Float tuesday) {
+    public void setTuesday(MainCaloriesBean tuesday) {
         this.tuesday = tuesday;
     }
 
-    public Float getWednesday() {
-        return (float) (wednesday/4.184);
+    public MainCaloriesBean getWednesday() {
+        return wednesday;
     }
 
-    public void setWednesday(Float wednesday) {
+    public void setWednesday(MainCaloriesBean wednesday) {
         this.wednesday = wednesday;
     }
 
-    public Float getThursday() {
-        return (float) (thursday/4.184);
+    public MainCaloriesBean getThursday() {
+        return thursday;
     }
 
-    public void setThursday(Float thursday) {
+    public void setThursday(MainCaloriesBean thursday) {
         this.thursday = thursday;
     }
 
-    public Float getFriday() {
-        return (float) (friday/4.184);
+    public MainCaloriesBean getFriday() {
+        return friday;
     }
 
-    public void setFriday(Float friday) {
+    public void setFriday(MainCaloriesBean friday) {
         this.friday = friday;
     }
 
-    public Float getSaturday() {
-        return (float) (saturday/4.184);
+    public MainCaloriesBean getSaturday() {
+        return saturday;
     }
 
-    public void setSaturday(Float saturday) {
+    public void setSaturday(MainCaloriesBean saturday) {
         this.saturday = saturday;
     }
 
-    public Float getSunday() {
-        return (float) (sunday/4.184);
+    public MainCaloriesBean getSunday() {
+        return sunday;
     }
 
-    public void setSunday(Float sunday) {
+    public void setSunday(MainCaloriesBean sunday) {
         this.sunday = sunday;
     }
 
@@ -158,48 +133,13 @@ public class CaloriesBarBean implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        if (monday == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeFloat(monday);
-        }
-        if (tuesday == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeFloat(tuesday);
-        }
-        if (wednesday == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeFloat(wednesday);
-        }
-        if (thursday == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeFloat(thursday);
-        }
-        if (friday == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeFloat(friday);
-        }
-        if (saturday == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeFloat(saturday);
-        }
-        if (sunday == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeFloat(sunday);
-        }
+        dest.writeParcelable(monday, flags);
+        dest.writeParcelable(tuesday, flags);
+        dest.writeParcelable(wednesday, flags);
+        dest.writeParcelable(thursday, flags);
+        dest.writeParcelable(friday, flags);
+        dest.writeParcelable(saturday, flags);
+        dest.writeParcelable(sunday, flags);
         dest.writeTypedList(goal);
     }
 

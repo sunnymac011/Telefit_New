@@ -43,9 +43,12 @@ import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -57,6 +60,7 @@ import fit.tele.com.telefit.base.BaseActivity;
 import fit.tele.com.telefit.databinding.ActivityDeviceBinding;
 import fit.tele.com.telefit.modelBean.CaloriesBarBean;
 import fit.tele.com.telefit.modelBean.DeviceBean;
+import fit.tele.com.telefit.modelBean.GoalBarBean;
 import fit.tele.com.telefit.modelBean.ModelBean;
 import fit.tele.com.telefit.modelBean.chompBeans.ChompProductBean;
 import fit.tele.com.telefit.utils.CommonUtils;
@@ -78,6 +82,9 @@ public class DeviceActivity extends BaseActivity implements View.OnClickListener
     private boolean authInProgress = false;
     private static final int REQUEST_OAUTH = 1;
     private CustomTabsServiceConnection connection;
+    private DateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
+    private DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+    Calendar calendar;
 
     @Override
     public int getLayoutResId() {
@@ -87,6 +94,7 @@ public class DeviceActivity extends BaseActivity implements View.OnClickListener
     @Override
     public void init() {
         binding = (ActivityDeviceBinding) getBindingObj();
+        calendar = Calendar.getInstance();
         binding.imgSideBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -215,8 +223,7 @@ public class DeviceActivity extends BaseActivity implements View.OnClickListener
         if (CommonUtils.isInternetOn(context)) {
             binding.progress.setVisibility(View.VISIBLE);
             Observable<ResponseBody> signupusers;
-
-            signupusers = FetchServiceBase.getFitbitFetcherService(context).getFitbitCalories(token);
+            signupusers = FetchServiceBase.getFitbitFetcherService(context).getFitbitCalories("Bearer "+token,format.format(calendar.getTime())+".json");
             subscription = signupusers.subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<ResponseBody>() {
@@ -243,6 +250,7 @@ public class DeviceActivity extends BaseActivity implements View.OnClickListener
 //                                    if (jsonObject.has("summary")) {
                                         JSONObject summaryObject = jsonObject.getJSONObject("summary");
                                         String burnedCalories = summaryObject.getString("caloriesOut");
+                                        callSetBurnCalApi(format1.format(calendar.getTime()), burnedCalories);
                                         Log.e("burnedCalories",""+burnedCalories);
                                         CommonUtils.toast(context,"Burned Calories synced from Fitbit!");
                                         preferences.saveBurnedCaloriesData(""+burnedCalories);
@@ -391,6 +399,7 @@ public class DeviceActivity extends BaseActivity implements View.OnClickListener
             binding.progress.setVisibility(View.GONE);
             CommonUtils.toast(context,"Burned Calories synced from Google Fit!");
             preferences.saveBurnedCaloriesData(""+aLong);
+            callSetBurnCalApi(format1.format(calendar.getTime()), ""+aLong);
             //Total calories burned for that day
             Log.e(TAG, "Total calories: " + aLong);
 
@@ -435,6 +444,44 @@ public class DeviceActivity extends BaseActivity implements View.OnClickListener
 
         }
     }*/
+
+    private void callSetBurnCalApi(String strDate, String strCal) {
+        if (CommonUtils.isInternetOn(context)) {
+            binding.progress.setVisibility(View.VISIBLE);
+            HashMap<String, String> map = new HashMap<>();
+            map.put("fitbit_date", strDate);
+            map.put("fitbit_calories", strCal);
+
+            Observable<ModelBean<GoalBarBean>> signupusers = FetchServiceBase.getFetcherServiceWithToken(context).getBurnCalApi(map);
+            subscription = signupusers.subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<ModelBean<GoalBarBean>>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            CommonUtils.toast(context, e.getMessage());
+                            Log.e("callSetBurnCalApi"," "+e);
+                            binding.progress.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onNext(ModelBean<GoalBarBean> apiFoodBean) {
+                            binding.progress.setVisibility(View.GONE);
+                            if (apiFoodBean.getStatus().toString().equalsIgnoreCase("1") )
+                            {
+
+                            }
+                        }
+                    });
+
+        } else {
+            CommonUtils.toast(context, context.getString(R.string.snack_bar_no_internet));
+        }
+    }
 
     @Override
     protected void onNewIntent(Intent intent) {
